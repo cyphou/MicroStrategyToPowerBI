@@ -4,7 +4,7 @@ build-backend = "setuptools.backends._legacy:_Backend"
 
 [project]
 name = "microstrategy-to-powerbi"
-version = "1.0.0"
+version = "2.0.0"
 description = "Automated migration of MicroStrategy reports & dossiers to Power BI .pbip projects (PBIR v4.0 + TMDL)"
 readme = "README.md"
 license = {text = "MIT"}
@@ -41,16 +41,21 @@ dev = [
     "pytest>=7.0",
     "pytest-cov>=4.0",
     "coverage>=7.0",
+    "ruff>=0.4.0",
+]
+perf = [
+    "tqdm>=4.60",
+    "aiohttp>=3.9.0",
 ]
 all = [
-    "microstrategy-to-powerbi[deploy,dev]",
+    "microstrategy-to-powerbi[deploy,dev,perf]",
 ]
 
 [project.urls]
-Homepage = "https://github.com/your-org/MicroStrategy-To-PowerBI"
-Documentation = "https://github.com/your-org/MicroStrategy-To-PowerBI/docs"
-Repository = "https://github.com/your-org/MicroStrategy-To-PowerBI"
-Changelog = "https://github.com/your-org/MicroStrategy-To-PowerBI/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/cyphou/MicroStrategyToPowerBI"
+Documentation = "https://github.com/cyphou/MicroStrategyToPowerBI/tree/main/docs"
+Repository = "https://github.com/cyphou/MicroStrategyToPowerBI"
+Changelog = "https://github.com/cyphou/MicroStrategyToPowerBI/blob/main/CHANGELOG.md"
 
 [project.scripts]
 mstr-to-powerbi = "migrate:main"

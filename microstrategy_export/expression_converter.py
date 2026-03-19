@@ -91,6 +91,36 @@ _FUNCTION_MAP = {
     "mod": "MOD",
     "int": "INT",
     "sign": "SIGN",
+    # Statistical (additional)
+    "percentile": "PERCENTILE.INC",
+    "correlation": None,  # Custom
+    "intercept": None,  # Custom
+    "slope": None,  # Custom
+    "rSquare": None,  # Custom
+    "forecast": None,  # Custom
+    # Rank/Window (additional)
+    "firstinrange": None,  # Custom
+    "lastinrange": None,  # Custom
+    "olap_rank": None,  # Custom
+    "olap_count": None,  # Custom
+    "olap_sum": None,  # Custom
+    "olap_avg": None,  # Custom
+    # Text (additional)
+    "initcap": None,  # Custom
+    "lpad": None,  # Custom
+    "rpad": None,  # Custom
+    "reverse": None,  # Custom
+    # Date (additional)
+    "datediff": "DATEDIFF",
+    "dateadd": "DATEADD",
+    "daysinmonth": None,  # Custom
+    "weekstartdate": None,  # Custom
+    "weekenddate": None,  # Custom
+    "quarterstartdate": "STARTOFQUARTER",
+    "quarterenddate": "ENDOFQUARTER",
+    # Type conversion
+    "number": "VALUE",
+    "text": "FORMAT",
 }
 
 # Derived metric patterns (OLAP functions)
@@ -148,6 +178,93 @@ _APPLY_SIMPLE_PATTERNS = [
      lambda m: "TRUNC({0})"),
     (re.compile(r"CAST\s*\(\s*#0\s+AS\s+VARCHAR\s*\)", re.IGNORECASE),
      lambda m: 'FORMAT({0}, "")'),
+    # ── Phase H additions: 30+ more SQL → DAX patterns ────────────
+    # ISNULL / IFNULL / NVL2
+    (re.compile(r"ISNULL\s*\(#0\s*,\s*#1\)", re.IGNORECASE),
+     lambda m: "COALESCE({0}, {1})"),
+    (re.compile(r"IFNULL\s*\(#0\s*,\s*#1\)", re.IGNORECASE),
+     lambda m: "COALESCE({0}, {1})"),
+    (re.compile(r"NVL2\s*\(#0\s*,\s*#1\s*,\s*#2\)", re.IGNORECASE),
+     lambda m: "IF(NOT(ISBLANK({0})), {1}, {2})"),
+    # DECODE (simple 2-branch)
+    (re.compile(r"DECODE\s*\(#0\s*,\s*'(.+?)'\s*,\s*'(.+?)'\s*,\s*'(.+?)'\)", re.IGNORECASE),
+     lambda m: f'IF([{{0}}] = "{m.group(1)}", "{m.group(2)}", "{m.group(3)}")'),
+    # NULLIF
+    (re.compile(r"NULLIF\s*\(#0\s*,\s*#1\)", re.IGNORECASE),
+     lambda m: "IF({0} = {1}, BLANK(), {0})"),
+    # GREATEST / LEAST (2 args)
+    (re.compile(r"GREATEST\s*\(#0\s*,\s*#1\)", re.IGNORECASE),
+     lambda m: "MAX({0}, {1})"),
+    (re.compile(r"LEAST\s*\(#0\s*,\s*#1\)", re.IGNORECASE),
+     lambda m: "MIN({0}, {1})"),
+    # String patterns
+    (re.compile(r"CONCAT\s*\(#0\s*,\s*#1\)", re.IGNORECASE),
+     lambda m: "{0} & {1}"),
+    (re.compile(r"CONCAT\s*\(#0\s*,\s*'(.+?)'\s*,\s*#1\)", re.IGNORECASE),
+     lambda m: '{0} & "' + m.group(1) + '" & {1}'),
+    (re.compile(r"SUBSTR(?:ING)?\s*\(#0\s*,\s*(\d+)\s*,\s*(\d+)\)", re.IGNORECASE),
+     lambda m: f"MID({{0}}, {m.group(1)}, {m.group(2)})"),
+    (re.compile(r"REPLACE\s*\(#0\s*,\s*'(.+?)'\s*,\s*'(.+?)'\)", re.IGNORECASE),
+     lambda m: f'SUBSTITUTE({{0}}, "{m.group(1)}", "{m.group(2)}")'),
+    (re.compile(r"UPPER\s*\(#0\)", re.IGNORECASE),
+     lambda m: "UPPER({0})"),
+    (re.compile(r"LOWER\s*\(#0\)", re.IGNORECASE),
+     lambda m: "LOWER({0})"),
+    (re.compile(r"TRIM\s*\(#0\)", re.IGNORECASE),
+     lambda m: "TRIM({0})"),
+    (re.compile(r"LENGTH\s*\(#0\)", re.IGNORECASE),
+     lambda m: "LEN({0})"),
+    (re.compile(r"INSTR\s*\(#0\s*,\s*'(.+?)'\)", re.IGNORECASE),
+     lambda m: f'SEARCH("{m.group(1)}", {{0}})'),
+    (re.compile(r"INITCAP\s*\(#0\)", re.IGNORECASE),
+     lambda m: "PROPER({0})"),
+    (re.compile(r"LPAD\s*\(#0\s*,\s*(\d+)\s*,\s*'(.)'\)", re.IGNORECASE),
+     lambda m: f'REPT("{m.group(2)}", {m.group(1)} - LEN({{0}})) & {{0}}'),
+    # Date patterns
+    (re.compile(r"TO_DATE\s*\(#0\s*,\s*'(.+?)'\)", re.IGNORECASE),
+     lambda m: f'DATEVALUE({{0}})'),
+    (re.compile(r"TO_CHAR\s*\(#0\s*,\s*'(.+?)'\)", re.IGNORECASE),
+     lambda m: f'FORMAT({{0}}, "{m.group(1)}")'),
+    (re.compile(r"DATEADD\s*\(\s*(DAY|MONTH|YEAR|QUARTER)\s*,\s*#1\s*,\s*#0\s*\)", re.IGNORECASE),
+     lambda m: f"DATEADD({{0}}, {{1}}, {m.group(1).upper()})"),
+    (re.compile(r"DATEDIFF\s*\(\s*(DAY|MONTH|YEAR)\s*,\s*#0\s*,\s*#1\s*\)", re.IGNORECASE),
+     lambda m: f"DATEDIFF({{0}}, {{1}}, {m.group(1).upper()})"),
+    (re.compile(r"ADD_MONTHS\s*\(#0\s*,\s*#1\)", re.IGNORECASE),
+     lambda m: "EDATE({0}, {1})"),
+    (re.compile(r"LAST_DAY\s*\(#0\)", re.IGNORECASE),
+     lambda m: "ENDOFMONTH({0})"),
+    (re.compile(r"TRUNC\s*\(#0\s*,\s*'MM'\)", re.IGNORECASE),
+     lambda m: "STARTOFMONTH({0})"),
+    (re.compile(r"TRUNC\s*\(#0\s*,\s*'YYYY'\)", re.IGNORECASE),
+     lambda m: "STARTOFYEAR({0})"),
+    (re.compile(r"TRUNC\s*\(#0\s*,\s*'Q'\)", re.IGNORECASE),
+     lambda m: "STARTOFQUARTER({0})"),
+    # Numeric cast patterns
+    (re.compile(r"CAST\s*\(\s*#0\s+AS\s+(?:INT(?:EGER)?|NUMERIC|DECIMAL)\s*\)", re.IGNORECASE),
+     lambda m: "INT({0})"),
+    (re.compile(r"CAST\s*\(\s*#0\s+AS\s+(?:FLOAT|DOUBLE|REAL)\s*\)", re.IGNORECASE),
+     lambda m: "VALUE({0})"),
+    (re.compile(r"CAST\s*\(\s*#0\s+AS\s+DATE\s*\)", re.IGNORECASE),
+     lambda m: "DATEVALUE({0})"),
+    # Math patterns
+    (re.compile(r"ABS\s*\(#0\)", re.IGNORECASE),
+     lambda m: "ABS({0})"),
+    (re.compile(r"ROUND\s*\(#0\s*,\s*(\d+)\)", re.IGNORECASE),
+     lambda m: f"ROUND({{0}}, {m.group(1)})"),
+    (re.compile(r"POWER\s*\(#0\s*,\s*#1\)", re.IGNORECASE),
+     lambda m: "POWER({0}, {1})"),
+    (re.compile(r"MOD\s*\(#0\s*,\s*#1\)", re.IGNORECASE),
+     lambda m: "MOD({0}, {1})"),
+    (re.compile(r"SIGN\s*\(#0\)", re.IGNORECASE),
+     lambda m: "SIGN({0})"),
+    # CASE WHEN with numeric output
+    (re.compile(r"CASE\s+WHEN\s+#0\s*([><=!]+)\s*(.+?)\s+THEN\s+(\d+(?:\.\d+)?)\s+ELSE\s+(\d+(?:\.\d+)?)\s+END", re.IGNORECASE),
+     lambda m: f'IF([{{0}}] {m.group(1)} {m.group(2)}, {m.group(3)}, {m.group(4)})'),
+    # CASE WHEN with IS NULL
+    (re.compile(r"CASE\s+WHEN\s+#0\s+IS\s+NULL\s+THEN\s+'(.+?)'\s+ELSE\s+'(.+?)'\s+END", re.IGNORECASE),
+     lambda m: f'IF(ISBLANK([{{0}}]), "{m.group(1)}", "{m.group(2)}")'),
+    (re.compile(r"CASE\s+WHEN\s+#0\s+IS\s+NOT\s+NULL\s+THEN\s+'(.+?)'\s+ELSE\s+'(.+?)'\s+END", re.IGNORECASE),
+     lambda m: f'IF(NOT(ISBLANK([{{0}}])), "{m.group(1)}", "{m.group(2)}")'),
 ]
 
 
@@ -558,6 +675,64 @@ def _handle_special_functions(expr, context):
     expr = re.sub(
         r'AddDays\s*\((.+?),\s*(.+?)\)',
         lambda m: f'({m.group(1)} + {m.group(2)})',
+        expr, flags=re.IGNORECASE
+    )
+
+    # Phase H additional functions
+    expr = _handle_additional_functions(expr, context)
+
+    return expr
+
+
+def _handle_additional_functions(expr, context):
+    """Handle additional special functions added in Phase H."""
+
+    # InitCap(x) → PROPER(x)
+    expr = re.sub(
+        r'InitCap\s*\((.+?)\)',
+        lambda m: f'PROPER({m.group(1)})',
+        expr, flags=re.IGNORECASE
+    )
+
+    # LPad(x, n, c) → REPT(c, n - LEN(x)) & x
+    expr = re.sub(
+        r'LPad\s*\((.+?),\s*(\d+),\s*["\'](.)["\']\)',
+        lambda m: f'REPT("{m.group(3)}", {m.group(2)} - LEN({m.group(1)})) & {m.group(1)}',
+        expr, flags=re.IGNORECASE
+    )
+
+    # RPad(x, n, c) → x & REPT(c, n - LEN(x))
+    expr = re.sub(
+        r'RPad\s*\((.+?),\s*(\d+),\s*["\'](.)["\']\)',
+        lambda m: f'{m.group(1)} & REPT("{m.group(3)}", {m.group(2)} - LEN({m.group(1)}))',
+        expr, flags=re.IGNORECASE
+    )
+
+    # Reverse(x) → not native in DAX, leave as comment
+    expr = re.sub(
+        r'Reverse\s*\((.+?)\)',
+        lambda m: f'/* REVERSE not supported in DAX */ {m.group(1)}',
+        expr, flags=re.IGNORECASE
+    )
+
+    # DaysInMonth(d) → DAY(ENDOFMONTH(d))
+    expr = re.sub(
+        r'DaysInMonth\s*\((.+?)\)',
+        lambda m: f'DAY(ENDOFMONTH({m.group(1)}))',
+        expr, flags=re.IGNORECASE
+    )
+
+    # WeekStartDate(d) → d - WEEKDAY(d, 2) + 1
+    expr = re.sub(
+        r'WeekStartDate\s*\((.+?)\)',
+        lambda m: f'({m.group(1)} - WEEKDAY({m.group(1)}, 2) + 1)',
+        expr, flags=re.IGNORECASE
+    )
+
+    # WeekEndDate(d) → d - WEEKDAY(d, 2) + 7
+    expr = re.sub(
+        r'WeekEndDate\s*\((.+?)\)',
+        lambda m: f'({m.group(1)} - WEEKDAY({m.group(1)}, 2) + 7)',
         expr, flags=re.IGNORECASE
     )
 

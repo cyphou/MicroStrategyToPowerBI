@@ -1,8 +1,8 @@
 # Migration Plan — MicroStrategy to Power BI / Fabric
 
-**Version:** v1.0.0  
+**Version:** v2.0.0  
 **Date:** 2026-03-19  
-**Status:** Complete — All 5 sprints done (500 tests passing)
+**Status:** Complete — Phases A–E (v1.0) + F–L (v2.0) done (570 tests passing)
 
 ---
 

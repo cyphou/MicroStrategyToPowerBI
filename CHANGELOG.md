@@ -2,6 +2,62 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.0.0] — 2026-03-19
+
+### 🚀 v2.0 — CI/CD, Wizard, DAX Depth, Performance, Incremental, Dashboard
+
+Major feature release: 7 new phases (F–L) adding production-grade tooling and enterprise capabilities.
+
+### Added
+
+**Phase F: CI/CD + Packaging**
+- GitHub Actions CI workflow (`.github/workflows/ci.yml`) — matrix testing on Python 3.9–3.13, Ubuntu+Windows, Ruff linting
+- GitHub Actions Release workflow (`.github/workflows/release.yml`) — automated PyPI publish + GitHub Release on tag push
+- `ruff.toml` — linter/formatter configuration
+- `--version` CLI flag
+- Updated `pyproject.toml` with correct GitHub URLs, v2.0.0, `perf` optional dependencies
+
+**Phase G: Interactive Wizard**
+- `wizard.py` — guided step-by-step migration wizard (`--wizard` flag)
+- 7-step flow: mode → connection → object selection → output → deployment → logging → save config
+- Config file generation for reuse (`migration_config.json`)
+
+**Phase H: DAX Depth**
+- 30+ new ApplySimple SQL→DAX patterns (ISNULL, IFNULL, NVL2, DECODE, NULLIF, GREATEST, LEAST, CONCAT, SUBSTR, REPLACE, INITCAP, LPAD, INSTR, TO_DATE, TO_CHAR, DATEADD, DATEDIFF, ADD_MONTHS, LAST_DAY, TRUNC with date parts, CAST variants, math patterns, CASE WHEN IS NULL)
+- 20+ new function map entries (percentile, correlation, forecast, initcap, datediff, dateadd, quarterstartdate, quarterenddate, number, text, etc.)
+- `_handle_additional_functions()` — InitCap→PROPER, DaysInMonth, WeekStartDate, WeekEndDate, LPad, RPad, Reverse
+
+**Phase I: Performance + Scale**
+- `microstrategy_export/parallel.py` — thread-pool parallel extraction and generation
+- `parallel_extract()` / `parallel_generate()` with configurable worker count
+- `stream_json_items()` — lazy JSON loading for large files (>50 MB)
+- Optional tqdm progress bars (auto-detected)
+- `--parallel N` CLI flag
+
+**Phase J: Incremental Migration**
+- `microstrategy_export/incremental.py` — state tracking with SHA-256 hashing
+- `MigrationState` class: is_changed, mark_migrated, mark_removed, get_changed_objects, get_stale_objects
+- Persistent `migration_state.json` for delta-only re-runs
+- `--incremental` CLI flag
+
+**Phase K: Live Integration Testing**
+- `tests/cassette_harness.py` — HTTP interaction recorder/player
+- `CassetteRecorder` — record, save, load, play API responses
+- `MockMstrClient` — drop-in replacement for MstrRestClient using cassettes
+
+**Phase L: Web Dashboard**
+- `powerbi_import/dashboard.py` — self-contained interactive HTML dashboard
+- Fidelity score gauge, generation stats, type breakdown
+- Fidelity heatmap by object type
+- Searchable/filterable object table
+- Migration timeline (incremental mode)
+
+### Tests
+- 70 new tests in `test_v2_features.py` (wizard, DAX depth, parallel, incremental, cassette, dashboard, CLI)
+- **Total: 570 tests passing**
+
+---
+
 ## [1.0.0] — 2026-03-19
 
 ### 🎉 Initial Release — Full Pipeline

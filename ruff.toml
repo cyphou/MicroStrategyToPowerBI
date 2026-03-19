@@ -1,0 +1,18 @@
+target-version = "py39"
+line-length = 120
+
+[lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM"]
+ignore = [
+    "E501",   # line too long (handled by formatter)
+    "E741",   # ambiguous variable name
+    "SIM108", # ternary instead of if-else
+    "B904",   # raise without from in except
+    "UP015",  # redundant open mode
+]
+
+[lint.per-file-ignores]
+"tests/*" = ["B", "SIM"]
+
+[format]
+quote-style = "double"

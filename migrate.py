@@ -525,6 +525,13 @@ Examples:
     shared_group.add_argument('--shared-model', action='store_true',
                              help='Generate a single shared semantic model for the entire project')
 
+    # Incremental migration
+    inc_group = parser.add_argument_group('Incremental Migration')
+    inc_group.add_argument('--incremental', action='store_true',
+                          help='Only migrate objects that changed since last run')
+    inc_group.add_argument('--parallel', type=int, default=1, metavar='N',
+                          help='Number of parallel workers for extraction/generation (default: 1)')
+
     # Deployment
     deploy_group = parser.add_argument_group('Deployment')
     deploy_group.add_argument('--deploy', metavar='WORKSPACE_ID',
@@ -554,6 +561,9 @@ Examples:
 
     # Config file
     parser.add_argument('--config', help='Path to configuration JSON file')
+
+    # Version
+    parser.add_argument('--version', action='version', version='%(prog)s 2.0.0')
 
     return parser
 
@@ -590,6 +600,16 @@ def main():
         log_file=args.log_file,
         quiet=args.quiet,
     )
+
+    # Interactive wizard mode
+    if args.wizard:
+        from wizard import run_wizard
+        import types
+        wizard_answers = run_wizard()
+        for k, v in wizard_answers.items():
+            setattr(args, k, v)
+        # Wizard sets config to None — skip config loading
+        args.config = None
 
     # Load config file if specified
     if args.config:
