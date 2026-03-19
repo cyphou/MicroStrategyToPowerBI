@@ -147,16 +147,18 @@ class TestValidateReportJson:
         assert any("$schema" in e for e in errors)
 
     def test_missing_version_key(self, tmp_path):
+        # version is no longer required in PBIR v2.0.0 report.json
         p = tmp_path / "report.json"
         p.write_text(json.dumps({"$schema": "x"}), encoding="utf-8")
         errors = validate_report_json(str(p))
-        assert any("version" in e for e in errors)
+        assert errors == []
 
     def test_wrong_version(self, tmp_path):
+        # version field is no longer validated in PBIR v2.0.0
         p = tmp_path / "report.json"
         p.write_text(json.dumps({"$schema": "x", "version": "3.0"}), encoding="utf-8")
         errors = validate_report_json(str(p))
-        assert any("3.0" in e for e in errors)
+        assert errors == []
 
     def test_version_40_ok(self, tmp_path):
         p = tmp_path / "report.json"
@@ -174,7 +176,7 @@ class TestValidateReportJson:
         p = tmp_path / "report.json"
         p.write_text("{}", encoding="utf-8")
         errors = validate_report_json(str(p))
-        assert len(errors) == 2  # missing $schema and version
+        assert len(errors) == 1  # missing $schema only (version no longer required)
 
 
 # ═══════════════════════════════════════════════════════════════════
@@ -211,28 +213,39 @@ class TestValidatePageJson:
         assert any("displayName" in e for e in errors)
 
     def test_missing_visuals(self, tmp_path):
+        # In PBIR v2.0.0, visuals are in separate files, not inline
+        # page.json without visuals is valid
         pg = self._page()
         del pg["visuals"]
         p = tmp_path / "page.json"
         p.write_text(json.dumps(pg), encoding="utf-8")
         errors, warnings = validate_page_json(str(p))
-        assert any("visuals" in e for e in errors)
+        assert errors == []
 
     def test_visual_missing_position(self, tmp_path):
-        pg = self._page()
-        pg["visuals"] = [{"visual": {"visualType": "bar"}}]
-        p = tmp_path / "page.json"
-        p.write_text(json.dumps(pg), encoding="utf-8")
+        # Set up visual in subfolder visuals/<id>/visual.json
+        page_dir = tmp_path / "mypage"
+        page_dir.mkdir()
+        p = page_dir / "page.json"
+        p.write_text(json.dumps({"displayName": "Page 1"}), encoding="utf-8")
+        vis_dir = page_dir / "visuals" / "v1"
+        vis_dir.mkdir(parents=True)
+        (vis_dir / "visual.json").write_text(
+            json.dumps({"visual": {"visualType": "bar"}}), encoding="utf-8"
+        )
         errors, warnings = validate_page_json(str(p))
         assert any("position" in e for e in errors)
 
     def test_position_missing_dimension(self, tmp_path):
-        pg = self._page()
-        pg["visuals"] = [
-            {"position": {"x": 0, "y": 0, "width": 100}}
-        ]
-        p = tmp_path / "page.json"
-        p.write_text(json.dumps(pg), encoding="utf-8")
+        page_dir = tmp_path / "mypage"
+        page_dir.mkdir()
+        p = page_dir / "page.json"
+        p.write_text(json.dumps({"displayName": "Page 1"}), encoding="utf-8")
+        vis_dir = page_dir / "visuals" / "v1"
+        vis_dir.mkdir(parents=True)
+        (vis_dir / "visual.json").write_text(
+            json.dumps({"position": {"x": 0, "y": 0, "width": 100}}), encoding="utf-8"
+        )
         errors, warnings = validate_page_json(str(p))
         assert any("height" in e for e in errors)
 
@@ -452,11 +465,11 @@ class TestValidateProject:
         assert any("invalid dataType" in e for e in result["errors"])
 
     def test_report_json_wrong_version_in_project(self, valid_project):
+        # version field is no longer validated in PBIR v2.0.0
         rpt_json = valid_project / "Test.Report" / "definition" / "report.json"
         rpt_json.write_text(json.dumps({"$schema": "x", "version": "3.0"}), encoding="utf-8")
         result = validate_project(str(valid_project))
-        assert result["valid"] is False
-        assert any("3.0" in e for e in result["errors"])
+        assert result["valid"] is True
 
     def test_page_missing_display_name_in_project(self, valid_project):
         page_json = valid_project / "Test.Report" / "definition" / "pages" / "page1" / "page.json"

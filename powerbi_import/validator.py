@@ -33,7 +33,7 @@ _VALID_DATA_TYPES = {"int64", "double", "decimal", "string", "dateTime", "boolea
 
 # ── PBIR required keys ───────────────────────────────────────────
 
-_REPORT_REQUIRED_KEYS = {"$schema", "version"}
+_REPORT_REQUIRED_KEYS = {"$schema"}
 _PAGE_REQUIRED_KEYS = {"displayName"}
 _VISUAL_REQUIRED_KEYS = {"position"}
 
@@ -441,7 +441,7 @@ def _validate_report(rpt_dir):
 
 
 def validate_report_json(path):
-    """Validate report.json against PBIR v4.0 expectations."""
+    """Validate report.json against PBIR v2.0.0 expectations."""
     errors = []
     try:
         with open(path, "r", encoding="utf-8") as f:
@@ -449,16 +449,13 @@ def validate_report_json(path):
         for key in _REPORT_REQUIRED_KEYS:
             if key not in data:
                 errors.append(f"{path}: missing required key '{key}'")
-        version = data.get("version", "")
-        if version and version != "4.0":
-            errors.append(f"{path}: unexpected version '{version}' (expected 4.0)")
     except (json.JSONDecodeError, OSError) as exc:
         errors.append(f"{path}: invalid JSON — {exc}")
     return errors
 
 
 def validate_page_json(path):
-    """Validate a page.json visual container."""
+    """Validate a page.json (PBIR v2.0.0 — visuals are in separate files)."""
     errors = []
     warnings = []
     try:
@@ -467,21 +464,26 @@ def validate_page_json(path):
         for key in _PAGE_REQUIRED_KEYS:
             if key not in data:
                 errors.append(f"{path}: missing required key '{key}'")
-        # Accept both 'visuals' (our generator) and 'visualContainers' (PBI native)
-        if "visuals" in data:
-            visuals = data["visuals"]
-        elif "visualContainers" in data:
-            visuals = data["visualContainers"]
-        else:
-            errors.append(f"{path}: missing 'visuals' or 'visualContainers'")
-            visuals = []
-        for i, vis in enumerate(visuals):
-            if "position" not in vis:
-                errors.append(f"{path}: visual [{i}] missing 'position'")
-            pos = vis.get("position", {})
-            for dim in ("x", "y", "width", "height"):
-                if dim not in pos:
-                    errors.append(f"{path}: visual [{i}] position missing '{dim}'")
+        # In PBIR v2.0.0, visuals live in visuals/<id>/visual.json, not inline.
+        # Check the visuals/ subfolder next to page.json if it exists.
+        page_dir = os.path.dirname(path)
+        visuals_dir = os.path.join(page_dir, "visuals")
+        if os.path.isdir(visuals_dir):
+            for vdir in os.listdir(visuals_dir):
+                vpath = os.path.join(visuals_dir, vdir, "visual.json")
+                if os.path.isfile(vpath):
+                    try:
+                        with open(vpath, "r", encoding="utf-8") as vf:
+                            vis = json.load(vf)
+                        if "position" not in vis:
+                            errors.append(f"{vpath}: visual missing 'position'")
+                        else:
+                            pos = vis["position"]
+                            for dim in ("x", "y", "width", "height"):
+                                if dim not in pos:
+                                    errors.append(f"{vpath}: position missing '{dim}'")
+                    except (json.JSONDecodeError, OSError) as exc:
+                        errors.append(f"{vpath}: invalid JSON — {exc}")
     except (json.JSONDecodeError, OSError) as exc:
         errors.append(f"{path}: invalid JSON — {exc}")
     return errors, warnings

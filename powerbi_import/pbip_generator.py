@@ -92,11 +92,14 @@ def generate_pbip(data, output_dir, report_name="MicroStrategy Report"):
         stats["tables"] += 1
 
     # model.tmdl header
-    _write_model_tmdl(sm_def, report_name)
+    _write_model_tmdl(sm_def, report_name, data=data)
 
     # Manifests
-    _write_platform(sm_root, "SemanticModel", logical_id + "-sm")
+    _write_platform(sm_root, "SemanticModel", logical_id + "-sm", display_name=report_name)
     _write_pbism(sm_root)
+
+    # database.tmdl (compatibility level)
+    _write_database_tmdl(sm_def)
 
     # ── 2. Report ────────────────────────────────────────────────
     rpt_root = os.path.join(output_dir, f"{report_name}.Report")
@@ -108,7 +111,13 @@ def generate_pbip(data, output_dir, report_name="MicroStrategy Report"):
     stats["slicers"] = visual_stats.get("slicers", 0)
     stats["unsupported_visuals"] = visual_stats.get("unsupported", 0)
 
-    _write_platform(rpt_root, "Report", logical_id + "-rpt")
+    _write_platform(rpt_root, "Report", logical_id + "-rpt", display_name=report_name)
+
+    # definition.pbir (links report → semantic model)
+    _write_pbir(rpt_root, report_name)
+
+    # version.json
+    _write_version_json(rpt_def)
 
     # ── 3. .pbip entry-point file ────────────────────────────────
     _write_pbip_file(output_dir, report_name)
@@ -125,13 +134,19 @@ def generate_pbip(data, output_dir, report_name="MicroStrategy Report"):
 
 # ── Scaffold writers ─────────────────────────────────────────────
 
-def _write_platform(folder, item_type, logical_id):
+def _write_platform(folder, item_type, logical_id, display_name=""):
     """Write .platform JSON."""
     os.makedirs(folder, exist_ok=True)
     platform = {
         "$schema": _PLATFORM_SCHEMA,
-        "metadata": {"type": item_type},
-        "config": {"logicalId": logical_id},
+        "metadata": {
+            "type": item_type,
+            "displayName": display_name or logical_id,
+        },
+        "config": {
+            "version": "2.0",
+            "logicalId": logical_id,
+        },
     }
     path = os.path.join(folder, ".platform")
     with open(path, "w", encoding="utf-8") as f:
@@ -140,19 +155,69 @@ def _write_platform(folder, item_type, logical_id):
 
 def _write_pbism(sm_root):
     """Write definition.pbism manifest."""
-    manifest = {"version": _PBISM_VERSION, "settings": {}}
+    manifest = {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/semanticModel/definitionProperties/1.0.0/schema.json",
+        "version": "4.2",
+        "settings": {
+            "qnaEnabled": True,
+        },
+    }
     path = os.path.join(sm_root, "definition.pbism")
     with open(path, "w", encoding="utf-8") as f:
         json.dump(manifest, f, indent=2)
 
 
-def _write_model_tmdl(definition_dir, report_name):
-    """Write model.tmdl header file."""
-    content = (
-        f"model Model\n"
-        f"\tculture: en-US\n"
-        f"\tdescription: Migrated from MicroStrategy — {report_name}\n"
-    )
+def _write_model_tmdl(definition_dir, report_name, data=None):
+    """Write model.tmdl header file with ref declarations."""
+    lines = [
+        "model Model",
+        "\tculture: en-US",
+        "\tdefaultPowerBIDataSourceVersion: powerBI_V3",
+        "\tsourceQueryCulture: en-US",
+        "\tdataAccessOptions",
+        "\t\tlegacyRedirects",
+        "\t\treturnErrorValuesAsNull",
+        "",
+    ]
+
+    if data:
+        # Collect table names
+        table_names = [ds["name"] for ds in data.get("datasources", [])]
+        # Add Calendar if date columns exist
+        date_cols = _detect_date_columns(data)
+        if date_cols:
+            table_names.append("Calendar")
+
+        if table_names:
+            order_str = ",".join(f'"{t}"' for t in table_names)
+            lines.append(f"annotation PBI_QueryOrder = [{order_str}]")
+            lines.append("")
+            for t in table_names:
+                ref = f"ref table '{t}'" if " " in t else f"ref table {t}"
+                lines.append(ref)
+            lines.append("")
+
+        # ref relationship (match names from tmdl_generator)
+        for rel in data.get("relationships", []):
+            rel_id = rel.get("id", "")
+            if rel_id:
+                ref_name = rel_id
+            else:
+                ref_name = f"rel_{rel['from_table']}_{rel['to_table']}"
+            lines.append(f"ref relationship {ref_name}")
+        if data.get("relationships"):
+            lines.append("")
+
+        # ref role (from security filters)
+        for sf in data.get("security_filters", []):
+            role_name = sf.get("name", "")
+            if role_name:
+                ref = f"ref role '{role_name}'" if " " in role_name else f"ref role {role_name}"
+                lines.append(ref)
+        if data.get("security_filters"):
+            lines.append("")
+
+    content = "\n".join(lines) + "\n"
     path = os.path.join(definition_dir, "model.tmdl")
     with open(path, "w", encoding="utf-8") as f:
         f.write(content)
@@ -161,13 +226,16 @@ def _write_model_tmdl(definition_dir, report_name):
 def _write_pbip_file(output_dir, report_name):
     """Write the <name>.pbip entry-point JSON file."""
     pbip = {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/pbip/pbipProperties/1.0.0/schema.json",
         "version": "1.0",
         "artifacts": [
             {
                 "report": {"path": f"{report_name}.Report"},
-                "semanticModel": {"path": f"{report_name}.SemanticModel"},
             }
         ],
+        "settings": {
+            "enableAutoRecovery": True,
+        },
     }
     path = os.path.join(output_dir, f"{report_name}.pbip")
     with open(path, "w", encoding="utf-8") as f:
@@ -202,6 +270,42 @@ def _detect_date_columns(data):
             if col.get("data_type", "").lower() in ("date", "datetime", "timestamp"):
                 date_cols.append((ds["name"], col["name"]))
     return date_cols
+
+
+def _write_pbir(rpt_root, report_name):
+    """Write definition.pbir — links report to semantic model by path."""
+    pbir = {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definitionProperties/2.0.0/schema.json",
+        "version": "4.0",
+        "datasetReference": {
+            "byPath": {
+                "path": f"../{report_name}.SemanticModel",
+            }
+        },
+    }
+    path = os.path.join(rpt_root, "definition.pbir")
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(pbir, f, indent=2)
+
+
+def _write_database_tmdl(definition_dir):
+    """Write database.tmdl with compatibility level."""
+    content = "database\n\tcompatibilityLevel: 1600\n"
+    path = os.path.join(definition_dir, "database.tmdl")
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(content)
+
+
+def _write_version_json(rpt_def):
+    """Write version.json for report definition."""
+    version = {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/versionMetadata/1.0.0/schema.json",
+        "version": "2.0.0",
+    }
+    path = os.path.join(rpt_def, "version.json")
+    os.makedirs(rpt_def, exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(version, f, indent=2)
 
 
 def _merge_stats(dst, src):

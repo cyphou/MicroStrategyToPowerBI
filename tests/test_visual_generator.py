@@ -591,11 +591,14 @@ class TestBuildPageJson:
         assert page["displayName"] == "My Page"
         assert page["width"] == 1280
         assert page["height"] == 720
-        assert len(page["visuals"]) == 1
+        assert "$schema" in page
+        # Visuals are no longer inline in page.json (PBIR v2.0.0)
+        assert "visuals" not in page
 
     def test_section_name(self):
+        # sectionName is no longer written in PBIR v2.0.0 page.json
         page = _build_page_json("pg_01", "My Page", [], section_name="Overview")
-        assert page["sectionName"] == "Overview"
+        assert "sectionName" not in page
 
     def test_no_section_name(self):
         page = _build_page_json("pg_01", "My Page", [])
@@ -649,7 +652,10 @@ class TestGenerateAllVisuals:
         manifest_path = output_dir / "report.json"
         assert manifest_path.exists()
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-        assert manifest["version"] == "4.0"
+        assert "report/2.0.0/schema.json" in manifest["$schema"]
+        assert "settings" in manifest
+        assert "resourcePackages" in manifest
+        assert "datasetBinding" not in manifest
 
     def test_page_json_files_written(self, intermediate_dossiers, tmp_path):
         output_dir = tmp_path / "Report" / "definition"
@@ -668,10 +674,15 @@ class TestGenerateAllVisuals:
         generate_all_visuals(data, str(output_dir))
         pages_dir = output_dir / "pages"
         for pd in pages_dir.iterdir():
-            if pd.is_dir():
+            if pd.is_dir() and (pd / "page.json").exists():
                 page = json.loads((pd / "page.json").read_text(encoding="utf-8"))
-                assert "visuals" in page
                 assert "displayName" in page
+                # Visuals are now in separate visuals/<id>/visual.json files
+                assert "visuals" not in page
+                visuals_dir = pd / "visuals"
+                assert visuals_dir.exists()
+                visual_files = list(visuals_dir.glob("*/visual.json"))
+                assert len(visual_files) >= 1
 
     def test_combined_dossiers_and_reports(self, intermediate_dossiers,
                                             intermediate_reports, tmp_path):

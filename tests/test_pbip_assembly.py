@@ -74,7 +74,9 @@ class TestPbipScaffold:
         assert pbip["version"] == "1.0"
         assert len(pbip["artifacts"]) == 1
         assert pbip["artifacts"][0]["report"]["path"] == "Test.Report"
-        assert pbip["artifacts"][0]["semanticModel"]["path"] == "Test.SemanticModel"
+        assert "semanticModel" not in pbip["artifacts"][0]
+        assert "$schema" in pbip
+        assert "settings" in pbip
 
     def test_gitignore_created(self, data, tmp_path):
         generate_pbip(data, str(tmp_path), report_name="Test")
@@ -103,7 +105,9 @@ class TestSemanticModelScaffold:
         p = tmp_path / "R.SemanticModel" / "definition.pbism"
         assert p.exists()
         obj = json.loads(p.read_text())
-        assert obj["version"] == "4.0"
+        assert obj["version"] == "4.2"
+        assert "$schema" in obj
+        assert obj["settings"]["qnaEnabled"] is True
 
     def test_model_tmdl(self, data, tmp_path):
         generate_pbip(data, str(tmp_path), report_name="R")

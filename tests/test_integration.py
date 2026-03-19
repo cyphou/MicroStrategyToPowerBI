@@ -85,13 +85,15 @@ class TestEndToEnd:
         datatype_errors = [e for e in result["errors"] if "invalid dataType" in e]
         assert datatype_errors == [], f"Invalid dataTypes: {datatype_errors}"
 
-    def test_generated_report_version_40(self, data, tmp_path):
-        """Generated report.json must be PBIR v4.0."""
+    def test_generated_report_version_20(self, data, tmp_path):
+        """Generated report.json must be PBIR v2.0.0 schema."""
         generate_pbip(data, str(tmp_path), report_name="E2E")
         report_json = tmp_path / "E2E.Report" / "definition" / "report.json"
         assert report_json.exists()
         rpt = json.loads(report_json.read_text(encoding="utf-8"))
-        assert rpt.get("version") == "4.0"
+        assert "report/2.0.0/schema.json" in rpt["$schema"]
+        assert "settings" in rpt
+        assert "datasetBinding" not in rpt
 
     def test_no_relationship_cycles(self, data, tmp_path):
         """Generated relationships should not contain cycles."""

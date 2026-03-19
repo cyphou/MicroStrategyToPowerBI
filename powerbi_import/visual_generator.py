@@ -97,14 +97,19 @@ def generate_all_visuals(data, output_dir):
     os.makedirs(pages_dir, exist_ok=True)
 
     stats = {"pages": 0, "visuals": 0, "slicers": 0, "unsupported": 0}
+    page_ids = []
 
     # Dossiers → pages with visuals
     for dossier in data.get("dossiers", []):
-        _generate_dossier_pages(dossier, pages_dir, stats)
+        _generate_dossier_pages(dossier, pages_dir, stats, page_ids)
 
     # Standalone reports → one page per report
     for report in data.get("reports", []):
-        _generate_report_page(report, pages_dir, stats)
+        _generate_report_page(report, pages_dir, stats, page_ids)
+
+    # Write pages.json (page ordering metadata)
+    if page_ids:
+        _write_pages_json(pages_dir, page_ids)
 
     # Write report.json manifest
     _write_report_manifest(data, output_dir, stats)
@@ -118,7 +123,7 @@ def generate_all_visuals(data, output_dir):
 
 # ── Dossier → Pages ──────────────────────────────────────────────
 
-def _generate_dossier_pages(dossier, pages_dir, stats):
+def _generate_dossier_pages(dossier, pages_dir, stats, page_ids):
     """Generate pages from a dossier (chapters → page groups, pages → pages)."""
     for chapter in dossier.get("chapters", []):
         for page in chapter.get("pages", []):
@@ -148,13 +153,14 @@ def _generate_dossier_pages(dossier, pages_dir, stats):
 
             page_json = _build_page_json(page_id, page_name, visuals,
                                          chapter.get("name", ""))
-            _write_page(pages_dir, page_id, page_json)
+            _write_page(pages_dir, page_id, page_json, visuals)
+            page_ids.append(page_id)
             stats["pages"] += 1
 
 
 # ── Report → Page ────────────────────────────────────────────────
 
-def _generate_report_page(report, pages_dir, stats):
+def _generate_report_page(report, pages_dir, stats, page_ids):
     """Generate a single page from a standalone report."""
     report_id = report.get("id", _make_id())
     report_name = report.get("name", "Report")
@@ -183,7 +189,8 @@ def _generate_report_page(report, pages_dir, stats):
 
     if visuals:
         page_json = _build_page_json(report_id, report_name, visuals)
-        _write_page(pages_dir, report_id, page_json)
+        _write_page(pages_dir, report_id, page_json, visuals)
+        page_ids.append(report_id)
         stats["pages"] += 1
 
 
@@ -499,51 +506,118 @@ def _build_slicer_visual(attr_name, slicer_id):
 # ── Page assembly ────────────────────────────────────────────────
 
 def _build_page_json(page_id, page_name, visuals, section_name=""):
-    """Build a PBIR page JSON structure."""
+    """Build a PBIR page JSON structure (v2.0.0 — no inline visuals)."""
     page = {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.0.0/schema.json",
         "name": page_id,
         "displayName": page_name,
         "displayOption": "FitToPage",
-        "width": _PBI_PAGE_WIDTH,
         "height": _PBI_PAGE_HEIGHT,
-        "visuals": visuals,
+        "width": _PBI_PAGE_WIDTH,
     }
-    if section_name:
-        page["sectionName"] = section_name
     return page
 
 
-def _write_page(pages_dir, page_id, page_json):
-    """Write a page JSON file to disk."""
+def _write_page(pages_dir, page_id, page_json, visuals):
+    """Write page.json and individual visual.json files."""
     page_dir = os.path.join(pages_dir, page_id)
     os.makedirs(page_dir, exist_ok=True)
+
+    # Write page.json (metadata only, no visuals)
     path = os.path.join(page_dir, "page.json")
     with open(path, "w", encoding="utf-8") as f:
         json.dump(page_json, f, indent=2, ensure_ascii=False)
     logger.debug("Wrote page %s → %s", page_id, path)
 
+    # Write each visual as visuals/<visual_name>/visual.json
+    visuals_dir = os.path.join(page_dir, "visuals")
+    for vis in visuals:
+        visual_name = vis.get("name", _make_id())
+        visual_dir = os.path.join(visuals_dir, visual_name)
+        os.makedirs(visual_dir, exist_ok=True)
+
+        visual_json = _build_visual_json(vis)
+        vpath = os.path.join(visual_dir, "visual.json")
+        with open(vpath, "w", encoding="utf-8") as f:
+            json.dump(visual_json, f, indent=2, ensure_ascii=False)
+
+
+def _build_visual_json(vis):
+    """Build a PBIR v2.5.0 visual.json from an internal visual dict."""
+    position = vis.get("position", {})
+    # Ensure z and tabOrder exist
+    if "z" not in position:
+        position["z"] = 0
+    if "tabOrder" not in position:
+        position["tabOrder"] = position.get("z", 0)
+
+    visual_json = {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.5.0/schema.json",
+        "name": vis.get("name", _make_id()),
+        "position": position,
+        "visual": vis.get("visual", {}),
+    }
+
+    # Add title via objects if present
+    title = vis.get("title", "")
+    if title:
+        objects = visual_json["visual"].setdefault("objects", {})
+        objects["title"] = [{
+            "properties": {
+                "text": {
+                    "expr": {
+                        "Literal": {"Value": f"'{title}'"}
+                    }
+                }
+            }
+        }]
+
+    return visual_json
+
+
+def _write_pages_json(pages_dir, page_ids):
+    """Write pages/pages.json with page ordering metadata."""
+    pages_meta = {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/pagesMetadata/1.0.0/schema.json",
+        "pageOrder": page_ids,
+        "activePageName": page_ids[0] if page_ids else "",
+    }
+    path = os.path.join(pages_dir, "pages.json")
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(pages_meta, f, indent=2, ensure_ascii=False)
+
 
 def _write_report_manifest(data, output_dir, stats):
-    """Write the top-level report.json manifest."""
+    """Write the top-level report.json manifest (PBIR v2.0.0 schema)."""
     manifest = {
-        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/report/1.0.0/schema.json",
-        "version": "4.0",
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/report/2.0.0/schema.json",
         "themeCollection": {
             "baseTheme": {
                 "name": "CY24SU06",
-                "reportVersionAtImport": "5.53",
+                "reportVersionAtImport": "5.55",
                 "type": "SharedResources",
             }
         },
-        "datasetBinding": {
-            "byConnection": {
-                "datasetName": data.get("project_name", "SemanticModel"),
-                "connectionString": "",
-                "pbiServiceModelId": None,
-                "pbiModelVirtualServerName": "sobe_wowvirtualserver",
-                "pbiModelDatabaseName": "",
-                "name": "EntityDataSource",
+        "resourcePackages": [
+            {
+                "name": "SharedResources",
+                "type": "SharedResources",
+                "items": [
+                    {
+                        "name": "CY24SU06",
+                        "path": "BaseThemes/CY24SU06.json",
+                        "type": "BaseTheme",
+                    }
+                ],
             }
+        ],
+        "settings": {
+            "hideVisualContainerHeader": True,
+            "useStylableVisualContainerHeader": True,
+            "exportDataMode": "None",
+            "defaultDrillFilterOtherVisuals": True,
+            "allowChangeFilterTypes": True,
+            "useEnhancedTooltips": True,
         },
     }
     path = os.path.join(output_dir, "report.json")
