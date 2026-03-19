@@ -262,7 +262,7 @@ class TestRelationshipTmdl:
         tmdl = generate_relationships_tmdl(intermediate_relationships)
         assert "fromColumn: LU_CUSTOMER.CUSTOMER_ID" in tmdl
         assert "toColumn: FACT_SALES.CUSTOMER_ID" in tmdl
-        assert "crossFilteringBehavior: singleDirection" in tmdl
+        assert "crossFilteringBehavior: oneDirection" in tmdl
 
     def test_relationship_names(self, intermediate_relationships):
         tmdl = generate_relationships_tmdl(intermediate_relationships)

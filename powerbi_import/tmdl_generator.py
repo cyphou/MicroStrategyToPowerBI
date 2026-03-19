@@ -292,7 +292,7 @@ def generate_relationships_tmdl(relationships):
         if cross_filter == "both":
             lines.append("\tcrossFilteringBehavior: bothDirections")
         else:
-            lines.append("\tcrossFilteringBehavior: singleDirection")
+            lines.append("\tcrossFilteringBehavior: oneDirection")
 
         blocks.append('\n'.join(lines))
 
