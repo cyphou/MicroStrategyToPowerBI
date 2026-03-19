@@ -1,0 +1,31 @@
+{
+    "server": "https://mstr.company.com/MicroStrategyLibrary",
+    "auth_mode": "standard",
+    "username": "",
+    "password": "",
+    "project": "",
+    "api_version": "2",
+    "ssl_verify": true,
+    "timeout": 120,
+    "max_retries": 3,
+    "output_dir": "artifacts/",
+    "calendar": {
+        "start_year": 2020,
+        "end_year": 2030
+    },
+    "deployment": {
+        "workspace_id": "",
+        "auth_method": "service_principal",
+        "tenant_id": "",
+        "client_id": "",
+        "client_secret": ""
+    },
+    "filters": {
+        "include_reports": true,
+        "include_dossiers": true,
+        "include_cubes": true,
+        "folder_path": "",
+        "object_ids": [],
+        "name_pattern": ""
+    }
+}

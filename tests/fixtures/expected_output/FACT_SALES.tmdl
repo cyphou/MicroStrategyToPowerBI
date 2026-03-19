@@ -1,0 +1,90 @@
+table FACT_SALES
+	lineageTag: BC902453-11D3-E4B6-1000-E787EC6DE8A4
+
+	column CUSTOMER_ID
+		dataType: int64
+		isHidden
+		sourceColumn: CUSTOMER_ID
+		lineageTag: col-030-customer-id
+
+	column PRODUCT_ID
+		dataType: int64
+		isHidden
+		sourceColumn: PRODUCT_ID
+		lineageTag: col-031-product-id
+
+	column DATE_ID
+		dataType: dateTime
+		isHidden
+		sourceColumn: DATE_ID
+		lineageTag: col-032-date-id
+
+	column REVENUE
+		dataType: double
+		isHidden
+		sourceColumn: REVENUE
+		lineageTag: col-033-revenue
+
+	column COST
+		dataType: double
+		isHidden
+		sourceColumn: COST
+		lineageTag: col-034-cost
+
+	column QUANTITY
+		dataType: int64
+		isHidden
+		sourceColumn: QUANTITY
+		lineageTag: col-035-quantity
+
+	column DISCOUNT
+		dataType: double
+		isHidden
+		sourceColumn: DISCOUNT
+		lineageTag: col-036-discount
+
+	column ORDER_ID
+		dataType: string
+		sourceColumn: ORDER_ID
+		lineageTag: col-037-order-id
+
+	column REGION_ID
+		dataType: int64
+		isHidden
+		sourceColumn: REGION_ID
+		lineageTag: col-038-region-id
+
+	measure 'Total Revenue' = SUM(FACT_SALES[REVENUE])
+		formatString: $#,##0.00
+		displayFolder: Sales Metrics
+		lineageTag: 4C051DB6-11D3-E877-C000-B3B2D86C964F
+
+	measure 'Total Cost' = SUM(FACT_SALES[COST])
+		formatString: $#,##0.00
+		displayFolder: Sales Metrics
+		lineageTag: 4C051DB7-11D3-E877-C000-B3B2D86C964F
+
+	measure Profit = [Total Revenue] - [Total Cost]
+		formatString: $#,##0.00
+		displayFolder: Sales Metrics
+		lineageTag: 4C051DB8-11D3-E877-C000-B3B2D86C964F
+
+	measure 'Profit Margin' = DIVIDE([Total Revenue] - [Total Cost], [Total Revenue])
+		formatString: 0.00%
+		displayFolder: Sales Metrics
+		lineageTag: 4C051DB9-11D3-E877-C000-B3B2D86C964F
+
+	measure 'Unit Price' = IF(ISBLANK(DIVIDE(SUM(FACT_SALES[REVENUE]), SUM(FACT_SALES[QUANTITY]))), 0, DIVIDE(SUM(FACT_SALES[REVENUE]), SUM(FACT_SALES[QUANTITY])))
+		formatString: $#,##0.00
+		displayFolder: Sales Metrics
+		lineageTag: 4C051DBA-11D3-E877-C000-B3B2D86C964F
+
+	partition FACT_SALES = m
+		mode: import
+		expression:= ```
+			let
+			    Source = Sql.Database("sql-prod-01.company.com", "SalesDB"),
+			    Table = Source{[Schema="dbo", Item="FACT_SALES"]}[Data]
+			in
+			    Table
+			```

@@ -1,0 +1,32 @@
+[
+  {
+    "id": "SF_001_REGION_FILTER",
+    "name": "Region Sales Filter",
+    "description": "Restricts sales data visibility by region",
+    "expression": "Customer Region In (Northeast, Southeast)",
+    "target_attributes": [
+      {"id": "8D679D3711D3E4981000E787EC6DE8A4", "name": "Customer Region"}
+    ],
+    "users": [
+      {"id": "user_003", "name": "EastRegionManager"},
+      {"id": "user_004", "name": "EastRegionAnalyst"}
+    ],
+    "groups": [
+      {"id": "group_001", "name": "East Region Team"}
+    ]
+  },
+  {
+    "id": "SF_002_PRODUCT_FILTER",
+    "name": "Product Category Filter",
+    "description": "Restricts product data by category",
+    "expression": "Category In (Electronics, Software)",
+    "target_attributes": [
+      {"id": "8D679D4611D3E4981000E787EC6DE8A4", "name": "Category"}
+    ],
+    "users": [],
+    "groups": [
+      {"id": "group_002", "name": "Tech Products Team"},
+      {"id": "group_003", "name": "Electronics Division"}
+    ]
+  }
+]

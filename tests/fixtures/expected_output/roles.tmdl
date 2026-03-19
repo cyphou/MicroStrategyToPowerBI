@@ -1,0 +1,9 @@
+role 'Region Sales Filter'
+
+	tablePermission LU_CUSTOMER
+		filterExpression:= [REGION_ID] IN {"Northeast", "Southeast"}
+
+role 'Product Category Filter'
+
+	tablePermission LU_PRODUCT
+		filterExpression:= [CATEGORY_NAME] IN {"Electronics", "Software"}

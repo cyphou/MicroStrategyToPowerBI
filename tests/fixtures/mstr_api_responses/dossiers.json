@@ -1,0 +1,363 @@
+{
+  "list": [
+    {
+      "id": "D4E5F60711E7A890001122334455DD11",
+      "name": "Sales Executive Dashboard",
+      "type": 55,
+      "subtype": 14081,
+      "dateCreated": "2023-01-15T10:00:00.000+0000",
+      "dateModified": "2025-11-01T14:30:00.000+0000",
+      "owner": {"name": "MJohnson", "id": "user_002"}
+    }
+  ],
+  "definitions": {
+    "D4E5F60711E7A890001122334455DD11": {
+      "id": "D4E5F60711E7A890001122334455DD11",
+      "name": "Sales Executive Dashboard",
+      "description": "Executive-level dashboard with KPIs, trends, and breakdowns",
+      "chapters": [
+        {
+          "key": "K52_ch_01",
+          "name": "Overview",
+          "pages": [
+            {
+              "key": "K52_pg_01",
+              "name": "KPI Summary",
+              "visualizations": [
+                {
+                  "key": "K52_viz_01",
+                  "name": "Revenue KPI",
+                  "vizType": "kpi",
+                  "visualizationType": "kpi",
+                  "data": {
+                    "attributes": [],
+                    "metrics": [
+                      {"id": "4C051DB611D3E877C000B3B2D86C964F", "name": "Total Revenue"}
+                    ]
+                  },
+                  "formatting": {
+                    "showTrend": true,
+                    "trendMetric": {"id": "4C051DBF11D3E877C000B3B2D86C964F", "name": "Revenue YoY Change"},
+                    "numberFormat": "$#,##0"
+                  },
+                  "thresholds": [],
+                  "position": {"x": 0, "y": 0, "width": 320, "height": 200}
+                },
+                {
+                  "key": "K52_viz_02",
+                  "name": "Profit KPI",
+                  "vizType": "kpi",
+                  "visualizationType": "kpi",
+                  "data": {
+                    "attributes": [],
+                    "metrics": [
+                      {"id": "4C051DB811D3E877C000B3B2D86C964F", "name": "Profit"}
+                    ]
+                  },
+                  "formatting": {
+                    "showTrend": false,
+                    "numberFormat": "$#,##0"
+                  },
+                  "thresholds": [],
+                  "position": {"x": 340, "y": 0, "width": 320, "height": 200}
+                },
+                {
+                  "key": "K52_viz_03",
+                  "name": "Profit Margin Gauge",
+                  "vizType": "gauge",
+                  "visualizationType": "gauge",
+                  "data": {
+                    "attributes": [],
+                    "metrics": [
+                      {"id": "4C051DB911D3E877C000B3B2D86C964F", "name": "Profit Margin"}
+                    ]
+                  },
+                  "formatting": {
+                    "minValue": 0,
+                    "maxValue": 1,
+                    "targetValue": 0.2,
+                    "numberFormat": "0.0%"
+                  },
+                  "thresholds": [
+                    {
+                      "name": "Margin Zones",
+                      "metricName": "Profit Margin",
+                      "conditions": [
+                        {"operator": "less_than", "value": 0.10, "format": {"backgroundColor": "#FF4444"}},
+                        {"operator": "between", "value": [0.10, 0.25], "format": {"backgroundColor": "#FFAA00"}},
+                        {"operator": "greater_than", "value": 0.25, "format": {"backgroundColor": "#44BB44"}}
+                      ]
+                    }
+                  ],
+                  "position": {"x": 680, "y": 0, "width": 320, "height": 200}
+                },
+                {
+                  "key": "K52_viz_04",
+                  "name": "Revenue Trend",
+                  "vizType": "line",
+                  "visualizationType": "line_chart",
+                  "data": {
+                    "attributes": [
+                      {"id": "8D679D5711D3E4981000E787EC6DE8A4", "name": "Month"}
+                    ],
+                    "metrics": [
+                      {"id": "4C051DB611D3E877C000B3B2D86C964F", "name": "Total Revenue"},
+                      {"id": "4C051DB711D3E877C000B3B2D86C964F", "name": "Total Cost"}
+                    ]
+                  },
+                  "formatting": {
+                    "showDataLabels": false,
+                    "showLegend": true,
+                    "gridLines": true
+                  },
+                  "thresholds": [],
+                  "position": {"x": 0, "y": 220, "width": 660, "height": 380}
+                },
+                {
+                  "key": "K52_viz_05",
+                  "name": "Revenue by Category",
+                  "vizType": "pie",
+                  "visualizationType": "pie_chart",
+                  "data": {
+                    "attributes": [
+                      {"id": "8D679D4611D3E4981000E787EC6DE8A4", "name": "Category"}
+                    ],
+                    "metrics": [
+                      {"id": "4C051DB611D3E877C000B3B2D86C964F", "name": "Total Revenue"}
+                    ]
+                  },
+                  "formatting": {
+                    "showDataLabels": true,
+                    "showPercentage": true
+                  },
+                  "thresholds": [],
+                  "position": {"x": 680, "y": 220, "width": 320, "height": 380}
+                }
+              ],
+              "panelStacks": [],
+              "selectors": [],
+              "filterPanel": []
+            },
+            {
+              "key": "K52_pg_02",
+              "name": "Regional Analysis",
+              "visualizations": [
+                {
+                  "key": "K52_viz_06",
+                  "name": "Revenue by Region Map",
+                  "vizType": "map",
+                  "visualizationType": "map_visualization",
+                  "data": {
+                    "attributes": [
+                      {"id": "8D679D3711D3E4981000E787EC6DE8A4", "name": "Customer Region"}
+                    ],
+                    "metrics": [
+                      {"id": "4C051DB611D3E877C000B3B2D86C964F", "name": "Total Revenue"}
+                    ]
+                  },
+                  "formatting": {
+                    "mapType": "bubble",
+                    "colorScale": "sequential"
+                  },
+                  "thresholds": [],
+                  "position": {"x": 0, "y": 0, "width": 500, "height": 400}
+                },
+                {
+                  "key": "K52_viz_07",
+                  "name": "Top Customers by Revenue",
+                  "vizType": "grid",
+                  "visualizationType": "grid_visualization",
+                  "data": {
+                    "attributes": [
+                      {"id": "8D679D3511D3E4981000E787EC6DE8A4", "name": "Customer"},
+                      {"id": "8D679D3711D3E4981000E787EC6DE8A4", "name": "Customer Region"}
+                    ],
+                    "metrics": [
+                      {"id": "4C051DB611D3E877C000B3B2D86C964F", "name": "Total Revenue"},
+                      {"id": "4C051DB811D3E877C000B3B2D86C964F", "name": "Profit"},
+                      {"id": "4C051DBD11D3E877C000B3B2D86C964F", "name": "Revenue Rank"}
+                    ]
+                  },
+                  "formatting": {
+                    "showBanding": true,
+                    "maxRows": 25
+                  },
+                  "thresholds": [
+                    {
+                      "name": "Profit Highlight",
+                      "metricName": "Profit",
+                      "conditions": [
+                        {"operator": "less_than", "value": 0, "format": {"fontColor": "#FF0000", "fontBold": true}}
+                      ]
+                    }
+                  ],
+                  "position": {"x": 520, "y": 0, "width": 480, "height": 400}
+                },
+                {
+                  "key": "K52_viz_08",
+                  "name": "Region Revenue Bar",
+                  "vizType": "vertical_bar",
+                  "visualizationType": "vertical_bar_chart",
+                  "data": {
+                    "attributes": [
+                      {"id": "8D679D3711D3E4981000E787EC6DE8A4", "name": "Customer Region"}
+                    ],
+                    "metrics": [
+                      {"id": "4C051DB611D3E877C000B3B2D86C964F", "name": "Total Revenue"},
+                      {"id": "4C051DB711D3E877C000B3B2D86C964F", "name": "Total Cost"}
+                    ]
+                  },
+                  "formatting": {
+                    "showDataLabels": true,
+                    "showLegend": true,
+                    "stacked": false
+                  },
+                  "thresholds": [],
+                  "position": {"x": 0, "y": 420, "width": 1000, "height": 280}
+                }
+              ],
+              "panelStacks": [
+                {
+                  "key": "K52_ps_01",
+                  "name": "Metric Toggle",
+                  "panels": [
+                    {"key": "panel_01", "name": "Revenue View", "visualizationKeys": ["K52_viz_08"]},
+                    {"key": "panel_02", "name": "Profit View", "visualizationKeys": []}
+                  ],
+                  "position": {"x": 0, "y": 700, "width": 1000, "height": 40}
+                }
+              ],
+              "selectors": [
+                {
+                  "key": "K52_sel_01",
+                  "name": "Year Selector",
+                  "type": "attribute_element",
+                  "attribute": {"id": "8D679D5511D3E4981000E787EC6DE8A4", "name": "Year"},
+                  "multiSelect": false,
+                  "style": "dropdown",
+                  "position": {"x": 0, "y": -40, "width": 200, "height": 40}
+                }
+              ],
+              "filterPanel": [
+                {
+                  "key": "K52_fp_01",
+                  "name": "Category Filter",
+                  "attribute": {"id": "8D679D4611D3E4981000E787EC6DE8A4", "name": "Category"},
+                  "type": "checkbox",
+                  "multiSelect": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "key": "K52_ch_02",
+          "name": "Product Deep Dive",
+          "pages": [
+            {
+              "key": "K52_pg_03",
+              "name": "Product Performance",
+              "visualizations": [
+                {
+                  "key": "K52_viz_09",
+                  "name": "Product Revenue vs Quantity Scatter",
+                  "vizType": "scatter",
+                  "visualizationType": "scatter_plot",
+                  "data": {
+                    "attributes": [
+                      {"id": "8D679D4511D3E4981000E787EC6DE8A4", "name": "Product"}
+                    ],
+                    "metrics": [
+                      {"id": "4C051DB611D3E877C000B3B2D86C964F", "name": "Total Revenue"},
+                      {"id": "4C051DBC11D3E877C000B3B2D86C964F", "name": "Customer Count"}
+                    ]
+                  },
+                  "formatting": {
+                    "showTrendLine": true,
+                    "showDataLabels": false
+                  },
+                  "thresholds": [],
+                  "position": {"x": 0, "y": 0, "width": 500, "height": 400}
+                },
+                {
+                  "key": "K52_viz_10",
+                  "name": "Category Breakdown Treemap",
+                  "vizType": "treemap",
+                  "visualizationType": "tree_map",
+                  "data": {
+                    "attributes": [
+                      {"id": "8D679D4611D3E4981000E787EC6DE8A4", "name": "Category"},
+                      {"id": "8D679D4511D3E4981000E787EC6DE8A4", "name": "Product"}
+                    ],
+                    "metrics": [
+                      {"id": "4C051DB611D3E877C000B3B2D86C964F", "name": "Total Revenue"}
+                    ]
+                  },
+                  "formatting": {
+                    "showLabels": true,
+                    "colorScale": "category"
+                  },
+                  "thresholds": [],
+                  "position": {"x": 520, "y": 0, "width": 480, "height": 400}
+                },
+                {
+                  "key": "K52_viz_11",
+                  "name": "Revenue Waterfall by Category",
+                  "vizType": "waterfall",
+                  "visualizationType": "waterfall_chart",
+                  "data": {
+                    "attributes": [
+                      {"id": "8D679D4611D3E4981000E787EC6DE8A4", "name": "Category"}
+                    ],
+                    "metrics": [
+                      {"id": "4C051DB811D3E877C000B3B2D86C964F", "name": "Profit"}
+                    ]
+                  },
+                  "formatting": {
+                    "increaseColor": "#44BB44",
+                    "decreaseColor": "#FF4444",
+                    "totalColor": "#4488CC"
+                  },
+                  "thresholds": [],
+                  "position": {"x": 0, "y": 420, "width": 1000, "height": 300}
+                }
+              ],
+              "panelStacks": [],
+              "selectors": [],
+              "filterPanel": []
+            }
+          ]
+        }
+      ],
+      "filterPanels": [
+        {
+          "key": "K52_gfp_01",
+          "name": "Global Year Filter",
+          "filters": [
+            {
+              "attribute": {"id": "8D679D5511D3E4981000E787EC6DE8A4", "name": "Year"},
+              "type": "attribute_element",
+              "defaultSelection": ["2025"]
+            }
+          ]
+        }
+      ],
+      "themes": {
+        "colorPalette": ["#1F77B4", "#FF7F0E", "#2CA02C", "#D62728", "#9467BD", "#8C564B"],
+        "fontFamily": "Segoe UI",
+        "backgroundColor": "#FFFFFF"
+      },
+      "prompts": [
+        {
+          "id": "prompt_01",
+          "name": "Select Region",
+          "type": "element_prompt",
+          "required": false,
+          "multiSelect": true,
+          "attribute": {"id": "8D679D3711D3E4981000E787EC6DE8A4", "name": "Customer Region"},
+          "defaultAnswer": [{"id": "h1", "name": "Northeast"}]
+        }
+      ]
+    }
+  }
+}

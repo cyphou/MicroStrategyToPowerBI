@@ -1,0 +1,121 @@
+{
+  "list": [
+    {
+      "id": "7A4ABE9111D5AC6FC000D98A4CC5F24F",
+      "name": "Revenue",
+      "description": "Total revenue from sales",
+      "type": 13,
+      "subtype": 3072,
+      "dateCreated": "2021-01-15T10:00:00.000+0000",
+      "dateModified": "2025-06-01T14:30:00.000+0000"
+    },
+    {
+      "id": "7A4ABE9211D5AC6FC000D98A4CC5F24F",
+      "name": "Cost",
+      "description": "Cost of goods sold",
+      "type": 13,
+      "subtype": 3072,
+      "dateCreated": "2021-01-15T10:00:00.000+0000",
+      "dateModified": "2025-06-01T14:30:00.000+0000"
+    },
+    {
+      "id": "7A4ABE9311D5AC6FC000D98A4CC5F24F",
+      "name": "Quantity",
+      "description": "Units sold",
+      "type": 13,
+      "subtype": 3072,
+      "dateCreated": "2021-01-15T10:00:00.000+0000",
+      "dateModified": "2025-06-01T14:30:00.000+0000"
+    },
+    {
+      "id": "7A4ABE9411D5AC6FC000D98A4CC5F24F",
+      "name": "Discount",
+      "description": "Discount amount",
+      "type": 13,
+      "subtype": 3072,
+      "dateCreated": "2021-01-15T10:00:00.000+0000",
+      "dateModified": "2025-06-01T14:30:00.000+0000"
+    },
+    {
+      "id": "7A4ABE9511D5AC6FC000D98A4CC5F24F",
+      "name": "Units On Hand",
+      "description": "Current inventory on hand",
+      "type": 13,
+      "subtype": 3072,
+      "dateCreated": "2021-01-15T10:00:00.000+0000",
+      "dateModified": "2025-06-01T14:30:00.000+0000"
+    }
+  ],
+  "details": {
+    "7A4ABE9111D5AC6FC000D98A4CC5F24F": {
+      "id": "7A4ABE9111D5AC6FC000D98A4CC5F24F",
+      "name": "Revenue",
+      "description": "Total revenue from sales",
+      "dataType": "real",
+      "expressions": [
+        {
+          "tables": [{"id": "BC90245311D3E4B61000E787EC6DE8A4", "name": "FACT_SALES"}],
+          "columnName": "REVENUE"
+        }
+      ],
+      "defaultAggregation": "sum",
+      "formatString": "$#,##0.00"
+    },
+    "7A4ABE9211D5AC6FC000D98A4CC5F24F": {
+      "id": "7A4ABE9211D5AC6FC000D98A4CC5F24F",
+      "name": "Cost",
+      "description": "Cost of goods sold",
+      "dataType": "real",
+      "expressions": [
+        {
+          "tables": [{"id": "BC90245311D3E4B61000E787EC6DE8A4", "name": "FACT_SALES"}],
+          "columnName": "COST"
+        }
+      ],
+      "defaultAggregation": "sum",
+      "formatString": "$#,##0.00"
+    },
+    "7A4ABE9311D5AC6FC000D98A4CC5F24F": {
+      "id": "7A4ABE9311D5AC6FC000D98A4CC5F24F",
+      "name": "Quantity",
+      "description": "Units sold",
+      "dataType": "integer",
+      "expressions": [
+        {
+          "tables": [{"id": "BC90245311D3E4B61000E787EC6DE8A4", "name": "FACT_SALES"}],
+          "columnName": "QUANTITY"
+        }
+      ],
+      "defaultAggregation": "sum",
+      "formatString": "#,##0"
+    },
+    "7A4ABE9411D5AC6FC000D98A4CC5F24F": {
+      "id": "7A4ABE9411D5AC6FC000D98A4CC5F24F",
+      "name": "Discount",
+      "description": "Discount amount",
+      "dataType": "real",
+      "expressions": [
+        {
+          "tables": [{"id": "BC90245311D3E4B61000E787EC6DE8A4", "name": "FACT_SALES"}],
+          "columnName": "DISCOUNT"
+        }
+      ],
+      "defaultAggregation": "sum",
+      "formatString": "$#,##0.00"
+    },
+    "7A4ABE9511D5AC6FC000D98A4CC5F24F": {
+      "id": "7A4ABE9511D5AC6FC000D98A4CC5F24F",
+      "name": "Units On Hand",
+      "description": "Current inventory on hand",
+      "dataType": "integer",
+      "expressions": [
+        {
+          "tables": [{"id": "FF01256411D3E4C71000E787EC6DE8A4", "name": "FACT_INVENTORY"}],
+          "columnName": "UNITS_ON_HAND"
+        }
+      ],
+      "defaultAggregation": "sum",
+      "formatString": "#,##0"
+    }
+  }
+}

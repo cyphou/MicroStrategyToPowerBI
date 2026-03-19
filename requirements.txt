@@ -1,0 +1,4 @@
+requests>=2.31.0
+
+# Optional: for deployment to Power BI Service / Fabric
+# azure-identity>=1.15.0

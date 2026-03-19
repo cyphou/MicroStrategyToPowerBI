@@ -1,0 +1,65 @@
+{
+  "list": [
+    {
+      "id": "E5F6071811E8B901001122334455EE22",
+      "name": "Sales Summary Cube",
+      "type": 21,
+      "subtype": 776,
+      "dateCreated": "2022-06-01T10:00:00.000+0000",
+      "dateModified": "2025-10-01T14:30:00.000+0000"
+    }
+  ],
+  "definitions": {
+    "E5F6071811E8B901001122334455EE22": {
+      "id": "E5F6071811E8B901001122334455EE22",
+      "name": "Sales Summary Cube",
+      "description": "Pre-aggregated cube with customer and product sales data",
+      "attributes": [
+        {
+          "id": "8D679D3511D3E4981000E787EC6DE8A4",
+          "name": "Customer",
+          "forms": [{"name": "ID"}, {"name": "DESC"}]
+        },
+        {
+          "id": "8D679D4511D3E4981000E787EC6DE8A4",
+          "name": "Product",
+          "forms": [{"name": "ID"}, {"name": "DESC"}]
+        },
+        {
+          "id": "8D679D4611D3E4981000E787EC6DE8A4",
+          "name": "Category",
+          "forms": [{"name": "ID"}, {"name": "DESC"}]
+        },
+        {
+          "id": "8D679D5711D3E4981000E787EC6DE8A4",
+          "name": "Month",
+          "forms": [{"name": "ID"}, {"name": "DESC"}]
+        },
+        {
+          "id": "8D679D5511D3E4981000E787EC6DE8A4",
+          "name": "Year",
+          "forms": [{"name": "ID"}]
+        }
+      ],
+      "metrics": [
+        {"id": "4C051DB611D3E877C000B3B2D86C964F", "name": "Total Revenue"},
+        {"id": "4C051DB711D3E877C000B3B2D86C964F", "name": "Total Cost"},
+        {"id": "4C051DB811D3E877C000B3B2D86C964F", "name": "Profit"},
+        {"id": "4C051DBC11D3E877C000B3B2D86C964F", "name": "Customer Count"}
+      ],
+      "filter": {
+        "expression": "Year >= 2023",
+        "qualifications": [
+          {
+            "type": "attribute_qualification",
+            "attribute": {"id": "8D679D5511D3E4981000E787EC6DE8A4", "name": "Year"},
+            "operator": "greater_equal",
+            "value": "2023"
+          }
+        ]
+      },
+      "refreshPolicy": "scheduled",
+      "lastRefreshDate": "2026-03-18T06:00:00.000+0000"
+    }
+  }
+}

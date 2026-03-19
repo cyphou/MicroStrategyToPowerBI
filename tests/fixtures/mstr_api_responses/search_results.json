@@ -1,0 +1,23 @@
+[
+  {
+    "id": "SEARCH_001",
+    "name": "Customer Segments",
+    "type": 1,
+    "subtype": 9984,
+    "dateCreated": "2023-06-01T10:00:00.000+0000",
+    "elements": [
+      {
+        "name": "High Value",
+        "filter": {"expression": "Sum(Revenue) > 100000"}
+      },
+      {
+        "name": "Medium Value",
+        "filter": {"expression": "Sum(Revenue) Between 10000 And 100000"}
+      },
+      {
+        "name": "Low Value",
+        "filter": {"expression": "Sum(Revenue) < 10000"}
+      }
+    ]
+  }
+]

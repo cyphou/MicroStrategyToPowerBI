@@ -1,0 +1,44 @@
+[
+  {
+    "id": "4C051DBD11D3E877C000B3B2D86C964F",
+    "name": "Revenue Rank",
+    "description": "Rank of revenue by customer",
+    "metric_type": "derived",
+    "expression": "Rank(Sum(Revenue)) <Customer>",
+    "aggregation": "",
+    "column_ref": null,
+    "format_string": "#,##0",
+    "subtotal_type": "none",
+    "folder_path": "\\Public Objects\\Metrics\\Derived Metrics",
+    "is_smart_metric": true,
+    "dependencies": ["4C051DB611D3E877C000B3B2D86C964F"]
+  },
+  {
+    "id": "4C051DBE11D3E877C000B3B2D86C964F",
+    "name": "Running Revenue",
+    "description": "Running sum of revenue by month",
+    "metric_type": "derived",
+    "expression": "RunningSum(Sum(Revenue)) <Month>",
+    "aggregation": "",
+    "column_ref": null,
+    "format_string": "$#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Public Objects\\Metrics\\Derived Metrics",
+    "is_smart_metric": true,
+    "dependencies": ["4C051DB611D3E877C000B3B2D86C964F"]
+  },
+  {
+    "id": "4C051DBF11D3E877C000B3B2D86C964F",
+    "name": "Revenue YoY Change",
+    "description": "Year over year revenue change",
+    "metric_type": "derived",
+    "expression": "(Sum(Revenue) - Lag(Sum(Revenue), 1, Year)) / Lag(Sum(Revenue), 1, Year)",
+    "aggregation": "",
+    "column_ref": null,
+    "format_string": "0.00%",
+    "subtotal_type": "none",
+    "folder_path": "\\Public Objects\\Metrics\\Derived Metrics",
+    "is_smart_metric": true,
+    "dependencies": ["4C051DB611D3E877C000B3B2D86C964F"]
+  }
+]

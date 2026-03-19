@@ -1,0 +1,35 @@
+{
+  "projects": [
+    {
+      "id": "B7CA92F04B9FAE8D941C3E9B7E0CD754",
+      "name": "MicroStrategy Tutorial",
+      "description": "Sample project for learning MicroStrategy",
+      "status": 0,
+      "alias": "",
+      "dateCreated": "2021-01-15T10:00:00.000+0000",
+      "dateModified": "2025-12-01T14:30:00.000+0000",
+      "owner": {
+        "name": "Administrator",
+        "id": "54F3D26011D2896560009A8E67019608"
+      }
+    },
+    {
+      "id": "EC70648611E7A2FE09E20080EF25E1C7",
+      "name": "Sales Analytics",
+      "description": "Enterprise sales and revenue analytics project",
+      "status": 0,
+      "alias": "",
+      "dateCreated": "2022-06-10T08:00:00.000+0000",
+      "dateModified": "2026-03-01T09:15:00.000+0000",
+      "owner": {
+        "name": "Administrator",
+        "id": "54F3D26011D2896560009A8E67019608"
+      }
+    }
+  ],
+  "auth_login": {
+    "headers": {
+      "X-MSTR-AuthToken": "fake-auth-token-12345678"
+    }
+  }
+}

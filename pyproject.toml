@@ -1,0 +1,78 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "microstrategy-to-powerbi"
+version = "1.0.0"
+description = "Automated migration of MicroStrategy reports & dossiers to Power BI .pbip projects (PBIR v4.0 + TMDL)"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.9"
+authors = [
+    {name = "MicroStrategy to Power BI Migration Team"},
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Code Generators",
+    "Topic :: Database :: Front-Ends",
+]
+keywords = ["microstrategy", "powerbi", "fabric", "migration", "pbip", "tmdl", "pbir", "dax"]
+
+dependencies = [
+    "requests>=2.31.0",
+]
+
+[project.optional-dependencies]
+deploy = [
+    "azure-identity>=1.15.0",
+]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "coverage>=7.0",
+]
+all = [
+    "microstrategy-to-powerbi[deploy,dev]",
+]
+
+[project.urls]
+Homepage = "https://github.com/your-org/MicroStrategy-To-PowerBI"
+Documentation = "https://github.com/your-org/MicroStrategy-To-PowerBI/docs"
+Repository = "https://github.com/your-org/MicroStrategy-To-PowerBI"
+Changelog = "https://github.com/your-org/MicroStrategy-To-PowerBI/blob/main/CHANGELOG.md"
+
+[project.scripts]
+mstr-to-powerbi = "migrate:main"
+
+[tool.setuptools.packages.find]
+include = ["microstrategy_export*", "powerbi_import*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+addopts = "-v --tb=short"
+
+[tool.coverage.run]
+source = ["microstrategy_export", "powerbi_import"]
+omit = ["tests/*", "*/test_*"]
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 80
+
+[tool.pyright]
+pythonVersion = "3.9"
+typeCheckingMode = "basic"

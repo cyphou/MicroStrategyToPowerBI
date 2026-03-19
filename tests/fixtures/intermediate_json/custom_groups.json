@@ -1,0 +1,12 @@
+[
+  {
+    "id": "SEARCH_001",
+    "name": "Customer Segments",
+    "elements": [
+      {"name": "High Value", "filter": {"expression": "Sum(Revenue) > 100000"}},
+      {"name": "Medium Value", "filter": {"expression": "Sum(Revenue) Between 10000 And 100000"}},
+      {"name": "Low Value", "filter": {"expression": "Sum(Revenue) < 10000"}}
+    ],
+    "type": "custom_group"
+  }
+]

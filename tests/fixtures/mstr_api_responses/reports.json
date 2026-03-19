@@ -1,0 +1,233 @@
+{
+  "list": [
+    {
+      "id": "A1B2C3D411E6F789001122334455AAEE",
+      "name": "Revenue by Customer",
+      "type": 3,
+      "subtype": 768,
+      "dateCreated": "2022-01-15T10:00:00.000+0000",
+      "dateModified": "2025-09-01T14:30:00.000+0000",
+      "folderId": "E4D8E57211D3E4981000E787EC6DE8A4",
+      "owner": {"name": "JSmith", "id": "user_001"}
+    },
+    {
+      "id": "B2C3D4E511E6F789001122334455BBFF",
+      "name": "Product Sales Trend",
+      "type": 3,
+      "subtype": 769,
+      "dateCreated": "2022-03-01T10:00:00.000+0000",
+      "dateModified": "2025-09-01T14:30:00.000+0000",
+      "folderId": "E4D8E57211D3E4981000E787EC6DE8A4",
+      "owner": {"name": "JSmith", "id": "user_001"}
+    },
+    {
+      "id": "C3D4E5F611E6F789001122334455CC00",
+      "name": "Monthly Revenue Grid",
+      "type": 3,
+      "subtype": 768,
+      "dateCreated": "2022-05-01T10:00:00.000+0000",
+      "dateModified": "2025-09-01T14:30:00.000+0000",
+      "folderId": "E4D8E57211D3E4981000E787EC6DE8A4",
+      "owner": {"name": "JSmith", "id": "user_001"}
+    }
+  ],
+  "definitions": {
+    "A1B2C3D411E6F789001122334455AAEE": {
+      "id": "A1B2C3D411E6F789001122334455AAEE",
+      "name": "Revenue by Customer",
+      "description": "Shows total revenue and profit by customer with threshold formatting",
+      "grid": {
+        "rows": [
+          {
+            "id": "8D679D3511D3E4981000E787EC6DE8A4",
+            "name": "Customer",
+            "type": "attribute",
+            "forms": ["ID", "DESC"]
+          },
+          {
+            "id": "8D679D3611D3E4981000E787EC6DE8A4",
+            "name": "Customer City",
+            "type": "attribute",
+            "forms": ["ID"]
+          }
+        ],
+        "columns": [],
+        "metricsPosition": "columns"
+      },
+      "graph": null,
+      "metrics": [
+        {
+          "id": "4C051DB611D3E877C000B3B2D86C964F",
+          "name": "Total Revenue",
+          "position": "columns"
+        },
+        {
+          "id": "4C051DB711D3E877C000B3B2D86C964F",
+          "name": "Total Cost",
+          "position": "columns"
+        },
+        {
+          "id": "4C051DB811D3E877C000B3B2D86C964F",
+          "name": "Profit",
+          "position": "columns"
+        },
+        {
+          "id": "4C051DB911D3E877C000B3B2D86C964F",
+          "name": "Profit Margin",
+          "position": "columns"
+        }
+      ],
+      "filter": {
+        "qualifications": [
+          {
+            "type": "attribute_element_list",
+            "attribute": {"id": "8D679D3711D3E4981000E787EC6DE8A4", "name": "Customer Region"},
+            "operator": "In",
+            "values": [
+              {"id": "h1", "name": "Northeast"},
+              {"id": "h2", "name": "Southeast"},
+              {"id": "h3", "name": "Midwest"}
+            ],
+            "isViewFilter": false
+          }
+        ]
+      },
+      "sorts": [
+        {"attribute": "Total Revenue", "order": "descending"}
+      ],
+      "subtotals": [
+        {"type": "grand_total", "position": "bottom", "function": "sum"}
+      ],
+      "pageBy": [],
+      "thresholds": [
+        {
+          "name": "Profit Margin Alert",
+          "metricName": "Profit Margin",
+          "conditions": [
+            {"operator": "less_than", "value": 0.10, "format": {"backgroundColor": "#FF6B6B", "fontColor": "#FFFFFF"}},
+            {"operator": "between", "value": [0.10, 0.25], "format": {"backgroundColor": "#FFD93D", "fontColor": "#000000"}},
+            {"operator": "greater_than", "value": 0.25, "format": {"backgroundColor": "#6BCB77", "fontColor": "#000000"}}
+          ]
+        }
+      ]
+    },
+    "B2C3D4E511E6F789001122334455BBFF": {
+      "id": "B2C3D4E511E6F789001122334455BBFF",
+      "name": "Product Sales Trend",
+      "description": "Line chart showing revenue by product and month",
+      "grid": {
+        "rows": [
+          {
+            "id": "8D679D5711D3E4981000E787EC6DE8A4",
+            "name": "Month",
+            "type": "attribute",
+            "forms": ["ID", "DESC"]
+          }
+        ],
+        "columns": [
+          {
+            "id": "8D679D4511D3E4981000E787EC6DE8A4",
+            "name": "Product",
+            "type": "attribute",
+            "forms": ["DESC"]
+          }
+        ],
+        "metricsPosition": "rows"
+      },
+      "graph": {
+        "graphType": "line",
+        "categoryAxis": [
+          {"id": "8D679D5711D3E4981000E787EC6DE8A4", "name": "Month"}
+        ],
+        "valueAxis": [
+          {"id": "4C051DB611D3E877C000B3B2D86C964F", "name": "Total Revenue"}
+        ],
+        "colorBy": {
+          "id": "8D679D4511D3E4981000E787EC6DE8A4",
+          "name": "Product"
+        },
+        "sizeBy": null
+      },
+      "metrics": [
+        {
+          "id": "4C051DB611D3E877C000B3B2D86C964F",
+          "name": "Total Revenue",
+          "position": "rows"
+        }
+      ],
+      "filter": {"qualifications": []},
+      "sorts": [],
+      "subtotals": [],
+      "pageBy": [
+        {
+          "id": "8D679D5511D3E4981000E787EC6DE8A4",
+          "name": "Year",
+          "type": "attribute"
+        }
+      ],
+      "thresholds": []
+    },
+    "C3D4E5F611E6F789001122334455CC00": {
+      "id": "C3D4E5F611E6F789001122334455CC00",
+      "name": "Monthly Revenue Grid",
+      "description": "Revenue by Month with running total",
+      "grid": {
+        "rows": [
+          {
+            "id": "8D679D5511D3E4981000E787EC6DE8A4",
+            "name": "Year",
+            "type": "attribute",
+            "forms": ["ID"]
+          },
+          {
+            "id": "8D679D5711D3E4981000E787EC6DE8A4",
+            "name": "Month",
+            "type": "attribute",
+            "forms": ["ID", "DESC"]
+          }
+        ],
+        "columns": [],
+        "metricsPosition": "columns"
+      },
+      "graph": null,
+      "metrics": [
+        {
+          "id": "4C051DB611D3E877C000B3B2D86C964F",
+          "name": "Total Revenue",
+          "position": "columns"
+        },
+        {
+          "id": "4C051DBE11D3E877C000B3B2D86C964F",
+          "name": "Running Revenue",
+          "position": "columns"
+        },
+        {
+          "id": "4C051DBF11D3E877C000B3B2D86C964F",
+          "name": "Revenue YoY Change",
+          "position": "columns"
+        }
+      ],
+      "filter": {
+        "qualifications": [
+          {
+            "type": "metric_qualification",
+            "metric": {"id": "4C051DB611D3E877C000B3B2D86C964F", "name": "Total Revenue"},
+            "operator": "greater_than",
+            "values": [{"name": "1000"}],
+            "isViewFilter": true
+          }
+        ]
+      },
+      "sorts": [
+        {"attribute": "Year", "order": "ascending"},
+        {"attribute": "Month", "order": "ascending"}
+      ],
+      "subtotals": [
+        {"type": "subtotal", "position": "bottom", "function": "sum"},
+        {"type": "grand_total", "position": "bottom", "function": "sum"}
+      ],
+      "pageBy": [],
+      "thresholds": []
+    }
+  }
+}

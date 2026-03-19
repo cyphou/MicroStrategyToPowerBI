@@ -1,0 +1,360 @@
+{
+  "list": [
+    {
+      "id": "8D679D3511D3E4981000E787EC6DE8A4",
+      "name": "Customer",
+      "description": "Customer dimension attribute",
+      "type": 12,
+      "subtype": 3072,
+      "dateCreated": "2021-01-15T10:00:00.000+0000",
+      "dateModified": "2025-06-01T14:30:00.000+0000"
+    },
+    {
+      "id": "8D679D3611D3E4981000E787EC6DE8A4",
+      "name": "Customer City",
+      "description": "City of the customer",
+      "type": 12,
+      "subtype": 3072,
+      "dateCreated": "2021-01-15T10:00:00.000+0000",
+      "dateModified": "2025-06-01T14:30:00.000+0000"
+    },
+    {
+      "id": "8D679D3711D3E4981000E787EC6DE8A4",
+      "name": "Customer Region",
+      "description": "Customer region grouping",
+      "type": 12,
+      "subtype": 3072,
+      "dateCreated": "2021-01-15T10:00:00.000+0000",
+      "dateModified": "2025-06-01T14:30:00.000+0000"
+    },
+    {
+      "id": "8D679D4511D3E4981000E787EC6DE8A4",
+      "name": "Product",
+      "description": "Product dimension attribute",
+      "type": 12,
+      "subtype": 3072,
+      "dateCreated": "2021-01-15T10:00:00.000+0000",
+      "dateModified": "2025-06-01T14:30:00.000+0000"
+    },
+    {
+      "id": "8D679D4611D3E4981000E787EC6DE8A4",
+      "name": "Category",
+      "description": "Product category",
+      "type": 12,
+      "subtype": 3072,
+      "dateCreated": "2021-01-15T10:00:00.000+0000",
+      "dateModified": "2025-06-01T14:30:00.000+0000"
+    },
+    {
+      "id": "8D679D5511D3E4981000E787EC6DE8A4",
+      "name": "Year",
+      "description": "Year",
+      "type": 12,
+      "subtype": 3072,
+      "dateCreated": "2021-01-15T10:00:00.000+0000",
+      "dateModified": "2025-06-01T14:30:00.000+0000"
+    },
+    {
+      "id": "8D679D5611D3E4981000E787EC6DE8A4",
+      "name": "Quarter",
+      "description": "Quarter",
+      "type": 12,
+      "subtype": 3072,
+      "dateCreated": "2021-01-15T10:00:00.000+0000",
+      "dateModified": "2025-06-01T14:30:00.000+0000"
+    },
+    {
+      "id": "8D679D5711D3E4981000E787EC6DE8A4",
+      "name": "Month",
+      "description": "Month",
+      "type": 12,
+      "subtype": 3072,
+      "dateCreated": "2021-01-15T10:00:00.000+0000",
+      "dateModified": "2025-06-01T14:30:00.000+0000"
+    },
+    {
+      "id": "8D679D5811D3E4981000E787EC6DE8A4",
+      "name": "Order Date",
+      "description": "Date of the order",
+      "type": 12,
+      "subtype": 3072,
+      "dateCreated": "2021-01-15T10:00:00.000+0000",
+      "dateModified": "2025-06-01T14:30:00.000+0000"
+    }
+  ],
+  "details": {
+    "8D679D3511D3E4981000E787EC6DE8A4": {
+      "id": "8D679D3511D3E4981000E787EC6DE8A4",
+      "name": "Customer",
+      "description": "Customer dimension attribute",
+      "forms": [
+        {
+          "id": "45C11FA478E745FEA08D781CEA190FE5",
+          "name": "ID",
+          "category": "ID",
+          "type": "system",
+          "dataType": "integer",
+          "expressions": [
+            {"tables": [{"id": "8D67912011D3E4981000E787EC6DE8A4", "name": "LU_CUSTOMER"}], "columnName": "CUSTOMER_ID"}
+          ]
+        },
+        {
+          "id": "A5C22FB589E846FEB09D892DEB291GF6",
+          "name": "DESC",
+          "category": "DESC",
+          "type": "system",
+          "dataType": "nVarChar",
+          "expressions": [
+            {"tables": [{"id": "8D67912011D3E4981000E787EC6DE8A4", "name": "LU_CUSTOMER"}], "columnName": "CUSTOMER_NAME"}
+          ]
+        },
+        {
+          "id": "B6D33FC690F957GFC10E903EFC302HG7",
+          "name": "Email",
+          "category": "none",
+          "type": "custom",
+          "dataType": "nVarChar",
+          "expressions": [
+            {"tables": [{"id": "8D67912011D3E4981000E787EC6DE8A4", "name": "LU_CUSTOMER"}], "columnName": "CUSTOMER_EMAIL"}
+          ]
+        }
+      ],
+      "sortOrder": "ascending",
+      "displayFormat": "",
+      "attributeLookupTable": {"id": "8D67912011D3E4981000E787EC6DE8A4", "name": "LU_CUSTOMER"},
+      "childAttributes": [
+        {"id": "8D679D3611D3E4981000E787EC6DE8A4", "name": "Customer City"}
+      ],
+      "parentAttributes": []
+    },
+    "8D679D3611D3E4981000E787EC6DE8A4": {
+      "id": "8D679D3611D3E4981000E787EC6DE8A4",
+      "name": "Customer City",
+      "description": "City of the customer",
+      "forms": [
+        {
+          "id": "45C11FA478E745FEA08D781CEA190FE5",
+          "name": "ID",
+          "category": "ID",
+          "type": "system",
+          "dataType": "nVarChar",
+          "expressions": [
+            {"tables": [{"id": "8D67912011D3E4981000E787EC6DE8A4", "name": "LU_CUSTOMER"}], "columnName": "CUSTOMER_CITY"}
+          ]
+        }
+      ],
+      "sortOrder": "ascending",
+      "displayFormat": "",
+      "attributeLookupTable": {"id": "8D67912011D3E4981000E787EC6DE8A4", "name": "LU_CUSTOMER"},
+      "childAttributes": [],
+      "parentAttributes": [
+        {"id": "8D679D3711D3E4981000E787EC6DE8A4", "name": "Customer Region"}
+      ],
+      "geographicRole": "city"
+    },
+    "8D679D3711D3E4981000E787EC6DE8A4": {
+      "id": "8D679D3711D3E4981000E787EC6DE8A4",
+      "name": "Customer Region",
+      "description": "Customer region grouping",
+      "forms": [
+        {
+          "id": "45C11FA478E745FEA08D781CEA190FE5",
+          "name": "ID",
+          "category": "ID",
+          "type": "system",
+          "dataType": "integer",
+          "expressions": [
+            {"tables": [{"id": "8D67912011D3E4981000E787EC6DE8A4", "name": "LU_CUSTOMER"}], "columnName": "REGION_ID"}
+          ]
+        },
+        {
+          "id": "A5C22FB589E846FEB09D892DEB291GF6",
+          "name": "DESC",
+          "category": "DESC",
+          "type": "system",
+          "dataType": "nVarChar",
+          "expressions": [
+            {"tables": [{"id": "BC90245311D3E4B61000E787EC6DE8A4", "name": "FACT_SALES"}], "columnName": "REGION_ID"}
+          ]
+        }
+      ],
+      "sortOrder": "ascending",
+      "attributeLookupTable": {"id": "8D67912011D3E4981000E787EC6DE8A4", "name": "LU_CUSTOMER"},
+      "childAttributes": [
+        {"id": "8D679D3611D3E4981000E787EC6DE8A4", "name": "Customer City"}
+      ],
+      "parentAttributes": [],
+      "geographicRole": "state_province"
+    },
+    "8D679D4511D3E4981000E787EC6DE8A4": {
+      "id": "8D679D4511D3E4981000E787EC6DE8A4",
+      "name": "Product",
+      "description": "Product dimension attribute",
+      "forms": [
+        {
+          "id": "45C11FA478E745FEA08D781CEA190FE5",
+          "name": "ID",
+          "category": "ID",
+          "type": "system",
+          "dataType": "integer",
+          "expressions": [
+            {"tables": [{"id": "9A78023111D3E49A1000E787EC6DE8A4", "name": "LU_PRODUCT"}], "columnName": "PRODUCT_ID"}
+          ]
+        },
+        {
+          "id": "A5C22FB589E846FEB09D892DEB291GF6",
+          "name": "DESC",
+          "category": "DESC",
+          "type": "system",
+          "dataType": "nVarChar",
+          "expressions": [
+            {"tables": [{"id": "9A78023111D3E49A1000E787EC6DE8A4", "name": "LU_PRODUCT"}], "columnName": "PRODUCT_NAME"}
+          ]
+        }
+      ],
+      "sortOrder": "ascending",
+      "attributeLookupTable": {"id": "9A78023111D3E49A1000E787EC6DE8A4", "name": "LU_PRODUCT"},
+      "childAttributes": [],
+      "parentAttributes": [
+        {"id": "8D679D4611D3E4981000E787EC6DE8A4", "name": "Category"}
+      ]
+    },
+    "8D679D4611D3E4981000E787EC6DE8A4": {
+      "id": "8D679D4611D3E4981000E787EC6DE8A4",
+      "name": "Category",
+      "description": "Product category",
+      "forms": [
+        {
+          "id": "45C11FA478E745FEA08D781CEA190FE5",
+          "name": "ID",
+          "category": "ID",
+          "type": "system",
+          "dataType": "integer",
+          "expressions": [
+            {"tables": [{"id": "9A78023111D3E49A1000E787EC6DE8A4", "name": "LU_PRODUCT"}], "columnName": "CATEGORY_ID"}
+          ]
+        },
+        {
+          "id": "A5C22FB589E846FEB09D892DEB291GF6",
+          "name": "DESC",
+          "category": "DESC",
+          "type": "system",
+          "dataType": "nVarChar",
+          "expressions": [
+            {"tables": [{"id": "9A78023111D3E49A1000E787EC6DE8A4", "name": "LU_PRODUCT"}], "columnName": "CATEGORY_NAME"}
+          ]
+        }
+      ],
+      "sortOrder": "ascending",
+      "attributeLookupTable": {"id": "9A78023111D3E49A1000E787EC6DE8A4", "name": "LU_PRODUCT"},
+      "childAttributes": [
+        {"id": "8D679D4511D3E4981000E787EC6DE8A4", "name": "Product"}
+      ],
+      "parentAttributes": []
+    },
+    "8D679D5511D3E4981000E787EC6DE8A4": {
+      "id": "8D679D5511D3E4981000E787EC6DE8A4",
+      "name": "Year",
+      "description": "Year",
+      "forms": [
+        {
+          "id": "45C11FA478E745FEA08D781CEA190FE5",
+          "name": "ID",
+          "category": "ID",
+          "type": "system",
+          "dataType": "integer",
+          "expressions": [
+            {"tables": [{"id": "AB89134211D3E4A51000E787EC6DE8A4", "name": "LU_DATE"}], "columnName": "YEAR_ID"}
+          ]
+        }
+      ],
+      "sortOrder": "ascending",
+      "attributeLookupTable": {"id": "AB89134211D3E4A51000E787EC6DE8A4", "name": "LU_DATE"},
+      "childAttributes": [
+        {"id": "8D679D5611D3E4981000E787EC6DE8A4", "name": "Quarter"}
+      ],
+      "parentAttributes": []
+    },
+    "8D679D5611D3E4981000E787EC6DE8A4": {
+      "id": "8D679D5611D3E4981000E787EC6DE8A4",
+      "name": "Quarter",
+      "description": "Quarter",
+      "forms": [
+        {
+          "id": "45C11FA478E745FEA08D781CEA190FE5",
+          "name": "ID",
+          "category": "ID",
+          "type": "system",
+          "dataType": "integer",
+          "expressions": [
+            {"tables": [{"id": "AB89134211D3E4A51000E787EC6DE8A4", "name": "LU_DATE"}], "columnName": "QUARTER_ID"}
+          ]
+        }
+      ],
+      "sortOrder": "ascending",
+      "attributeLookupTable": {"id": "AB89134211D3E4A51000E787EC6DE8A4", "name": "LU_DATE"},
+      "childAttributes": [
+        {"id": "8D679D5711D3E4981000E787EC6DE8A4", "name": "Month"}
+      ],
+      "parentAttributes": [
+        {"id": "8D679D5511D3E4981000E787EC6DE8A4", "name": "Year"}
+      ]
+    },
+    "8D679D5711D3E4981000E787EC6DE8A4": {
+      "id": "8D679D5711D3E4981000E787EC6DE8A4",
+      "name": "Month",
+      "description": "Month",
+      "forms": [
+        {
+          "id": "45C11FA478E745FEA08D781CEA190FE5",
+          "name": "ID",
+          "category": "ID",
+          "type": "system",
+          "dataType": "integer",
+          "expressions": [
+            {"tables": [{"id": "AB89134211D3E4A51000E787EC6DE8A4", "name": "LU_DATE"}], "columnName": "MONTH_ID"}
+          ]
+        },
+        {
+          "id": "A5C22FB589E846FEB09D892DEB291GF6",
+          "name": "DESC",
+          "category": "DESC",
+          "type": "system",
+          "dataType": "nVarChar",
+          "expressions": [
+            {"tables": [{"id": "AB89134211D3E4A51000E787EC6DE8A4", "name": "LU_DATE"}], "columnName": "MONTH_NAME"}
+          ]
+        }
+      ],
+      "sortOrder": "ascending",
+      "attributeLookupTable": {"id": "AB89134211D3E4A51000E787EC6DE8A4", "name": "LU_DATE"},
+      "childAttributes": [],
+      "parentAttributes": [
+        {"id": "8D679D5611D3E4981000E787EC6DE8A4", "name": "Quarter"}
+      ]
+    },
+    "8D679D5811D3E4981000E787EC6DE8A4": {
+      "id": "8D679D5811D3E4981000E787EC6DE8A4",
+      "name": "Order Date",
+      "description": "Date of the order",
+      "forms": [
+        {
+          "id": "45C11FA478E745FEA08D781CEA190FE5",
+          "name": "ID",
+          "category": "ID",
+          "type": "system",
+          "dataType": "date",
+          "expressions": [
+            {"tables": [{"id": "AB89134211D3E4A51000E787EC6DE8A4", "name": "LU_DATE"}], "columnName": "DATE_ID"}
+          ]
+        }
+      ],
+      "sortOrder": "ascending",
+      "attributeLookupTable": {"id": "AB89134211D3E4A51000E787EC6DE8A4", "name": "LU_DATE"},
+      "childAttributes": [],
+      "parentAttributes": [
+        {"id": "8D679D5711D3E4981000E787EC6DE8A4", "name": "Month"}
+      ]
+    }
+  }
+}

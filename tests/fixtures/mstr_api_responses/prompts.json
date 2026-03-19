@@ -1,0 +1,92 @@
+[
+  {
+    "id": "F60718291E9CA012001122334455FF33",
+    "name": "Select Year",
+    "title": "Select Year",
+    "type": "element_prompt",
+    "promptType": "element",
+    "required": true,
+    "multiSelect": false,
+    "attribute": {
+      "id": "8D679D5511D3E4981000E787EC6DE8A4",
+      "name": "Year"
+    },
+    "defaultAnswer": [{"id": "h2025", "name": "2025"}],
+    "options": [
+      {"id": "h2021", "name": "2021"},
+      {"id": "h2022", "name": "2022"},
+      {"id": "h2023", "name": "2023"},
+      {"id": "h2024", "name": "2024"},
+      {"id": "h2025", "name": "2025"},
+      {"id": "h2026", "name": "2026"}
+    ]
+  },
+  {
+    "id": "G7182A3A1FADB123001122334455AA44",
+    "name": "Select Region",
+    "title": "Select Region",
+    "type": "element_prompt",
+    "promptType": "element",
+    "required": false,
+    "multiSelect": true,
+    "attribute": {
+      "id": "8D679D3711D3E4981000E787EC6DE8A4",
+      "name": "Customer Region"
+    },
+    "defaultAnswer": [],
+    "options": [
+      {"id": "h1", "name": "Northeast"},
+      {"id": "h2", "name": "Southeast"},
+      {"id": "h3", "name": "Midwest"},
+      {"id": "h4", "name": "West"},
+      {"id": "h5", "name": "Southwest"}
+    ]
+  },
+  {
+    "id": "H8293B4B20BCE234001122334455BB55",
+    "name": "Revenue Threshold",
+    "title": "Minimum Revenue",
+    "type": "value_prompt",
+    "promptType": "value",
+    "required": false,
+    "multiSelect": false,
+    "min": 0,
+    "max": 10000000,
+    "defaultValue": "100000",
+    "dataType": "real"
+  },
+  {
+    "id": "I93A4C5C31CDF345001122334455CC66",
+    "name": "Select Category",
+    "title": "Choose Product Category",
+    "type": "object_prompt",
+    "promptType": "object",
+    "required": false,
+    "multiSelect": true,
+    "searchResults": [
+      {"id": "8D679D4611D3E4981000E787EC6DE8A4", "name": "Category"}
+    ]
+  },
+  {
+    "id": "JA4B5D6D42DEF456001122334455DD77",
+    "name": "Date Range",
+    "title": "Select Date Range",
+    "type": "date_prompt",
+    "promptType": "date",
+    "required": true,
+    "multiSelect": false,
+    "min": "2020-01-01",
+    "max": "2026-12-31",
+    "defaultValue": "2025-01-01"
+  },
+  {
+    "id": "KB5C6E7E53EF0567001122334455EE88",
+    "name": "Custom Expression Filter",
+    "title": "Custom Filter",
+    "type": "expression_prompt",
+    "promptType": "expression",
+    "required": false,
+    "multiSelect": false,
+    "defaultValue": null
+  }
+]

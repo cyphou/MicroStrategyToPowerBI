@@ -1,0 +1,23 @@
+[
+  {
+    "id": "GG12367511D3E4D81000E787EC6DE8A4",
+    "name": "VW_MONTHLY_SUMMARY",
+    "sql_statement": "SELECT c.CUSTOMER_ID, c.CUSTOMER_NAME, p.PRODUCT_ID, p.PRODUCT_NAME, d.MONTH_ID, d.YEAR_ID, SUM(s.REVENUE) AS MONTHLY_REVENUE, SUM(s.QUANTITY) AS MONTHLY_QUANTITY FROM FACT_SALES s JOIN LU_CUSTOMER c ON s.CUSTOMER_ID = c.CUSTOMER_ID JOIN LU_PRODUCT p ON s.PRODUCT_ID = p.PRODUCT_ID JOIN LU_DATE d ON s.DATE_ID = d.DATE_ID GROUP BY c.CUSTOMER_ID, c.CUSTOMER_NAME, p.PRODUCT_ID, p.PRODUCT_NAME, d.MONTH_ID, d.YEAR_ID",
+    "db_connection": {
+      "db_type": "sql_server",
+      "server": "sql-prod-01.company.com",
+      "database": "SalesDB",
+      "schema": "dbo"
+    },
+    "columns": [
+      {"name": "CUSTOMER_ID", "data_type": "integer"},
+      {"name": "CUSTOMER_NAME", "data_type": "nVarChar"},
+      {"name": "PRODUCT_ID", "data_type": "integer"},
+      {"name": "PRODUCT_NAME", "data_type": "nVarChar"},
+      {"name": "MONTH_ID", "data_type": "integer"},
+      {"name": "YEAR_ID", "data_type": "integer"},
+      {"name": "MONTHLY_REVENUE", "data_type": "real"},
+      {"name": "MONTHLY_QUANTITY", "data_type": "integer"}
+    ]
+  }
+]

@@ -1,0 +1,114 @@
+[
+  {
+    "id": "8D67912011D3E4981000E787EC6DE8A4",
+    "name": "LU_CUSTOMER",
+    "physical_table": "LU_CUSTOMER",
+    "db_connection": {
+      "db_type": "sql_server",
+      "server": "sql-prod-01.company.com",
+      "database": "SalesDB",
+      "schema": "dbo"
+    },
+    "columns": [
+      {"name": "CUSTOMER_ID", "data_type": "integer"},
+      {"name": "CUSTOMER_NAME", "data_type": "nVarChar"},
+      {"name": "CUSTOMER_EMAIL", "data_type": "nVarChar"},
+      {"name": "CUSTOMER_CITY", "data_type": "nVarChar"},
+      {"name": "CUSTOMER_STATE", "data_type": "nVarChar"},
+      {"name": "CUSTOMER_COUNTRY", "data_type": "nVarChar"},
+      {"name": "REGION_ID", "data_type": "integer"}
+    ],
+    "is_freeform_sql": false,
+    "sql_statement": "",
+    "type": "table"
+  },
+  {
+    "id": "9A78023111D3E49A1000E787EC6DE8A4",
+    "name": "LU_PRODUCT",
+    "physical_table": "LU_PRODUCT",
+    "db_connection": {
+      "db_type": "sql_server",
+      "server": "sql-prod-01.company.com",
+      "database": "SalesDB",
+      "schema": "dbo"
+    },
+    "columns": [
+      {"name": "PRODUCT_ID", "data_type": "integer"},
+      {"name": "PRODUCT_NAME", "data_type": "nVarChar"},
+      {"name": "CATEGORY_ID", "data_type": "integer"},
+      {"name": "CATEGORY_NAME", "data_type": "nVarChar"},
+      {"name": "BRAND", "data_type": "nVarChar"},
+      {"name": "UNIT_PRICE", "data_type": "real"}
+    ],
+    "is_freeform_sql": false,
+    "sql_statement": "",
+    "type": "table"
+  },
+  {
+    "id": "AB89134211D3E4A51000E787EC6DE8A4",
+    "name": "LU_DATE",
+    "physical_table": "LU_DATE",
+    "db_connection": {
+      "db_type": "sql_server",
+      "server": "sql-prod-01.company.com",
+      "database": "SalesDB",
+      "schema": "dbo"
+    },
+    "columns": [
+      {"name": "DATE_ID", "data_type": "date"},
+      {"name": "DAY_OF_WEEK", "data_type": "nVarChar"},
+      {"name": "MONTH_NAME", "data_type": "nVarChar"},
+      {"name": "MONTH_ID", "data_type": "integer"},
+      {"name": "QUARTER_ID", "data_type": "integer"},
+      {"name": "YEAR_ID", "data_type": "integer"}
+    ],
+    "is_freeform_sql": false,
+    "sql_statement": "",
+    "type": "table"
+  },
+  {
+    "id": "BC90245311D3E4B61000E787EC6DE8A4",
+    "name": "FACT_SALES",
+    "physical_table": "FACT_SALES",
+    "db_connection": {
+      "db_type": "sql_server",
+      "server": "sql-prod-01.company.com",
+      "database": "SalesDB",
+      "schema": "dbo"
+    },
+    "columns": [
+      {"name": "CUSTOMER_ID", "data_type": "integer"},
+      {"name": "PRODUCT_ID", "data_type": "integer"},
+      {"name": "DATE_ID", "data_type": "date"},
+      {"name": "REVENUE", "data_type": "real"},
+      {"name": "COST", "data_type": "real"},
+      {"name": "QUANTITY", "data_type": "integer"},
+      {"name": "DISCOUNT", "data_type": "real"},
+      {"name": "ORDER_ID", "data_type": "nVarChar"},
+      {"name": "REGION_ID", "data_type": "integer"}
+    ],
+    "is_freeform_sql": false,
+    "sql_statement": "",
+    "type": "table"
+  },
+  {
+    "id": "FF01256411D3E4C71000E787EC6DE8A4",
+    "name": "FACT_INVENTORY",
+    "physical_table": "FACT_INVENTORY",
+    "db_connection": {
+      "db_type": "sql_server",
+      "server": "sql-prod-01.company.com",
+      "database": "SalesDB",
+      "schema": "dbo"
+    },
+    "columns": [
+      {"name": "PRODUCT_ID", "data_type": "integer"},
+      {"name": "DATE_ID", "data_type": "date"},
+      {"name": "UNITS_ON_HAND", "data_type": "integer"},
+      {"name": "UNITS_ON_ORDER", "data_type": "integer"}
+    ],
+    "is_freeform_sql": false,
+    "sql_statement": "",
+    "type": "table"
+  }
+]

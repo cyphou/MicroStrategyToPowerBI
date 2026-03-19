@@ -1,0 +1,67 @@
+[
+  {
+    "id": "A1B2C3D411E6F789001122334455AAEE",
+    "name": "Revenue by Customer",
+    "description": "Shows total revenue and profit by customer with threshold formatting",
+    "report_type": "grid",
+    "grid": {
+      "rows": [
+        {"id": "8D679D3511D3E4981000E787EC6DE8A4", "name": "Customer", "type": "attribute", "forms": ["ID", "DESC"]},
+        {"id": "8D679D3611D3E4981000E787EC6DE8A4", "name": "Customer City", "type": "attribute", "forms": ["ID"]}
+      ],
+      "columns": [],
+      "metrics_position": "columns"
+    },
+    "graph": null,
+    "metrics": [
+      {"id": "4C051DB611D3E877C000B3B2D86C964F", "name": "Total Revenue"},
+      {"id": "4C051DB711D3E877C000B3B2D86C964F", "name": "Total Cost"},
+      {"id": "4C051DB811D3E877C000B3B2D86C964F", "name": "Profit"},
+      {"id": "4C051DB911D3E877C000B3B2D86C964F", "name": "Profit Margin"}
+    ],
+    "filters": [
+      {"type": "attribute_element_list", "attribute": "Customer Region", "operator": "In", "values": ["Northeast", "Southeast", "Midwest"], "is_view_filter": false}
+    ],
+    "sorts": [{"attribute": "Total Revenue", "order": "descending"}],
+    "subtotals": [{"type": "grand_total", "position": "bottom", "function": "sum"}],
+    "page_by": [],
+    "thresholds": [
+      {
+        "name": "Profit Margin Alert",
+        "metric_name": "Profit Margin",
+        "conditions": [
+          {"operator": "less_than", "value": 0.10, "format": {"background_color": "#FF6B6B", "font_color": "#FFFFFF"}},
+          {"operator": "between", "value": [0.10, 0.25], "format": {"background_color": "#FFD93D", "font_color": "#000000"}},
+          {"operator": "greater_than", "value": 0.25, "format": {"background_color": "#6BCB77", "font_color": "#000000"}}
+        ]
+      }
+    ],
+    "prompts": []
+  },
+  {
+    "id": "B2C3D4E511E6F789001122334455BBFF",
+    "name": "Product Sales Trend",
+    "description": "Line chart showing revenue by product and month",
+    "report_type": "graph",
+    "grid": {
+      "rows": [{"id": "8D679D5711D3E4981000E787EC6DE8A4", "name": "Month", "type": "attribute", "forms": ["ID", "DESC"]}],
+      "columns": [{"id": "8D679D4511D3E4981000E787EC6DE8A4", "name": "Product", "type": "attribute", "forms": ["DESC"]}],
+      "metrics_position": "rows"
+    },
+    "graph": {
+      "type": "lineChart",
+      "mstr_type": "line",
+      "attributes_on_axis": [{"id": "8D679D5711D3E4981000E787EC6DE8A4", "name": "Month"}],
+      "metrics_on_axis": [{"id": "4C051DB611D3E877C000B3B2D86C964F", "name": "Total Revenue"}],
+      "color_by": "Product",
+      "size_by": ""
+    },
+    "metrics": [{"id": "4C051DB611D3E877C000B3B2D86C964F", "name": "Total Revenue"}],
+    "filters": [],
+    "sorts": [],
+    "subtotals": [],
+    "page_by": [{"id": "8D679D5511D3E4981000E787EC6DE8A4", "name": "Year", "type": "attribute"}],
+    "thresholds": [],
+    "prompts": []
+  }
+]

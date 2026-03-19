@@ -1,0 +1,334 @@
+[
+  {
+    "id": "8D67912011D3E4981000E787EC6DE8A4",
+    "name": "LU_CUSTOMER",
+    "physicalTable": {
+      "tableName": "LU_CUSTOMER",
+      "namespace": "dbo",
+      "tablePrefix": ""
+    },
+    "logicalSize": 15000,
+    "isFreeformSql": false,
+    "sqlStatement": "",
+    "columns": [
+      {
+        "id": "col_001",
+        "name": "CUSTOMER_ID",
+        "dataType": "integer",
+        "length": 4
+      },
+      {
+        "id": "col_002",
+        "name": "CUSTOMER_NAME",
+        "dataType": "nVarChar",
+        "length": 255
+      },
+      {
+        "id": "col_003",
+        "name": "CUSTOMER_EMAIL",
+        "dataType": "nVarChar",
+        "length": 255
+      },
+      {
+        "id": "col_004",
+        "name": "CUSTOMER_CITY",
+        "dataType": "nVarChar",
+        "length": 100
+      },
+      {
+        "id": "col_005",
+        "name": "CUSTOMER_STATE",
+        "dataType": "nVarChar",
+        "length": 50
+      },
+      {
+        "id": "col_006",
+        "name": "CUSTOMER_COUNTRY",
+        "dataType": "nVarChar",
+        "length": 50
+      },
+      {
+        "id": "col_007",
+        "name": "REGION_ID",
+        "dataType": "integer",
+        "length": 4
+      }
+    ],
+    "warehouseConnection": {
+      "id": "wh_001",
+      "name": "Sales_DW",
+      "dbType": "sql_server",
+      "server": "sql-prod-01.company.com",
+      "database": "SalesDB",
+      "schema": "dbo"
+    }
+  },
+  {
+    "id": "9A78023111D3E49A1000E787EC6DE8A4",
+    "name": "LU_PRODUCT",
+    "physicalTable": {
+      "tableName": "LU_PRODUCT",
+      "namespace": "dbo",
+      "tablePrefix": ""
+    },
+    "logicalSize": 5000,
+    "isFreeformSql": false,
+    "sqlStatement": "",
+    "columns": [
+      {
+        "id": "col_010",
+        "name": "PRODUCT_ID",
+        "dataType": "integer",
+        "length": 4
+      },
+      {
+        "id": "col_011",
+        "name": "PRODUCT_NAME",
+        "dataType": "nVarChar",
+        "length": 255
+      },
+      {
+        "id": "col_012",
+        "name": "CATEGORY_ID",
+        "dataType": "integer",
+        "length": 4
+      },
+      {
+        "id": "col_013",
+        "name": "CATEGORY_NAME",
+        "dataType": "nVarChar",
+        "length": 100
+      },
+      {
+        "id": "col_014",
+        "name": "BRAND",
+        "dataType": "nVarChar",
+        "length": 100
+      },
+      {
+        "id": "col_015",
+        "name": "UNIT_PRICE",
+        "dataType": "real",
+        "length": 8
+      }
+    ],
+    "warehouseConnection": {
+      "id": "wh_001",
+      "name": "Sales_DW",
+      "dbType": "sql_server",
+      "server": "sql-prod-01.company.com",
+      "database": "SalesDB",
+      "schema": "dbo"
+    }
+  },
+  {
+    "id": "AB89134211D3E4A51000E787EC6DE8A4",
+    "name": "LU_DATE",
+    "physicalTable": {
+      "tableName": "LU_DATE",
+      "namespace": "dbo",
+      "tablePrefix": ""
+    },
+    "logicalSize": 3650,
+    "isFreeformSql": false,
+    "sqlStatement": "",
+    "columns": [
+      {
+        "id": "col_020",
+        "name": "DATE_ID",
+        "dataType": "date",
+        "length": 8
+      },
+      {
+        "id": "col_021",
+        "name": "DAY_OF_WEEK",
+        "dataType": "nVarChar",
+        "length": 20
+      },
+      {
+        "id": "col_022",
+        "name": "MONTH_NAME",
+        "dataType": "nVarChar",
+        "length": 20
+      },
+      {
+        "id": "col_023",
+        "name": "MONTH_ID",
+        "dataType": "integer",
+        "length": 4
+      },
+      {
+        "id": "col_024",
+        "name": "QUARTER_ID",
+        "dataType": "integer",
+        "length": 4
+      },
+      {
+        "id": "col_025",
+        "name": "YEAR_ID",
+        "dataType": "integer",
+        "length": 4
+      }
+    ],
+    "warehouseConnection": {
+      "id": "wh_001",
+      "name": "Sales_DW",
+      "dbType": "sql_server",
+      "server": "sql-prod-01.company.com",
+      "database": "SalesDB",
+      "schema": "dbo"
+    }
+  },
+  {
+    "id": "BC90245311D3E4B61000E787EC6DE8A4",
+    "name": "FACT_SALES",
+    "physicalTable": {
+      "tableName": "FACT_SALES",
+      "namespace": "dbo",
+      "tablePrefix": ""
+    },
+    "logicalSize": 2500000,
+    "isFreeformSql": false,
+    "sqlStatement": "",
+    "columns": [
+      {
+        "id": "col_030",
+        "name": "CUSTOMER_ID",
+        "dataType": "integer",
+        "length": 4
+      },
+      {
+        "id": "col_031",
+        "name": "PRODUCT_ID",
+        "dataType": "integer",
+        "length": 4
+      },
+      {
+        "id": "col_032",
+        "name": "DATE_ID",
+        "dataType": "date",
+        "length": 8
+      },
+      {
+        "id": "col_033",
+        "name": "REVENUE",
+        "dataType": "real",
+        "length": 8
+      },
+      {
+        "id": "col_034",
+        "name": "COST",
+        "dataType": "real",
+        "length": 8
+      },
+      {
+        "id": "col_035",
+        "name": "QUANTITY",
+        "dataType": "integer",
+        "length": 4
+      },
+      {
+        "id": "col_036",
+        "name": "DISCOUNT",
+        "dataType": "real",
+        "length": 8
+      },
+      {
+        "id": "col_037",
+        "name": "ORDER_ID",
+        "dataType": "nVarChar",
+        "length": 50
+      },
+      {
+        "id": "col_038",
+        "name": "REGION_ID",
+        "dataType": "integer",
+        "length": 4
+      }
+    ],
+    "warehouseConnection": {
+      "id": "wh_001",
+      "name": "Sales_DW",
+      "dbType": "sql_server",
+      "server": "sql-prod-01.company.com",
+      "database": "SalesDB",
+      "schema": "dbo"
+    }
+  },
+  {
+    "id": "FF01256411D3E4C71000E787EC6DE8A4",
+    "name": "FACT_INVENTORY",
+    "physicalTable": {
+      "tableName": "FACT_INVENTORY",
+      "namespace": "dbo",
+      "tablePrefix": ""
+    },
+    "logicalSize": 500000,
+    "isFreeformSql": false,
+    "sqlStatement": "",
+    "columns": [
+      {
+        "id": "col_040",
+        "name": "PRODUCT_ID",
+        "dataType": "integer",
+        "length": 4
+      },
+      {
+        "id": "col_041",
+        "name": "DATE_ID",
+        "dataType": "date",
+        "length": 8
+      },
+      {
+        "id": "col_042",
+        "name": "UNITS_ON_HAND",
+        "dataType": "integer",
+        "length": 4
+      },
+      {
+        "id": "col_043",
+        "name": "UNITS_ON_ORDER",
+        "dataType": "integer",
+        "length": 4
+      }
+    ],
+    "warehouseConnection": {
+      "id": "wh_001",
+      "name": "Sales_DW",
+      "dbType": "sql_server",
+      "server": "sql-prod-01.company.com",
+      "database": "SalesDB",
+      "schema": "dbo"
+    }
+  },
+  {
+    "id": "GG12367511D3E4D81000E787EC6DE8A4",
+    "name": "VW_MONTHLY_SUMMARY",
+    "physicalTable": {
+      "tableName": "VW_MONTHLY_SUMMARY",
+      "namespace": "dbo",
+      "tablePrefix": ""
+    },
+    "logicalSize": 0,
+    "isFreeformSql": true,
+    "sqlStatement": "SELECT c.CUSTOMER_ID, c.CUSTOMER_NAME, p.PRODUCT_ID, p.PRODUCT_NAME, d.MONTH_ID, d.YEAR_ID, SUM(s.REVENUE) AS MONTHLY_REVENUE, SUM(s.QUANTITY) AS MONTHLY_QUANTITY FROM FACT_SALES s JOIN LU_CUSTOMER c ON s.CUSTOMER_ID = c.CUSTOMER_ID JOIN LU_PRODUCT p ON s.PRODUCT_ID = p.PRODUCT_ID JOIN LU_DATE d ON s.DATE_ID = d.DATE_ID GROUP BY c.CUSTOMER_ID, c.CUSTOMER_NAME, p.PRODUCT_ID, p.PRODUCT_NAME, d.MONTH_ID, d.YEAR_ID",
+    "columns": [
+      {"id": "col_050", "name": "CUSTOMER_ID", "dataType": "integer", "length": 4},
+      {"id": "col_051", "name": "CUSTOMER_NAME", "dataType": "nVarChar", "length": 255},
+      {"id": "col_052", "name": "PRODUCT_ID", "dataType": "integer", "length": 4},
+      {"id": "col_053", "name": "PRODUCT_NAME", "dataType": "nVarChar", "length": 255},
+      {"id": "col_054", "name": "MONTH_ID", "dataType": "integer", "length": 4},
+      {"id": "col_055", "name": "YEAR_ID", "dataType": "integer", "length": 4},
+      {"id": "col_056", "name": "MONTHLY_REVENUE", "dataType": "real", "length": 8},
+      {"id": "col_057", "name": "MONTHLY_QUANTITY", "dataType": "integer", "length": 4}
+    ],
+    "warehouseConnection": {
+      "id": "wh_001",
+      "name": "Sales_DW",
+      "dbType": "sql_server",
+      "server": "sql-prod-01.company.com",
+      "database": "SalesDB",
+      "schema": "dbo"
+    }
+  }
+]
