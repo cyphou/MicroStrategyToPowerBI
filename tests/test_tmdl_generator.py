@@ -333,13 +333,14 @@ class TestCalendarTable:
     def test_calendar_partition(self):
         tmdl = generate_calendar_table_tmdl(
             [("FACT_SALES", "DATE_ID")], start_year=2015, end_year=2025)
-        assert "partition Calendar = calculated" in tmdl
-        assert "CALENDAR(DATE(2015, 1, 1), DATE(2025, 12, 31))" in tmdl
+        assert "partition Calendar = m" in tmdl
+        assert "#date(2015, 1, 1)" in tmdl
+        assert "#date(2025, 12, 31)" in tmdl
 
     def test_calendar_default_years(self):
         tmdl = generate_calendar_table_tmdl([("FACT_SALES", "DATE_ID")])
-        assert "DATE(2020, 1, 1)" in tmdl
-        assert "DATE(2030, 12, 31)" in tmdl
+        assert "#date(2020, 1, 1)" in tmdl
+        assert "#date(2030, 12, 31)" in tmdl
 
 
 # ── Full generation pipeline ─────────────────────────────────────

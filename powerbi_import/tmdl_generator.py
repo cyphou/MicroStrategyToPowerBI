@@ -704,7 +704,11 @@ def _convert_security_expression(expression, column_name):
 
 
 def generate_calendar_table_tmdl(date_columns, start_year=None, end_year=None):
-    """Generate a Calendar auto-table TMDL.
+    """Generate a Calendar auto-table TMDL using an M partition.
+
+    Uses Power Query M (not DAX CALENDAR) to avoid 'invalid column ID'
+    errors — calculated-table partitions cannot be referenced by hierarchies
+    or relationships reliably in TMDL.
 
     Args:
         date_columns: List of (table_name, column_name) for date columns
@@ -718,13 +722,13 @@ def generate_calendar_table_tmdl(date_columns, start_year=None, end_year=None):
     end_year = end_year or 2030
 
     lines = ["table Calendar"]
-    lines.append(f"\tlineageTag: calendar-auto-generated")
+    lines.append("\tlineageTag: calendar-auto-generated")
     lines.append("")
 
     cal_columns = [
         ("Date", "dateTime", True),
         ("Year", "int64", False),
-        ("Quarter", "int64", False),
+        ("Quarter", "string", False),
         ("Month", "int64", False),
         ("MonthName", "string", False),
         ("Day", "int64", False),
@@ -753,9 +757,32 @@ def generate_calendar_table_tmdl(date_columns, start_year=None, end_year=None):
         lines.append(f"\t\t\tlineageTag: cal-level-{level_name.lower()}")
         lines.append("")
 
-    # DAX calculated table partition
-    lines.append("\tpartition Calendar = calculated")
+    # M partition — generates all columns server-side so TMDL can resolve them
+    m_expr = (
+        f'let\n'
+        f'    StartDate = #date({start_year}, 1, 1),\n'
+        f'    EndDate = #date({end_year}, 12, 31),\n'
+        f'    DayCount = Duration.Days(EndDate - StartDate) + 1,\n'
+        f'    DateList = List.Dates(StartDate, DayCount, #duration(1, 0, 0, 0)),\n'
+        f'    #"Date Table" = Table.FromList(DateList, Splitter.SplitByNothing(), {{"Date"}}, null, ExtraValues.Error),\n'
+        f'    #"Changed Type" = Table.TransformColumnTypes(#"Date Table", {{"Date", type date}}),\n'
+        f'    #"Added Year" = Table.AddColumn(#"Changed Type", "Year", each Date.Year([Date]), Int64.Type),\n'
+        f'    #"Added Quarter" = Table.AddColumn(#"Added Year", "Quarter", each "Q" & Text.From(Date.QuarterOfYear([Date]))),\n'
+        f'    #"Added Month" = Table.AddColumn(#"Added Quarter", "Month", each Date.Month([Date]), Int64.Type),\n'
+        f'    #"Added MonthName" = Table.AddColumn(#"Added Month", "MonthName", each Date.MonthName([Date])),\n'
+        f'    #"Added Day" = Table.AddColumn(#"Added MonthName", "Day", each Date.Day([Date]), Int64.Type),\n'
+        f'    #"Added DayOfWeek" = Table.AddColumn(#"Added Day", "DayOfWeek", each Date.DayOfWeek([Date], Day.Monday) + 1, Int64.Type),\n'
+        f'    #"Added DayName" = Table.AddColumn(#"Added DayOfWeek", "DayName", each Date.DayOfWeekName([Date])),\n'
+        f'    #"Added WeekOfYear" = Table.AddColumn(#"Added DayName", "WeekOfYear", each Date.WeekOfYear([Date]), Int64.Type)\n'
+        f'in\n'
+        f'    #"Added WeekOfYear"'
+    )
+
+    lines.append("\tpartition Calendar = m")
     lines.append("\t\tmode: import")
-    lines.append(f"\t\texpression:= CALENDAR(DATE({start_year}, 1, 1), DATE({end_year}, 12, 31))")
+    lines.append("\t\texpression:= ```")
+    for m_line in m_expr.split('\n'):
+        lines.append(f"\t\t\t{m_line}")
+    lines.append("\t\t\t```")
 
     return '\n'.join(lines).rstrip() + '\n'
