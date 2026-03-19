@@ -520,7 +520,7 @@ def _generate_hierarchy(hier_name, levels, attr_by_id, table_name, table_columns
 
         # Resolve level to a column on this table
         attr = attr_by_id.get(level.get("attribute_id", ""))
-        col_ref = _resolve_hierarchy_level_column(attr, table_name, col_names)
+        col_ref = _resolve_hierarchy_level_column(attr, table_name, col_names, level_name)
 
         lines.append(f"\t\tlevel {level_name_str}")
         lines.append(f"\t\t\tcolumn: {col_ref}")
@@ -530,10 +530,31 @@ def _generate_hierarchy(hier_name, levels, attr_by_id, table_name, table_columns
     return lines
 
 
-def _resolve_hierarchy_level_column(attr, table_name, table_col_names):
+def _fuzzy_match_column(level_name, table_col_names):
+    """Try to match a hierarchy level name to a table column by name patterns."""
+    if not level_name or not table_col_names:
+        return None
+    name_lower = level_name.lower().replace(" ", "_")
+    # Exact match (case-insensitive)
+    for col in table_col_names:
+        if col.lower() == name_lower:
+            return col
+    # Match with _ID suffix (e.g., "Quarter" → "QUARTER_ID")
+    for col in table_col_names:
+        if col.lower() == f"{name_lower}_id":
+            return col
+    # Match as substring (e.g., "Quarter" in "QUARTER_NAME")
+    for col in table_col_names:
+        if name_lower in col.lower():
+            return col
+    return None
+
+
+def _resolve_hierarchy_level_column(attr, table_name, table_col_names, level_name=""):
     """Resolve an attribute to the best column reference for a hierarchy level."""
     if not attr:
-        return "UNKNOWN"
+        # Attribute not found — try to match level name to a table column
+        return _fuzzy_match_column(level_name, table_col_names) or "UNKNOWN"
 
     # Look for ID form first, then DESC form
     id_col = None
