@@ -85,9 +85,9 @@ def generate_pbip(data, output_dir, report_name="MicroStrategy Report"):
     tmdl_stats = generate_all_tmdl(data, sm_def)
     _merge_stats(stats, tmdl_stats)
 
-    # Calendar table
+    # Calendar table — only if no dedicated date dimension table exists
     date_cols = _detect_date_columns(data)
-    if date_cols:
+    if date_cols and not _has_date_dimension_table(data):
         cal_tmdl = generate_calendar_table_tmdl(date_cols)
         cal_path = os.path.join(sm_def, "tables", "Calendar.tmdl")
         os.makedirs(os.path.dirname(cal_path), exist_ok=True)
@@ -187,9 +187,9 @@ def _write_model_tmdl(definition_dir, report_name, data=None):
     if data:
         # Collect table names
         table_names = [ds["name"] for ds in data.get("datasources", [])]
-        # Add Calendar if date columns exist
+        # Add Calendar if date columns exist and no date dimension table
         date_cols = _detect_date_columns(data)
-        if date_cols:
+        if date_cols and not _has_date_dimension_table(data):
             table_names.append("Calendar")
 
         if table_names:
@@ -274,6 +274,28 @@ def _detect_date_columns(data):
             if col.get("data_type", "").lower() in ("date", "datetime", "timestamp"):
                 date_cols.append((ds["name"], col["name"]))
     return date_cols
+
+
+_DATE_DIM_PATTERNS = {"date", "calendar", "time", "period"}
+
+
+def _has_date_dimension_table(data):
+    """Check if a dedicated date dimension/lookup table already exists.
+
+    Detects tables with names like LU_DATE, DIM_DATE, DIM_CALENDAR, etc.
+    These tables already provide date hierarchy columns, making an
+    auto-generated Calendar table redundant.
+    """
+    for ds in data.get("datasources", []):
+        name = ds.get("name", "").upper()
+        # Strip common prefixes to get the core name
+        for prefix in ("LU_", "DIM_", "D_", "LOOKUP_", "DIM"):
+            if name.startswith(prefix):
+                name = name[len(prefix):]
+                break
+        if name.lower() in _DATE_DIM_PATTERNS:
+            return True
+    return False
 
 
 def _write_pbir(rpt_root, report_name):
