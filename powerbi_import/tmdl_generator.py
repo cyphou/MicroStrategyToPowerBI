@@ -455,7 +455,14 @@ def _generate_measure(metric, table_name):
     if not dax:
         dax = f"/* TODO: {metric.get('expression', '')} */"
 
-    lines = [f"\tmeasure {name_str} = {dax}"]
+    # TMDL requires multi-line expressions to be wrapped in triple-backtick blocks
+    if '\n' in dax:
+        lines = [f"\tmeasure {name_str} = ```"]
+        for expr_line in dax.split('\n'):
+            lines.append(f"\t\t\t{expr_line}")
+        lines.append("\t\t\t```")
+    else:
+        lines = [f"\tmeasure {name_str} = {dax}"]
 
     fmt = metric.get("format_string", "")
     if fmt:

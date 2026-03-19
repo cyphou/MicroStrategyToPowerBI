@@ -332,10 +332,16 @@ def convert_metric_to_dax(metric_def, context=None):
     agg = metric_def.get("aggregation", "sum").lower()
     column_ref = metric_def.get("column_ref", "")
 
+    # Resolve dict column_ref to a proper column name string
+    if isinstance(column_ref, dict):
+        column_ref = column_ref.get("fact_name") or column_ref.get("attribute_name") or ""
+
     if column_ref and agg in _FUNCTION_MAP:
         dax_func = _FUNCTION_MAP[agg]
         if dax_func:
-            dax = f"{dax_func}({column_ref})"
+            # Use unqualified column reference — TMDL resolves within the table
+            col_ref_str = f"[{column_ref}]" if column_ref else ""
+            dax = f"{dax_func}({col_ref_str})"
             return {"dax": dax, "fidelity": "full", "warnings": []}
 
     # Fall back to expression conversion
