@@ -219,7 +219,8 @@ def generate_table_tmdl(datasource, table_attrs, table_facts, table_metrics,
     if not is_fact_table and len(key_columns) == 1:
         single_key = next(iter(key_columns))
 
-    # Generate columns
+    # Generate columns — also collect display names for hierarchy collision check
+    col_display_names = set()
     lines.append("")
     for col in columns:
         col_name = col["name"]
@@ -229,6 +230,8 @@ def generate_table_tmdl(datasource, table_attrs, table_facts, table_metrics,
         # Use friendly name from attribute DESC form
         if col_name in desc_columns:
             display_name = desc_columns[col_name]
+
+        col_display_names.add(display_name)
 
         # Quote names with spaces or special chars
         name_str = f"'{display_name}'" if _needs_quoting(display_name) else display_name
@@ -275,7 +278,7 @@ def generate_table_tmdl(datasource, table_attrs, table_facts, table_metrics,
 
     # Generate hierarchies
     for hier_name, levels in table_hierarchies:
-        hier_lines = _generate_hierarchy(hier_name, levels, attr_by_id, table_name, columns)
+        hier_lines = _generate_hierarchy(hier_name, levels, attr_by_id, table_name, columns, col_display_names)
         lines.extend(hier_lines)
 
     # Generate M partition
@@ -522,8 +525,11 @@ def _extract_display_folder(folder_path):
     return meaningful[-1] if meaningful else (parts[-1] if parts else "")
 
 
-def _generate_hierarchy(hier_name, levels, attr_by_id, table_name, table_columns):
+def _generate_hierarchy(hier_name, levels, attr_by_id, table_name, table_columns, col_display_names=None):
     """Generate TMDL hierarchy block."""
+    # Disambiguate if hierarchy name collides with a column name
+    if col_display_names and hier_name in col_display_names:
+        hier_name = f"{hier_name} Hierarchy"
     name_str = f"'{hier_name}'" if _needs_quoting(hier_name) else hier_name
 
     lines = [f"\thierarchy {name_str}"]
