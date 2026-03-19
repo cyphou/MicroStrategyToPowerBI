@@ -347,13 +347,49 @@ def run_assessment(args):
 
     result = assess_project(converted, output_dir=output_dir)
 
+    summary = result.get("summary", result)
     print()
-    print(f"  Total objects:    {result['total_objects']}")
-    print(f"  Complexity:       {result['complexity_score']} ({result['complexity_level']})")
-    print(f"  Est. fidelity:    {result['estimated_fidelity']:.0%}")
+    print(f"  Overall score:    {result.get('overall_score', 'N/A')}")
+    print(f"  Total objects:    {summary['total_objects']}")
+    print(f"  Complexity:       {summary['complexity_score']} ({summary['complexity_level']})")
+    print(f"  Est. fidelity:    {summary['estimated_fidelity']:.0%}")
+    print(f"  Est. effort:      {summary.get('effort_hours', 0):.1f}h")
     print()
-    for rec in result['recommendations']:
+    for rec in summary['recommendations']:
         print(f"  • {rec}")
+
+
+def run_global_assessment_cli(args):
+    """Run portfolio-level assessment."""
+    from powerbi_import.global_assessment import run_global_assessment
+
+    base_dir = args.global_assess
+    output_dir = args.output_dir or 'artifacts/'
+    result = run_global_assessment(base_dir, output_dir=output_dir)
+
+    print()
+    print(f"  Projects:       {result['total_projects']}")
+    print(f"  Total effort:   {result['total_effort_hours']:.1f}h")
+    dist = result['score_distribution']
+    print(f"  GREEN/YELLOW/RED: {dist['GREEN']}/{dist['YELLOW']}/{dist['RED']}")
+    print(f"  Merge clusters: {len(result['merge_clusters'])}")
+
+
+def run_strategy_cli(args):
+    """Show connectivity strategy recommendation."""
+    from powerbi_import.strategy_advisor import recommend_strategy
+    from import_to_powerbi import PowerBIImporter
+
+    importer = PowerBIImporter(source_dir='microstrategy_export/')
+    converted = importer._load_converted_objects()
+    fabric = getattr(args, 'fabric', False)
+
+    result = recommend_strategy(converted, fabric_available=fabric)
+    print()
+    print(f"  Recommended:  {result['recommended']}")
+    print(f"  Rationale:    {result['rationale']}")
+    if result.get('alternatives'):
+        print(f"  Alternatives: {', '.join(result['alternatives'])}")
 
 
 def run_validation(output_dir):
@@ -525,6 +561,12 @@ Examples:
     assess_group = parser.add_argument_group('Assessment')
     assess_group.add_argument('--assess', action='store_true',
                              help='Run pre-migration assessment without generating output')
+    assess_group.add_argument('--global-assess', metavar='DIR',
+                             help='Run portfolio-level assessment on a directory of projects')
+    assess_group.add_argument('--strategy', action='store_true',
+                             help='Show connectivity strategy recommendation (Import/DQ/Composite/DirectLake)')
+    assess_group.add_argument('--compare', action='store_true',
+                             help='Generate source-vs-output comparison report after migration')
 
     # Shared model
     shared_group = parser.add_argument_group('Shared Semantic Model')
@@ -569,7 +611,7 @@ Examples:
     parser.add_argument('--config', help='Path to configuration JSON file')
 
     # Version
-    parser.add_argument('--version', action='version', version='%(prog)s 2.0.0')
+    parser.add_argument('--version', action='version', version='%(prog)s 3.0.0')
 
     return parser
 
@@ -631,6 +673,15 @@ def main():
     print_header("MicroStrategy → Power BI / Fabric Migration")
     start_time = datetime.now()
 
+    # Global assessment mode (no extraction needed)
+    if getattr(args, 'global_assess', None):
+        try:
+            run_global_assessment_cli(args)
+        except Exception as e:
+            logger.error("Global assessment failed: %s", e, exc_info=True)
+            sys.exit(ExitCode.ASSESSMENT_FAILED)
+        sys.exit(ExitCode.SUCCESS)
+
     # Step 1: Extraction
     extraction_ok = run_extraction(args)
     if not extraction_ok:
@@ -641,11 +692,22 @@ def main():
     if args.assess:
         try:
             run_assessment(args)
+            if getattr(args, 'strategy', False):
+                run_strategy_cli(args)
         except Exception as e:
             logger.error("Assessment failed: %s", e, exc_info=True)
             sys.exit(ExitCode.ASSESSMENT_FAILED)
         print_summary()
         print("\n✓ Assessment complete (no output generated)")
+        sys.exit(ExitCode.SUCCESS)
+
+    # Strategy-only mode
+    if getattr(args, 'strategy', False) and not args.assess:
+        try:
+            run_strategy_cli(args)
+        except Exception as e:
+            logger.error("Strategy analysis failed: %s", e, exc_info=True)
+            sys.exit(ExitCode.ASSESSMENT_FAILED)
         sys.exit(ExitCode.SUCCESS)
 
     # Step 2: Generation (batch or single)
@@ -665,6 +727,19 @@ def main():
 
     # Step 3: Validate (automatic)
     run_validation(args.output_dir)
+
+    # Step 3b: Comparison report (optional)
+    if getattr(args, 'compare', False):
+        try:
+            from powerbi_import.comparison_report import generate_comparison_report
+            from import_to_powerbi import PowerBIImporter
+            importer = PowerBIImporter(source_dir='microstrategy_export/')
+            converted = importer._load_converted_objects()
+            generate_comparison_report(converted, {}, args.output_dir,
+                                       report_name=args.report_name or 'MicroStrategy Report')
+            print("  ✓ Comparison report generated")
+        except Exception as e:
+            logger.warning("Comparison report failed: %s", e)
 
     # Step 4: Deploy (optional)
     if args.deploy:

@@ -113,7 +113,7 @@ class TestAssessmentOnFixtures:
 
     def test_assessment_runs(self, data):
         result = assess_project(data)
-        assert result["total_objects"] > 0
+        assert result["summary"]["total_objects"] > 0
 
     def test_assessment_writes_report(self, data, tmp_path):
         assess_project(data, output_dir=str(tmp_path))
@@ -122,8 +122,8 @@ class TestAssessmentOnFixtures:
 
     def test_assessment_fidelity_positive(self, data):
         result = assess_project(data)
-        assert result["estimated_fidelity"] > 0.0
+        assert result["summary"]["estimated_fidelity"] > 0.0
 
     def test_assessment_has_recommendations(self, data):
         result = assess_project(data)
-        assert len(result["recommendations"]) >= 1
+        assert len(result["summary"]["recommendations"]) >= 1

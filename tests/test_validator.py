@@ -545,60 +545,62 @@ class TestAssessment:
 
     def test_object_counts(self, sample_data):
         result = assess_project(sample_data)
-        assert result["object_counts"]["attributes"] == 2
-        assert result["object_counts"]["reports"] == 1
-        assert result["object_counts"]["derived_metrics"] == 1
-        assert result["total_objects"] > 0
+        s = result["summary"]
+        assert s["object_counts"]["attributes"] == 2
+        assert s["object_counts"]["reports"] == 1
+        assert s["object_counts"]["derived_metrics"] == 1
+        assert s["total_objects"] > 0
 
     def test_complexity_score_not_zero(self, sample_data):
         result = assess_project(sample_data)
-        assert result["complexity_score"] > 0
+        assert result["summary"]["complexity_score"] > 0
 
     def test_complexity_level_present(self, sample_data):
         result = assess_project(sample_data)
-        assert result["complexity_level"] in ("low", "medium", "high", "very_high")
+        assert result["summary"]["complexity_level"] in ("low", "medium", "high", "very_high")
 
     def test_feature_detection_apply_simple(self, sample_data):
         result = assess_project(sample_data)
-        assert result["feature_support"].get("apply_simple_complex_sql") == "unsupported"
+        assert result["summary"]["feature_support"].get("apply_simple_complex_sql") == "unsupported"
 
     def test_feature_detection_running_sum(self, sample_data):
         result = assess_project(sample_data)
-        assert result["feature_support"].get("olap_running_sum") == "approximated"
+        assert result["summary"]["feature_support"].get("olap_running_sum") == "approximated"
 
     def test_feature_detection_custom_groups(self, sample_data):
         result = assess_project(sample_data)
-        assert result["feature_support"].get("custom_groups") == "manual_review"
+        assert result["summary"]["feature_support"].get("custom_groups") == "manual_review"
 
     def test_feature_detection_rls(self, sample_data):
         result = assess_project(sample_data)
-        assert result["feature_support"].get("row_level_security") == "approximated"
+        assert result["summary"]["feature_support"].get("row_level_security") == "approximated"
 
     def test_fidelity_estimate(self, sample_data):
         result = assess_project(sample_data)
-        assert 0.0 <= result["estimated_fidelity"] <= 1.0
+        assert 0.0 <= result["summary"]["estimated_fidelity"] <= 1.0
 
     def test_recommendations_not_empty(self, sample_data):
         result = assess_project(sample_data)
-        assert len(result["recommendations"]) > 0
+        assert len(result["summary"]["recommendations"]) > 0
 
     def test_recommendation_apply_simple(self, sample_data):
         result = assess_project(sample_data)
-        assert any("ApplySimple" in r for r in result["recommendations"])
+        assert any("ApplySimple" in r for r in result["summary"]["recommendations"])
 
     def test_recommendation_custom_groups(self, sample_data):
         result = assess_project(sample_data)
-        assert any("Custom groups" in r for r in result["recommendations"])
+        assert any("Custom groups" in r for r in result["summary"]["recommendations"])
 
     def test_recommendation_rls(self, sample_data):
         result = assess_project(sample_data)
-        assert any("Security filters" in r or "RLS" in r for r in result["recommendations"])
+        assert any("Security filters" in r or "RLS" in r for r in result["summary"]["recommendations"])
 
     def test_empty_project(self):
         result = assess_project({})
-        assert result["total_objects"] == 0
-        assert result["complexity_score"] == 0
-        assert result["estimated_fidelity"] == 0.0
+        s = result["summary"]
+        assert s["total_objects"] == 0
+        assert s["complexity_score"] == 0
+        assert s["estimated_fidelity"] == 0.0
 
     def test_low_complexity(self):
         data = {
@@ -608,14 +610,14 @@ class TestAssessment:
             "reports": [{"id": "r"}],
         }
         result = assess_project(data)
-        assert result["complexity_level"] == "low"
+        assert result["summary"]["complexity_level"] == "low"
 
     def test_writes_json_report(self, sample_data, tmp_path):
         assess_project(sample_data, output_dir=str(tmp_path))
         rpt = tmp_path / "assessment_report.json"
         assert rpt.exists()
         report = json.loads(rpt.read_text(encoding="utf-8"))
-        assert "complexity_score" in report
+        assert "summary" in report
 
     def test_writes_html_report(self, sample_data, tmp_path):
         assess_project(sample_data, output_dir=str(tmp_path))
@@ -632,7 +634,7 @@ class TestAssessment:
     def test_no_output_dir_no_file(self, sample_data, tmp_path):
         result = assess_project(sample_data)
         # Should work, just not write files
-        assert "complexity_score" in result
+        assert "summary" in result
 
     def test_fidelity_penalty_unsupported(self):
         """Unsupported features reduce fidelity."""
@@ -641,7 +643,7 @@ class TestAssessment:
             "reports": [{"id": "r"}],
         }
         result = assess_project(data)
-        assert result["estimated_fidelity"] < 1.0
+        assert result["summary"]["estimated_fidelity"] < 1.0
 
     def test_complexity_capped_at_100(self):
         """Very large projects cap at 100."""
@@ -650,8 +652,8 @@ class TestAssessment:
             "custom_groups": [{"id": f"cg{i}"} for i in range(50)],
         }
         result = assess_project(data)
-        assert result["complexity_score"] == 100
-        assert result["complexity_level"] == "very_high"
+        assert result["summary"]["complexity_score"] == 100
+        assert result["summary"]["complexity_level"] == "very_high"
 
     def test_no_risks_recommendation(self):
         """Clean project gets a confidence message."""
@@ -661,4 +663,4 @@ class TestAssessment:
             "metrics": [],
         }
         result = assess_project(data)
-        assert any("No major migration risks" in r for r in result["recommendations"])
+        assert any("No major migration risks" in r for r in result["summary"]["recommendations"])

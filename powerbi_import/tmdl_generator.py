@@ -61,7 +61,35 @@ _GEO_ROLE_MAP = {
     "longitude": "Longitude",
     "address": "Address",
     "place": "Place",
+    "web_url": "WebUrl",
+    "image_url": "ImageUrl",
+    "barcode": "Barcode",
 }
+
+# MSTR format string → TMDL formatString mapping
+_FORMAT_MAP = {
+    "fixed": "#,##0.00",
+    "currency": "$#,##0.00",
+    "percent": "0.00%",
+    "scientific": "0.00E+00",
+    "general": "",
+    "date": "yyyy-MM-dd",
+    "time": "HH:mm:ss",
+    "datetime": "yyyy-MM-dd HH:mm:ss",
+}
+
+
+def _convert_format_string(mstr_format):
+    """Convert MSTR format string to TMDL formatString."""
+    if not mstr_format:
+        return ""
+    low = mstr_format.lower().strip()
+    if low in _FORMAT_MAP:
+        return _FORMAT_MAP[low]
+    # Common MSTR patterns: #,##0;  #,##0.00
+    if any(c in mstr_format for c in ('#', '0', '%')):
+        return mstr_format  # Already in Excel-style format
+    return mstr_format
 
 
 def generate_all_tmdl(data, output_dir):
@@ -264,6 +292,10 @@ def generate_table_tmdl(datasource, table_attrs, table_facts, table_metrics,
             category = _GEO_ROLE_MAP.get(geo_role.lower())
             if category:
                 lines.append(f"\t\tdataCategory: {category}")
+
+        # Column annotation: preserve MSTR source metadata
+        if col.get("source_attribute_id"):
+            lines.append(f"\t\tannotation MSTR_SourceId = {col['source_attribute_id']}")
 
         lines.append("")
 
