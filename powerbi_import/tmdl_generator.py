@@ -194,6 +194,7 @@ def generate_table_tmdl(datasource, table_attrs, table_facts, table_metrics,
 
     # Determine attribute key columns (hidden)
     key_columns = set()
+    primary_key = None  # TMDL allows only one isKey column per table
     desc_columns = {}
     geo_columns = {}
     for attr in table_attrs:
@@ -207,6 +208,19 @@ def generate_table_tmdl(datasource, table_attrs, table_facts, table_metrics,
             for form in attr["forms"]:
                 if form.get("table") == table_name:
                     geo_columns[form["column_name"]] = attr["geographic_role"]
+
+    # Pick a single primary key: prefer column matching table name pattern
+    if key_columns:
+        table_id_col = f"{table_name}_ID" if not table_name.endswith("_ID") else table_name
+        # Prefer TABLE_ID, then first column named *_ID, then first key column
+        for col_name in key_columns:
+            if col_name.upper() == table_id_col.upper():
+                primary_key = col_name
+                break
+        if not primary_key:
+            # Take the first _ID column alphabetically for determinism
+            id_cols = sorted(c for c in key_columns if c.upper().endswith("_ID"))
+            primary_key = id_cols[0] if id_cols else sorted(key_columns)[0]
 
     # Is this a fact table? All non-key/non-FK columns should be hidden
     is_fact_table = any(f.get("expressions", [{}])[0].get("table") == table_name
@@ -233,8 +247,8 @@ def generate_table_tmdl(datasource, table_attrs, table_facts, table_metrics,
         if col_name in key_columns or is_fact_table:
             lines.append("\t\tisHidden")
 
-        # Key column
-        if col_name in key_columns and not is_fact_table:
+        # Key column — only one per table allowed in TMDL
+        if col_name == primary_key and not is_fact_table:
             lines.append("\t\tisKey")
 
         lines.append(f"\t\tsourceColumn: {col_name}")
