@@ -194,7 +194,6 @@ def generate_table_tmdl(datasource, table_attrs, table_facts, table_metrics,
 
     # Determine attribute key columns (hidden)
     key_columns = set()
-    primary_key = None  # TMDL allows only one isKey column per table
     desc_columns = {}
     geo_columns = {}
     for attr in table_attrs:
@@ -209,22 +208,16 @@ def generate_table_tmdl(datasource, table_attrs, table_facts, table_metrics,
                 if form.get("table") == table_name:
                     geo_columns[form["column_name"]] = attr["geographic_role"]
 
-    # Pick a single primary key: prefer column matching table name pattern
-    if key_columns:
-        table_id_col = f"{table_name}_ID" if not table_name.endswith("_ID") else table_name
-        # Prefer TABLE_ID, then first column named *_ID, then first key column
-        for col_name in key_columns:
-            if col_name.upper() == table_id_col.upper():
-                primary_key = col_name
-                break
-        if not primary_key:
-            # Take the first _ID column alphabetically for determinism
-            id_cols = sorted(c for c in key_columns if c.upper().endswith("_ID"))
-            primary_key = id_cols[0] if id_cols else sorted(key_columns)[0]
-
     # Is this a fact table? All non-key/non-FK columns should be hidden
     is_fact_table = any(f.get("expressions", [{}])[0].get("table") == table_name
                         for f in table_facts if f.get("expressions"))
+
+    # TMDL allows only one isKey column per table.
+    # When multiple key columns exist, generate a composite RowKey calculated column.
+    needs_composite_key = len(key_columns) > 1 and not is_fact_table
+    single_key = None
+    if not is_fact_table and len(key_columns) == 1:
+        single_key = next(iter(key_columns))
 
     # Generate columns
     lines.append("")
@@ -247,8 +240,8 @@ def generate_table_tmdl(datasource, table_attrs, table_facts, table_metrics,
         if col_name in key_columns or is_fact_table:
             lines.append("\t\tisHidden")
 
-        # Key column — only one per table allowed in TMDL
-        if col_name == primary_key and not is_fact_table:
+        # Key column — only when there's a single natural key
+        if col_name == single_key:
             lines.append("\t\tisKey")
 
         lines.append(f"\t\tsourceColumn: {col_name}")
@@ -261,6 +254,19 @@ def generate_table_tmdl(datasource, table_attrs, table_facts, table_metrics,
             if category:
                 lines.append(f"\t\tdataCategory: {category}")
 
+        lines.append("")
+
+    # Composite key: merge multiple key columns into a single calculated column
+    if needs_composite_key:
+        sorted_keys = sorted(key_columns)
+        concat_parts = " & \"|\" & ".join(f"[{k}]" for k in sorted_keys)
+        dax_expr = concat_parts
+        lines.append("\tcolumn RowKey")
+        lines.append("\t\tdataType: string")
+        lines.append("\t\tisHidden")
+        lines.append("\t\tisKey")
+        lines.append(f"\t\texpression: = {dax_expr}")
+        lines.append(f"\t\tlineageTag: col-{_make_tag(table_name, 'RowKey')}")
         lines.append("")
 
     # Generate measures (metrics assigned to this table)
