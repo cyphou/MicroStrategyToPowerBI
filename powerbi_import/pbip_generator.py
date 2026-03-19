@@ -22,6 +22,7 @@ Creates the full .pbip folder structure:
 import json
 import os
 import logging
+import uuid
 
 from powerbi_import.tmdl_generator import (
     generate_all_tmdl,
@@ -58,7 +59,10 @@ def generate_pbip(data, output_dir, report_name="MicroStrategy Report"):
         dict with combined generation statistics
     """
     os.makedirs(output_dir, exist_ok=True)
-    logical_id = _slugify(report_name)
+    # Generate deterministic GUIDs for logicalId (Power BI requires System.Guid)
+    _ns = uuid.UUID("a3b2c1d0-1234-5678-9abc-def012345678")
+    sm_logical_id = str(uuid.uuid5(_ns, report_name + "-sm"))
+    rpt_logical_id = str(uuid.uuid5(_ns, report_name + "-rpt"))
 
     stats = {
         "tables": 0,
@@ -95,7 +99,7 @@ def generate_pbip(data, output_dir, report_name="MicroStrategy Report"):
     _write_model_tmdl(sm_def, report_name, data=data)
 
     # Manifests
-    _write_platform(sm_root, "SemanticModel", logical_id + "-sm", display_name=report_name)
+    _write_platform(sm_root, "SemanticModel", sm_logical_id, display_name=report_name)
     _write_pbism(sm_root)
 
     # database.tmdl (compatibility level)
@@ -111,7 +115,7 @@ def generate_pbip(data, output_dir, report_name="MicroStrategy Report"):
     stats["slicers"] = visual_stats.get("slicers", 0)
     stats["unsupported_visuals"] = visual_stats.get("unsupported", 0)
 
-    _write_platform(rpt_root, "Report", logical_id + "-rpt", display_name=report_name)
+    _write_platform(rpt_root, "Report", rpt_logical_id, display_name=report_name)
 
     # definition.pbir (links report → semantic model)
     _write_pbir(rpt_root, report_name)

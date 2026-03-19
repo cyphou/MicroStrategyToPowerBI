@@ -223,12 +223,16 @@ class TestPbipReportName:
         assert (tmp_path / "Sales Dashboard.SemanticModel").is_dir()
         assert (tmp_path / "Sales Dashboard.Report").is_dir()
 
-    def test_logical_id_slugified(self, data, tmp_path):
+    def test_logical_id_is_guid(self, data, tmp_path):
+        import uuid
         generate_pbip(data, str(tmp_path), report_name="My Report")
         p = json.loads(
             (tmp_path / "My Report.SemanticModel" / ".platform").read_text()
         )
-        assert p["config"]["logicalId"] == "my-report-sm"
+        # logicalId must be a valid GUID
+        lid = p["config"]["logicalId"]
+        parsed = uuid.UUID(lid)
+        assert str(parsed) == lid
 
 
 # ═══════════════════════════════════════════════════════════════════
