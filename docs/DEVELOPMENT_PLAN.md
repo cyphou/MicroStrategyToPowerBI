@@ -1,9 +1,9 @@
 # Development Plan — MicroStrategy to Power BI / Fabric Migration Tool
 
-**Version:** v1.0.0 (planning)  
-**Date:** 2026-03-18  
+**Version:** v3.0.0 (released)  
+**Date:** 2026-03-20  
 **Based on:** Tableau to Power BI Migration Tool (v17.0.0 architecture)  
-**Current state:** Planning phase
+**Current state:** v3.0 complete — 623 tests passing, 11 new modules in v3.0
 
 ---
 

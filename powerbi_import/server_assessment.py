@@ -25,15 +25,17 @@ class WorkbookReadiness:
     def __init__(self, name, assessment_report):
         self.name = name
         r = assessment_report
+        # Support both flat (v2) and nested (v3) report structures
+        summary = r.get("summary", r)
         checks = r.get("checks", [])
         self.pass_count = sum(1 for c in checks if c.get("severity") == "pass")
         self.warn_count = sum(1 for c in checks if c.get("severity") == "warning")
         self.fail_count = sum(1 for c in checks if c.get("severity") == "fail")
         self.info_count = sum(1 for c in checks if c.get("severity") == "info")
-        self.complexity = r.get("complexity_score", 0)
-        self.effort_hours = r.get("effort_hours", 0)
-        self.connectors = r.get("connectors", [])
-        self.counts = r.get("object_counts", {})
+        self.complexity = summary.get("complexity_score", 0)
+        self.effort_hours = summary.get("effort_hours", 0)
+        self.connectors = summary.get("connectors", [])
+        self.counts = summary.get("object_counts", {})
 
         if self.fail_count == 0 and self.warn_count <= 2:
             self.status = "GREEN"
@@ -74,16 +76,24 @@ class ServerAssessment:
 # ── Public API ───────────────────────────────────────────────────
 
 def run_server_assessment(project_assessments):
-    """Run server-wide assessment from a list of project assessment reports.
+    """Run server-wide assessment from a list of assessment reports.
 
     Args:
-        project_assessments: list of (project_name, assessment_report_dict) tuples
+        project_assessments: list of assessment_report dicts, or list of
+            (project_name, assessment_report_dict) tuples.
 
     Returns:
-        ServerAssessment
+        dict with workbooks, waves, and aggregate stats.
     """
     results = []
-    for name, report in project_assessments:
+    for item in project_assessments:
+        if isinstance(item, (list, tuple)) and len(item) == 2:
+            name, report = item
+        elif isinstance(item, dict):
+            name = item.get("project_name", f"Project_{len(results)+1}")
+            report = item
+        else:
+            continue
         results.append(WorkbookReadiness(name, report))
 
     wave1 = [r for r in results if r.status == "GREEN" and r.complexity <= 20]
@@ -98,7 +108,27 @@ def run_server_assessment(project_assessments):
         MigrationWave(3, "Complex (RED, high complexity)", wave3),
     ]
 
-    return ServerAssessment(results, waves)
+    return _server_assessment_to_dict(ServerAssessment(results, waves))
+
+
+def _server_assessment_to_dict(assessment):
+    """Convert ServerAssessment to a plain dict."""
+    return {
+        "total_workbooks": assessment.total,
+        "readiness_pct": assessment.readiness_pct,
+        "green": assessment.green,
+        "yellow": assessment.yellow,
+        "red": assessment.red,
+        "total_effort_hours": assessment.total_effort,
+        "connector_census": assessment.connector_census,
+        "workbooks": [r.to_dict() for r in assessment.workbook_results],
+        "waves": [
+            {"wave": w.number, "label": w.label,
+             "members": [wb.name for wb in w.workbooks],
+             "effort_hours": w.total_effort}
+            for w in assessment.waves
+        ],
+    }
 
 
 def save_server_assessment_json(assessment, output_dir):

@@ -1,8 +1,9 @@
 # Test Strategy — MicroStrategy to Power BI / Fabric Migration Tool
 
-**Version:** v1.0.0  
-**Date:** 2026-03-19  
-**Coverage Target:** ≥80% overall, ≥95% expression converter
+**Version:** v3.0.0  
+**Date:** 2026-03-20  
+**Coverage Target:** ≥80% overall, ≥95% expression converter  
+**Current:** 623 tests passing
 
 ---
 
@@ -12,7 +13,7 @@
 2. **No live MicroStrategy server required** — all tests use mock API responses and fixture data. The `MockMstrRestClient` in conftest.py replaces the real REST client.
 3. **Expression conversion is the highest-risk area** — parametrized tests cover every function mapping, level metric pattern, derived metric type, and ApplySimple SQL pattern.
 4. **Generation output is validated structurally** — TMDL syntax, PBIR schema, and .pbip project structure are verified against expected output snapshots.
-5. **Reference project**: TableauToPowerBI has 4,219 tests across 77 files. We target 2,000+ tests at v1.0.
+5. **Reference project**: TableauToPowerBI has 4,219 tests across 77 files. We target 2,000+ tests at maturity. Current: 623 tests across 15 test files.
 
 ---
 

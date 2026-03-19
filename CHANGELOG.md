@@ -2,6 +2,64 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.0.0] — 2026-03-20
+
+### 🚀 v3.0 — Enterprise Assessment, Strategy, Telemetry & Extensibility
+
+Major release adding 11 new modules for enterprise-grade migration assessment, strategy advisory, comparison reporting, and an extensible plugin system.
+
+### Added
+
+**Sprint F: Regression Test Suite**
+- `tests/test_regression.py` — 10 regression test classes covering all PBI Desktop bugs fixed in v2.x (format strings, Calendar table, RLS syntax, relationship TMDL, page layout, etc.)
+
+**Sprint G: TMDL Enhancements**
+- Format string generation for numeric/currency/percentage measures
+- Geographic data category annotations (City, State, Country, PostalCode, Latitude, Longitude)
+- Column-level annotations for lineage tracking
+
+**Sprint H: 14-Category Assessment Engine**
+- Complete rewrite of `assessment.py` — `CheckItem`/`CategoryResult`/`AssessmentReport` data model
+- 14 assessment categories: expressions, visuals, connectors, security, prompts, hierarchies, relationships, data types, formatting, calculated tables, partitions, RLS, aggregations, advanced features
+- GREEN/YELLOW/RED scoring with effort estimation in hours
+- Connector tier classification
+- `server_assessment.py` — Server-wide portfolio assessment with `WorkbookReadiness` and `MigrationWave` planning
+- `global_assessment.py` — Multi-project global assessment with pairwise-merge clustering
+
+**Sprint I: Comparison & Telemetry**
+- `comparison_report.py` — Side-by-side MSTR↔PBI HTML comparison report
+- `visual_diff.py` — Visual type + field coverage analysis (identifies missing columns, measure mismatches)
+- `telemetry.py` — Migration run data collection (timings, object counts, fidelity)
+- `telemetry_dashboard.py` — Historical aggregation HTML dashboard across runs
+
+**Sprint J: Thin Report Generator**
+- `thin_report_generator.py` — Generates lightweight reports referencing a shared semantic model
+- Supports remote model ID for Fabric deployment scenarios
+
+**Sprint K: Progress & Plugins**
+- `progress.py` — tqdm-based progress bar wrapper with fallback for non-TTY environments
+- `plugins.py` — Extension point hook system (pre/post extraction, pre/post generation, custom transformations)
+
+**CLI Enhancements**
+- `--global-assess DIR` — Portfolio-wide assessment across multiple project directories
+- `--strategy` — Import/DirectQuery/Composite/DirectLake strategy recommendation
+- `--compare` — Side-by-side comparison report generation after migration
+- `--no-calendar` — Suppress Calendar table generation (when date dimension already exists)
+- `strategy_advisor.py` — Automatic mode recommendation with confidence scoring
+
+### Fixed
+- `server_assessment.py`: Handle both plain dicts and `(name, report)` tuples in `run_server_assessment()`
+- `server_assessment.py`: Return plain dict via `_server_assessment_to_dict()` for JSON serialization
+- `server_assessment.py`: `WorkbookReadiness` handles v3 nested report structure (`summary` key)
+- `thin_report_generator.py`: Removed unsupported `report_name` kwarg from `generate_all_visuals()` call
+
+### Tests
+- 43 new tests in `test_v3_features.py` (assessment categories, server assessment, global assessment, strategy advisor, comparison report, visual diff, telemetry, thin reports, plugins, progress)
+- 10 new tests in `test_regression.py`
+- **Total: 623 tests passing**
+
+---
+
 ## [2.0.0] — 2026-03-19
 
 ### 🚀 v2.0 — CI/CD, Wizard, DAX Depth, Performance, Incremental, Dashboard

@@ -92,7 +92,7 @@ def generate_thin_report(data, output_dir, *, report_name, shared_model_name,
     pages_dir = os.path.join(rpt_def, "pages")
     os.makedirs(pages_dir, exist_ok=True)
 
-    stats = generate_all_visuals(data, pages_dir, report_name=report_name)
+    stats = generate_all_visuals(data, pages_dir)
 
     # ── .gitignore ───────────────────────────────────────────────
     gi_path = os.path.join(project_dir, ".gitignore")

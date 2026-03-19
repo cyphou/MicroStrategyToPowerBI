@@ -93,13 +93,25 @@ flowchart LR
 |--------|----------------|
 | `import_to_powerbi.py` | Loads intermediate JSON files and orchestrates generation pipeline. |
 | `pbip_generator.py` | Creates `.pbip` project directory structure: `.pbip` file, `.gitignore`, SemanticModel (TMDL), Report (PBIR v4.0). |
-| `tmdl_generator.py` | Generates TMDL semantic model: tables (from warehouse tables), columns (from attribute forms + fact columns), measures (from metrics), relationships, hierarchies, RLS roles, Calendar table. |
+| `tmdl_generator.py` | Generates TMDL semantic model: tables (from warehouse tables), columns (from attribute forms + fact columns), measures (from metrics), relationships, hierarchies, RLS roles, Calendar table. Format strings, geographic roles, annotations. |
 | `visual_generator.py` | Generates PBIR v4.0 visuals: maps dossier visualizations / report grids+graphs to Power BI visual types with data bindings. |
 | `m_query_generator.py` | Generates Power Query M expressions for warehouse connections. Handles 15+ database types + freeform SQL passthrough. |
 | `dax_expression_gen.py` | Assembles final DAX expressions for measures, incorporating expression converter output with proper table/column references. |
 | `validator.py` | Validates generated artifacts: TMDL syntax, PBIR schema, relationship cycles, DAX references, column type compatibility. |
-| `assessment.py` | Pre-migration assessment: analyzes MicroStrategy project complexity, unsupported features, estimated fidelity. |
+| `assessment.py` | 14-category pre-migration assessment: CheckItem/CategoryResult/AssessmentReport model. GREEN/YELLOW/RED scoring with effort estimation in hours. |
 | `migration_report.py` | Generates migration report (JSON + HTML): per-object status, expression conversion details, warnings, manual review items. |
+| `dashboard.py` | Interactive HTML fidelity dashboard: fidelity gauge, type breakdown, heatmap, searchable object table. |
+| `shared_model.py` | Shared semantic model: merges all project schema into one model with thin reports per dossier. |
+| `thin_report_generator.py` | Thin reports referencing a shared semantic model. PBIR `byPath` or `byConnection` bindings. |
+| `server_assessment.py` | Server-wide portfolio assessment: `WorkbookReadiness`, `MigrationWave` planning across multiple projects. |
+| `global_assessment.py` | Multi-project global assessment with pairwise-merge clustering and consolidated scoring. |
+| `comparison_report.py` | Side-by-side MSTR↔PBI HTML comparison report for post-migration validation. |
+| `visual_diff.py` | Visual type + field coverage analysis: identifies missing columns, measure mismatches, layout differences. |
+| `strategy_advisor.py` | Import/DirectQuery/Composite/DirectLake mode recommendation with confidence scoring. |
+| `telemetry.py` | Migration run data collection: timings, object counts, fidelity scores per run. |
+| `telemetry_dashboard.py` | Historical aggregation HTML dashboard across multiple migration runs. |
+| `progress.py` | tqdm-based progress bar wrapper with fallback for non-TTY environments. |
+| `plugins.py` | Extension point hook system: pre/post extraction, pre/post generation, custom transformation plugins. |
 | `deploy/` | Deployment to Power BI Service (REST API) and Microsoft Fabric. Azure AD authentication. Gateway configuration. |
 
 ---

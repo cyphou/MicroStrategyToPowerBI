@@ -4,9 +4,19 @@
 
 - [ ] **Inventory MicroStrategy project**
   - Run `python migrate.py --server URL --project P --assess` 
-  - Review object counts: attributes, facts, metrics, reports, dossiers
+  - Review 14-category assessment: expressions, visuals, connectors, security, prompts, hierarchies, relationships, data types, formatting, calculated tables, partitions, RLS, aggregations, advanced features
+  - Review GREEN/YELLOW/RED scoring and effort estimation (hours)
   - Identify unsupported features (transaction services, custom viz plugins)
-  - Estimate migration fidelity per report/dossier
+
+- [ ] **Portfolio-wide assessment** (if multiple projects)
+  - Run `python migrate.py --global-assess ./exports/ --output-dir assessment/`
+  - Review consolidated scoring across all projects
+  - Identify common patterns and shared data sources
+
+- [ ] **Strategy recommendation**
+  - Run `python migrate.py --server URL --project P --strategy`
+  - Review recommended mode: Import / DirectQuery / Composite / DirectLake
+  - Validate recommendation against data volume and refresh requirements
 
 - [ ] **Map data connections**
   - List all warehouse connections (Oracle, SQL Server, Teradata, etc.)
@@ -41,6 +51,8 @@
   - Open `.pbip` in Power BI Desktop
   - Verify data connections work
   - Compare visuals against MicroStrategy originals
+  - Run comparison report: `python migrate.py --server URL --project P --dossier "Pilot Dashboard" --compare`
+  - Review side-by-side HTML comparison and visual diff
   - Check calculated measures against known values
   - Review migration report for warnings
 

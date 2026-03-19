@@ -5,8 +5,8 @@ Thanks for your interest in contributing to the MicroStrategy to Power BI migrat
 ## Getting Started
 
 ```bash
-git clone https://github.com/your-org/MicroStrategy-To-PowerBI.git
-cd MicroStrategy-To-PowerBI
+git clone https://github.com/cyphou/MicroStrategyToPowerBI.git
+cd MicroStrategyToPowerBI
 pip install -r requirements.txt
 pip install -e ".[dev]"
 python -m pytest tests/ -q

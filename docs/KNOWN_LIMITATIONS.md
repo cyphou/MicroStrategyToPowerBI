@@ -1,5 +1,19 @@
 # Known Limitations — MicroStrategy to Power BI Migration
 
+## v3.0 Improvements
+
+| Feature | Status | Details |
+|---------|--------|--------|
+| **14-category assessment** | ✅ New | CheckItem/CategoryResult model with GREEN/YELLOW/RED scoring, effort estimation in hours |
+| **Strategy advisor** | ✅ New | Automatic Import/DQ/Composite/DirectLake recommendation with confidence scoring |
+| **Comparison reports** | ✅ New | Side-by-side MSTR↔PBI HTML comparison for post-migration validation |
+| **Visual diff** | ✅ New | Field coverage analysis identifying missing columns and measure mismatches |
+| **Telemetry** | ✅ New | Migration run data collection with historical dashboard |
+| **Thin reports** | ✅ New | Lightweight reports referencing shared semantic models |
+| **Plugin system** | ✅ New | Extension hooks for custom pre/post transformations |
+| **Progress bars** | ✅ New | tqdm-based progress tracking for long-running operations |
+| **Calendar suppression** | ✅ New | `--no-calendar` flag when date dimension table exists |
+
 ## Unsupported Features
 
 | Feature | Status | Notes |
@@ -29,12 +43,12 @@
 
 | Gap | Details | Planned Fix |
 |-----|---------|-------------|
-| `ApplyAgg` / `ApplyOLAP` functions | Flagged as manual review | Sprint 11: Enhanced passthrough handling |
-| Object prompts with dynamic attributes | Converted to static field parameter | Sprint 12: Dynamic parameter support |
-| Prompted Intelligent Cubes | Static import from default answers | Sprint 12: Parameter integration |
-| Multi-source reports | Merged into single model | Sprint 13: Multi-model support |
-| Nested panel stacks | Flattened to single level | Sprint 12: Deep panel stack support |
-| Theme CSS customization | Basic colors only | Sprint 12: Theme enrichment |
+| **ApplyAgg** / **ApplyOLAP** functions | Flagged as manual review | Future: Enhanced passthrough handling |
+| Object prompts with dynamic attributes | Converted to static field parameter | Future: Dynamic parameter support |
+| Prompted Intelligent Cubes | Static import from default answers | Future: Parameter integration |
+| Multi-source reports | Merged into single model | Future: Multi-model support |
+| Nested panel stacks | Flattened to single level | Future: Deep panel stack support |
+| Theme CSS customization | Basic colors only | Future: Theme enrichment |
 
 ## MicroStrategy Version Compatibility
 

@@ -32,6 +32,25 @@ microstrategy_export/   # Step 1: Extraction layer (REST API → JSON)
 
 powerbi_import/         # Step 2: Generation layer (JSON → .pbip)
   import_to_powerbi.py  #   Importer orchestrator
+  pbip_generator.py     #   .pbip project assembly
+  tmdl_generator.py     #   TMDL semantic model
+  visual_generator.py   #   PBIR v4.0 visual JSON
+  m_query_generator.py  #   Power Query M expressions
+  validator.py          #   TMDL/PBIR/DAX validation
+  assessment.py         #   14-category pre-migration assessment
+  migration_report.py   #   Fidelity report (JSON + HTML)
+  dashboard.py          #   Interactive HTML fidelity dashboard
+  shared_model.py       #   Shared semantic model generator
+  thin_report_generator.py  # Thin reports (shared model ref)
+  server_assessment.py  #   Server-wide portfolio assessment
+  global_assessment.py  #   Multi-project global assessment
+  comparison_report.py  #   Source-vs-output comparison report
+  visual_diff.py        #   Visual field coverage analysis
+  strategy_advisor.py   #   Import/DQ/Composite/DirectLake advisor
+  telemetry.py          #   Migration run data collection
+  telemetry_dashboard.py #  Historical run dashboard
+  progress.py           #   Progress bar wrapper
+  plugins.py            #   Plugin extension system
 
 migrate.py              # CLI entry point
 ```
@@ -59,8 +78,7 @@ python migrate.py --help
 - Zero external dependencies for core logic (only `requests` for REST API)
 - All extraction modules return plain dicts/lists serializable to JSON
 - Generation modules consume only the intermediate JSON files (decoupled from extraction)
-- See `docs/DEVELOPMENT_PLAN.md` for the 15-sprint roadmap
-- See `docs/MAPPING_REFERENCE.md` for all MSTR→PBI mapping tables
+- See `docs/DEVELOPMENT_PLAN.md` for the full sprint roadmap\n- See `docs/MAPPING_REFERENCE.md` for all MSTR→PBI mapping tables
 
 ## Multi-Agent Development
 
@@ -74,6 +92,15 @@ python migrate.py --help
 | `@testing` | Unit tests, fixtures, coverage | `tests/*` |
 | `@validation` | Assessment, fidelity scoring, reports | Validation/reporting modules |
 | `@orchestrator` | CLI, config, cross-module coordination | `migrate.py`, `docs/`, `pyproject.toml` |
-- Generation modules consume only the intermediate JSON files (decoupled from extraction)
-- See `docs/DEVELOPMENT_PLAN.md` for the 15-sprint roadmap
-- See `docs/MAPPING_REFERENCE.md` for all MSTR→PBI mapping tables
+
+## v3.0 Features
+
+- **14-category assessment** with GREEN/YELLOW/RED scoring and effort estimation
+- **Strategy advisor**: Import/DirectQuery/Composite/DirectLake recommendation
+- **Comparison report**: Side-by-side MSTR↔PBI HTML report
+- **Visual diff**: Field coverage analysis
+- **Telemetry**: Migration run data collection + historical dashboard
+- **Thin reports**: Shared model reference reports
+- **Plugin system**: Extension hooks for custom transformations
+- **Progress bars**: tqdm-based progress tracking
+- CLI flags: `--global-assess`, `--strategy`, `--compare`, `--no-calendar`

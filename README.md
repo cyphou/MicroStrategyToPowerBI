@@ -12,11 +12,11 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/tests-385%20passed-brightgreen?style=for-the-badge" alt="Tests"/>
+  <img src="https://img.shields.io/badge/tests-623%20passed-brightgreen?style=for-the-badge" alt="Tests"/>
   <img src="https://img.shields.io/badge/coverage-80%25%2B-brightgreen?style=for-the-badge" alt="Coverage"/>
   <img src="https://img.shields.io/badge/python-3.9%2B-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python"/>
   <img src="https://img.shields.io/badge/license-MIT-green?style=for-the-badge" alt="License"/>
-  <img src="https://img.shields.io/badge/version-1.0.0-blue?style=for-the-badge" alt="Version"/>
+  <img src="https://img.shields.io/badge/version-3.0.0-blue?style=for-the-badge" alt="Version"/>
 </p>
 
 <p align="center">
@@ -47,8 +47,8 @@ python migrate.py --server https://mstr.company.com/MicroStrategyLibrary \
 <summary><b>📦 Installation</b></summary>
 
 ```bash
-git clone https://github.com/your-org/MicroStrategy-To-PowerBI.git
-cd MicroStrategy-To-PowerBI
+git clone https://github.com/cyphou/MicroStrategyToPowerBI.git
+cd MicroStrategyToPowerBI
 pip install -r requirements.txt
 python migrate.py --help
 ```
@@ -75,6 +75,17 @@ python migrate.py --server URL --username admin --password secret \
 # 🔍 Pre-migration readiness assessment
 python migrate.py --server URL --username admin --password secret \
     --project "Sales Analytics" --assess
+
+# 📊 Portfolio-wide assessment (all projects in a directory)
+python migrate.py --global-assess ./mstr_exports/ --output-dir assessment/
+
+# 🧭 Strategy recommendation (Import vs DirectQuery vs Composite)
+python migrate.py --server URL --username admin --password secret \
+    --project "Sales Analytics" --strategy
+
+# 📋 Side-by-side comparison report after migration
+python migrate.py --server URL --username admin --password secret \
+    --project "Sales Analytics" --dossier "Executive Dashboard" --compare
 
 # 🚀 Migrate + deploy to Power BI Service in one shot
 python migrate.py --server URL --username admin --password secret \
@@ -149,6 +160,34 @@ One-command deploy to **Power BI Service** or **Microsoft Fabric** with Azure AD
 
 ### 🔗 Shared Semantic Model
 Entire MicroStrategy project schema → **one shared Power BI semantic model** with thin reports per dossier. Attribute/fact/metric deduplication across all reports. Fabric bundle deployment as an atomic unit.
+
+</td>
+</tr>
+<tr>
+<td>
+
+### 📋 14-Category Assessment
+Pre-migration readiness check with **GREEN/YELLOW/RED** scoring across 14 categories: expressions, visuals, connectors, security, prompts, hierarchies, relationships, data types, formatting, calculated tables, partitions, row-level security, aggregations, advanced features. Effort estimation in hours.
+
+</td>
+<td>
+
+### 🧭 Strategy Advisor
+Automatic recommendation of **Import, DirectQuery, Composite, or DirectLake** mode based on data volume, refresh frequency, query patterns, and Fabric availability. Per-project strategy with confidence scoring.
+
+</td>
+</tr>
+<tr>
+<td>
+
+### 📊 Comparison Reports & Visual Diff
+Side-by-side **MSTR ↔ PBI** comparison HTML report. Visual field coverage analysis: identifies missing columns, measure mismatches, and layout differences. Portfolio-level telemetry dashboard across migration runs.
+
+</td>
+<td>
+
+### 🔌 Plugin System & Telemetry
+Extensible hook system for custom transformations (pre/post extraction, pre/post generation). Migration run telemetry collection with historical dashboard. Progress bars for long-running operations.
 
 </td>
 </tr>
@@ -367,19 +406,37 @@ MicrostratToPowerBI/
 │   ├── tmdl_generator.py               # TMDL semantic model
 │   ├── visual_generator.py             # PBIR v4.0 visual JSON
 │   ├── m_query_generator.py            # Power Query M expressions
-│   └── migration_report.py             # Fidelity report (JSON + HTML)
+│   ├── validator.py                    # TMDL/PBIR/DAX validation
+│   ├── assessment.py                   # 14-category pre-migration assessment
+│   ├── migration_report.py             # Per-object fidelity report (JSON + HTML)
+│   ├── dashboard.py                    # Interactive HTML fidelity dashboard
+│   ├── shared_model.py                 # Shared semantic model generator
+│   ├── thin_report_generator.py        # Thin reports (shared model reference)
+│   ├── server_assessment.py            # Server-wide portfolio assessment
+│   ├── global_assessment.py            # Multi-project global assessment
+│   ├── comparison_report.py            # Source-vs-output comparison report
+│   ├── visual_diff.py                  # Visual field coverage analysis
+│   ├── strategy_advisor.py             # Import/DQ/Composite/DirectLake advisor
+│   ├── telemetry.py                    # Migration run data collection
+│   ├── telemetry_dashboard.py          # Historical run dashboard
+│   ├── progress.py                     # Progress bar wrapper
+│   └── plugins.py                      # Plugin extension system
 │
-├── tests/                              ── 385 tests ──
+├── tests/                              ── 623 tests ──
 │   ├── fixtures/                       # API response + intermediate JSON fixtures
-│   ├── test_tmdl_generator.py          # 48 tests
+│   ├── test_tmdl_generator.py          # 58 tests
 │   ├── test_visual_generator.py        # 97 tests
-│   ├── test_expression_converter.py    # 57 tests
-│   ├── test_pbip_assembly.py           # 45 tests
+│   ├── test_expression_converter.py    # 61 tests
+│   ├── test_pbip_assembly.py           # 43 tests
 │   ├── test_rest_api_client.py         # 28 tests
 │   ├── test_m_query_generator.py       # 19 tests
-│   ├── test_connection_mapper.py       # 15 tests
+│   ├── test_connection_mapper.py       # 16 tests
 │   ├── test_metric_extractor.py        # 15 tests
-│   └── ...                             # + schema, report, dossier, advanced tests
+│   ├── test_v2_features.py             # 70 tests (wizard, DAX, parallel, incremental)
+│   ├── test_v3_features.py             # 43 tests (assessment, strategy, diff, plugins)
+│   ├── test_regression.py              # 10 tests (PBI Desktop bug regression)
+│   ├── test_validator.py               # 80 tests (TMDL/PBIR/assessment validation)
+│   └── ...                             # + schema, report, dossier, integration tests
 │
 └── docs/                               ── Documentation ──
     ├── MIGRATION_PLAN.md               # Sprint execution plan
@@ -430,11 +487,17 @@ Deploy:
   --deploy WORKSPACE_ID    Deploy to Power BI workspace
   --deploy-refresh         Trigger dataset refresh after deploy
 
+Assessment:
+  --assess                 Pre-migration readiness assessment (14 categories)
+  --global-assess DIR      Portfolio-wide assessment across multiple projects
+  --strategy               Strategy recommendation (Import/DQ/Composite/DirectLake)
+  --compare                Side-by-side comparison report after migration
+
 Advanced:
-  --assess                 Pre-migration readiness assessment only
   --shared-model           Merge all into one semantic model
   --wizard                 Interactive step-by-step mode
   --from-export DIR        Offline mode: read from JSON export directory
+  --no-calendar            Suppress Calendar table generation
 ```
 
 </details>
@@ -496,13 +559,13 @@ The fidelity report classifies every migrated object:
 ## 🧪 Testing
 
 <p>
-  <img src="https://img.shields.io/badge/tests-385%20passed-brightgreen?style=for-the-badge" alt="Tests"/>
+  <img src="https://img.shields.io/badge/tests-623%20passed-brightgreen?style=for-the-badge" alt="Tests"/>
   <img src="https://img.shields.io/badge/coverage-80%25%2B-brightgreen?style=for-the-badge" alt="Coverage"/>
   <img src="https://img.shields.io/badge/fixtures-34%20files-blue?style=for-the-badge" alt="Fixtures"/>
 </p>
 
 ```bash
-python -m pytest tests/ -v                          # Run all 385 tests
+python -m pytest tests/ -v                          # Run all 623 tests
 python -m pytest tests/test_tmdl_generator.py -v    # Run specific file
 python -m pytest tests/ --cov --cov-report=html     # Coverage report
 ```
@@ -513,17 +576,21 @@ python -m pytest tests/ --cov --cov-report=html     # Coverage report
 | Test File | Tests | Coverage Area |
 |-----------|-------|---------------|
 | `test_visual_generator.py` | 97 | 30+ visual type mappings, data bindings, page layout, PBIR manifest |
-| `test_expression_converter.py` | 57 | 60+ function mappings, level metrics, derived metrics, ApplySimple |
-| `test_tmdl_generator.py` | 48 | Tables, columns, measures, relationships, hierarchies, RLS, calendar |
-| `test_pbip_assembly.py` | 45 | .pbip scaffold, SemanticModel, Report, migration report, E2E pipeline |
+| `test_validator.py` | 80 | TMDL/PBIR/assessment validation rules |
+| `test_v2_features.py` | 70 | Wizard, advanced DAX, parallel extraction, incremental migration |
+| `test_expression_converter.py` | 61 | 60+ function mappings, level metrics, derived metrics, ApplySimple |
+| `test_tmdl_generator.py` | 58 | Tables, columns, measures, relationships, hierarchies, RLS, calendar |
+| `test_v3_features.py` | 43 | Assessment, strategy advisor, visual diff, telemetry, plugins |
+| `test_pbip_assembly.py` | 43 | .pbip scaffold, SemanticModel, Report, migration report, E2E pipeline |
 | `test_rest_api_client.py` | 28 | Client init, auth modes, API URLs, object constants, error handling |
 | `test_m_query_generator.py` | 19 | 10+ DB types, freeform SQL, fixture validation |
-| `test_connection_mapper.py` | 15 | SQL Server, Oracle, PostgreSQL, MySQL, Snowflake, Databricks, etc. |
+| `test_connection_mapper.py` | 16 | SQL Server, Oracle, PostgreSQL, MySQL, Snowflake, Databricks, etc. |
 | `test_metric_extractor.py` | 15 | Simple/compound/derived metrics, thresholds, format strings |
 | `test_schema_extractor.py` | 20+ | Attributes, facts, tables, hierarchies, custom groups, freeform SQL |
+| `test_regression.py` | 10 | PBI Desktop bug regression (format strings, Calendar, RLS) |
+| `test_advanced_extraction.py` | 8 | Cubes, prompts, security filters, search results |
 | `test_report_extractor.py` | 3 | Grid/graph report extraction |
 | `test_dossier_extractor.py` | 4 | Dossier chapter/page/visualization extraction |
-| `test_advanced_extraction.py` | 8 | Cubes, prompts, security filters, search results |
 
 </details>
 
@@ -573,10 +640,10 @@ After migration, a visual **HTML Migration Report** is generated with per-object
 Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ```bash
-git clone https://github.com/your-org/MicroStrategy-To-PowerBI.git
-cd MicroStrategy-To-PowerBI
+git clone https://github.com/cyphou/MicroStrategyToPowerBI.git
+cd MicroStrategyToPowerBI
 pip install -r requirements.txt
-python -m pytest tests/ -q     # Make sure all 385 tests pass
+python -m pytest tests/ -q     # Make sure all 623 tests pass
 ```
 
 ---
