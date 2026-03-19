@@ -212,12 +212,20 @@ def generate_table_tmdl(datasource, table_attrs, table_facts, table_metrics,
     is_fact_table = any(f.get("expressions", [{}])[0].get("table") == table_name
                         for f in table_facts if f.get("expressions"))
 
-    # TMDL allows only one isKey column per table.
-    # When multiple key columns exist, generate a composite RowKey calculated column.
-    needs_composite_key = len(key_columns) > 1 and not is_fact_table
-    single_key = None
-    if not is_fact_table and len(key_columns) == 1:
-        single_key = next(iter(key_columns))
+    # TMDL allows only one isKey column per table, and it must be a physical column.
+    # Pick the best single primary key from the key columns.
+    primary_key = None
+    if not is_fact_table and key_columns:
+        table_id_col = f"{table_name}_ID" if not table_name.endswith("_ID") else table_name
+        # Prefer column matching TABLE_ID pattern
+        for col_name in key_columns:
+            if col_name.upper() == table_id_col.upper():
+                primary_key = col_name
+                break
+        if not primary_key:
+            # Fall back to first _ID column alphabetically
+            id_cols = sorted(c for c in key_columns if c.upper().endswith("_ID"))
+            primary_key = id_cols[0] if id_cols else sorted(key_columns)[0]
 
     # Generate columns — also collect display names for hierarchy collision check
     col_display_names = set()
@@ -243,8 +251,8 @@ def generate_table_tmdl(datasource, table_attrs, table_facts, table_metrics,
         if col_name in key_columns or is_fact_table:
             lines.append("\t\tisHidden")
 
-        # Key column — only when there's a single natural key
-        if col_name == single_key:
+        # Key column — only one physical column per table
+        if col_name == primary_key:
             lines.append("\t\tisKey")
 
         lines.append(f"\t\tsourceColumn: {col_name}")
@@ -257,17 +265,6 @@ def generate_table_tmdl(datasource, table_attrs, table_facts, table_metrics,
             if category:
                 lines.append(f"\t\tdataCategory: {category}")
 
-        lines.append("")
-
-    # Composite key: merge multiple key columns into a single calculated column
-    if needs_composite_key:
-        sorted_keys = sorted(key_columns)
-        concat_parts = " & \"|\" & ".join(f"[{k}]" for k in sorted_keys)
-        lines.append(f"\tcolumn RowKey = {concat_parts}")
-        lines.append("\t\tdataType: string")
-        lines.append("\t\tisHidden")
-        lines.append("\t\tisKey")
-        lines.append(f"\t\tlineageTag: col-{_make_tag(table_name, 'RowKey')}")
         lines.append("")
 
     # Generate measures (metrics assigned to this table)
