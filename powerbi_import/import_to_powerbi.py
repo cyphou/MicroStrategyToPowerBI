@@ -57,7 +57,7 @@ class PowerBIImporter:
 
     def import_all(self, generate_pbip_flag=True, report_name=None,
                    output_dir=None, calendar_start=None, calendar_end=None,
-                   culture=None):
+                   culture=None, no_calendar=False):
         """Import all extracted objects and generate Power BI project.
 
         Args:
@@ -93,7 +93,7 @@ class PowerBIImporter:
         print()
 
         # Delegate to the pbip_generator which wires TMDL + visuals + scaffold
-        stats = generate_pbip(converted, output_dir, report_name=report_name)
+        stats = generate_pbip(converted, output_dir, report_name=report_name, no_calendar=no_calendar)
 
         # Print summary
         print()

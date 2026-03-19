@@ -218,7 +218,7 @@ def run_extraction(args):
         return False
 
 
-def run_generation(output_dir=None, report_name=None, culture=None, shared_model=False):
+def run_generation(output_dir=None, report_name=None, culture=None, shared_model=False, no_calendar=False):
     """Run Power BI project generation."""
     global _stats
     print_step(2, 2, "POWER BI PROJECT GENERATION")
@@ -235,6 +235,7 @@ def run_generation(output_dir=None, report_name=None, culture=None, shared_model
                 report_name=report_name or _stats.project_name,
                 output_dir=output_dir,
                 culture=culture,
+                no_calendar=no_calendar,
             )
             # Also generate a shared model if requested
             try:
@@ -251,6 +252,7 @@ def run_generation(output_dir=None, report_name=None, culture=None, shared_model
                 report_name=report_name or _stats.project_name,
                 output_dir=output_dir,
                 culture=culture,
+                no_calendar=no_calendar,
             )
 
         if result:
@@ -295,7 +297,8 @@ def run_batch_generation(args):
             try:
                 from powerbi_import.pbip_generator import generate_pbip
                 sub_dir = os.path.join(output_dir, _safe_filename(name))
-                generate_pbip(obj_data, sub_dir, report_name=name)
+                generate_pbip(obj_data, sub_dir, report_name=name,
+                              no_calendar=getattr(args, 'no_calendar', False))
                 print(f"  [{i}/{total}] ✓ {name}")
                 succeeded += 1
             except Exception as e:
@@ -312,7 +315,8 @@ def run_batch_generation(args):
             try:
                 from powerbi_import.pbip_generator import generate_pbip
                 sub_dir = os.path.join(output_dir, _safe_filename(name))
-                generate_pbip(obj_data, sub_dir, report_name=name)
+                generate_pbip(obj_data, sub_dir, report_name=name,
+                              no_calendar=getattr(args, 'no_calendar', False))
                 print(f"  [{j}/{total}] ✓ {name}")
                 succeeded += 1
             except Exception as e:
@@ -514,6 +518,8 @@ Examples:
                           help='Output directory for .pbip projects (default: artifacts/)')
     out_group.add_argument('--report-name', help='Override Power BI report name')
     out_group.add_argument('--culture', help='Override culture/locale (e.g., en-US, fr-FR)')
+    out_group.add_argument('--no-calendar', action='store_true',
+                          help='Do not generate an auto Calendar table (auto-skipped if a date dimension table exists)')
 
     # Assessment
     assess_group = parser.add_argument_group('Assessment')
@@ -651,6 +657,7 @@ def main():
             report_name=args.report_name,
             culture=args.culture,
             shared_model=getattr(args, 'shared_model', False),
+            no_calendar=getattr(args, 'no_calendar', False),
         )
     if not generation_ok:
         print_summary()

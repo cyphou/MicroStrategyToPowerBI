@@ -47,13 +47,14 @@ _PBIP_SCHEMA = (
 
 # ── Public API ───────────────────────────────────────────────────
 
-def generate_pbip(data, output_dir, report_name="MicroStrategy Report"):
+def generate_pbip(data, output_dir, report_name="MicroStrategy Report", no_calendar=False):
     """Assemble a complete .pbip project from intermediate JSON data.
 
     Args:
         data: dict with all 18 intermediate JSON keys
         output_dir: root directory to write project into
         report_name: name used for project folders and manifest IDs
+        no_calendar: if True, never generate auto Calendar table
 
     Returns:
         dict with combined generation statistics
@@ -85,9 +86,9 @@ def generate_pbip(data, output_dir, report_name="MicroStrategy Report"):
     tmdl_stats = generate_all_tmdl(data, sm_def)
     _merge_stats(stats, tmdl_stats)
 
-    # Calendar table — only if no dedicated date dimension table exists
+    # Calendar table — only if not suppressed and no dedicated date dimension table exists
     date_cols = _detect_date_columns(data)
-    if date_cols and not _has_date_dimension_table(data):
+    if date_cols and not no_calendar and not _has_date_dimension_table(data):
         cal_tmdl = generate_calendar_table_tmdl(date_cols)
         cal_path = os.path.join(sm_def, "tables", "Calendar.tmdl")
         os.makedirs(os.path.dirname(cal_path), exist_ok=True)
@@ -96,7 +97,7 @@ def generate_pbip(data, output_dir, report_name="MicroStrategy Report"):
         stats["tables"] += 1
 
     # model.tmdl header
-    _write_model_tmdl(sm_def, report_name, data=data)
+    _write_model_tmdl(sm_def, report_name, data=data, no_calendar=no_calendar)
 
     # Manifests
     _write_platform(sm_root, "SemanticModel", sm_logical_id, display_name=report_name)
@@ -171,7 +172,7 @@ def _write_pbism(sm_root):
         json.dump(manifest, f, indent=2)
 
 
-def _write_model_tmdl(definition_dir, report_name, data=None):
+def _write_model_tmdl(definition_dir, report_name, data=None, no_calendar=False):
     """Write model.tmdl header file with ref declarations."""
     lines = [
         "model Model",
@@ -187,9 +188,9 @@ def _write_model_tmdl(definition_dir, report_name, data=None):
     if data:
         # Collect table names
         table_names = [ds["name"] for ds in data.get("datasources", [])]
-        # Add Calendar if date columns exist and no date dimension table
+        # Add Calendar if date columns exist, not suppressed, and no date dimension table
         date_cols = _detect_date_columns(data)
-        if date_cols and not _has_date_dimension_table(data):
+        if date_cols and not no_calendar and not _has_date_dimension_table(data):
             table_names.append("Calendar")
 
         if table_names:
