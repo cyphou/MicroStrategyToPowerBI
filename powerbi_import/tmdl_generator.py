@@ -260,12 +260,10 @@ def generate_table_tmdl(datasource, table_attrs, table_facts, table_metrics,
     if needs_composite_key:
         sorted_keys = sorted(key_columns)
         concat_parts = " & \"|\" & ".join(f"[{k}]" for k in sorted_keys)
-        dax_expr = concat_parts
-        lines.append("\tcolumn RowKey")
+        lines.append(f"\tcolumn RowKey = {concat_parts}")
         lines.append("\t\tdataType: string")
         lines.append("\t\tisHidden")
         lines.append("\t\tisKey")
-        lines.append(f"\t\texpression: = {dax_expr}")
         lines.append(f"\t\tlineageTag: col-{_make_tag(table_name, 'RowKey')}")
         lines.append("")
 
