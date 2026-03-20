@@ -1,0 +1,46 @@
+table DIM_PROMOTION
+	lineageTag: DU06
+
+	column PROMO_ID
+		dataType: int64
+		isHidden
+		isKey
+		sourceColumn: PROMO_ID
+		lineageTag: col-2b0d0d4c
+
+	column Promotion
+		dataType: string
+		sourceColumn: PROMO_NAME
+		lineageTag: col-9c01327c
+
+	column PROMO_TYPE
+		dataType: string
+		isHidden
+		sourceColumn: PROMO_TYPE
+		lineageTag: col-9c04472b
+
+	column START_DATE
+		dataType: dateTime
+		sourceColumn: START_DATE
+		lineageTag: col-0418c82c
+
+	column END_DATE
+		dataType: dateTime
+		sourceColumn: END_DATE
+		lineageTag: col-cd37a393
+
+	column DISCOUNT_PCT
+		dataType: double
+		sourceColumn: DISCOUNT_PCT
+		lineageTag: col-9b689764
+
+
+	partition DIM_PROMOTION = m
+		mode: import
+		expression:= ```
+			let
+			    Source = Oracle.Database("ora-prod"),
+			    Table = Source{[Schema="SALES", Name="DIM_PROMOTION"]}[Data]
+			in
+			    Table
+			```

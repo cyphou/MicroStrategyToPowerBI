@@ -1,0 +1,74 @@
+table DIM_DATE
+	lineageTag: DS_C03
+
+	column DATE_KEY
+		dataType: dateTime
+		isHidden
+		sourceColumn: DATE_KEY
+		lineageTag: col-83e95616
+
+	column DAY_NAME
+		dataType: string
+		isHidden
+		sourceColumn: DAY_NAME
+		lineageTag: col-8c23b116
+
+	column Month
+		dataType: string
+		isHidden
+		sourceColumn: MONTH_NAME
+		lineageTag: col-9a2beeb2
+
+	column MONTH_NUM
+		dataType: int64
+		isHidden
+		sourceColumn: MONTH_NUM
+		lineageTag: col-baa6967f
+
+	column QUARTER
+		dataType: int64
+		isHidden
+		sourceColumn: QUARTER
+		lineageTag: col-abc369e4
+
+	column YEAR
+		dataType: int64
+		isHidden
+		sourceColumn: YEAR
+		lineageTag: col-4e18cc05
+
+	column FISCAL_YEAR
+		dataType: int64
+		isHidden
+		sourceColumn: FISCAL_YEAR
+		lineageTag: col-81d55956
+
+	hierarchy Time
+		lineageTag: hier-4e169695
+
+		level Year
+			column: YEAR
+			lineageTag: hier-078be875
+
+		level Quarter
+			column: QUARTER
+			lineageTag: hier-a65db774
+
+		level Month
+			column: Month
+			lineageTag: hier-e94cc948
+
+		level Date
+			column: DATE_KEY
+			lineageTag: hier-07824fe6
+
+
+	partition DIM_DATE = m
+		mode: import
+		expression:= ```
+			let
+			    Source = Oracle.Database("db-prod.company.com"),
+			    Table = Source{[Schema="SALES", Name="DIM_DATE"]}[Data]
+			in
+			    Table
+			```

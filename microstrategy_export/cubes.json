@@ -1,25 +1,105 @@
 [
   {
-    "id": "E5F6071811E8B901001122334455EE22",
-    "name": "Sales Summary Cube",
-    "description": "Pre-aggregated cube with customer and product sales data",
+    "id": "CUBE_U01",
+    "name": "Sales Summary",
+    "description": "Pre-aggregated sales",
     "attributes": [
-      {"id": "8D679D3511D3E4981000E787EC6DE8A4", "name": "Customer", "forms": ["ID", "DESC"]},
-      {"id": "8D679D4511D3E4981000E787EC6DE8A4", "name": "Product", "forms": ["ID", "DESC"]},
-      {"id": "8D679D4611D3E4981000E787EC6DE8A4", "name": "Category", "forms": ["ID", "DESC"]},
-      {"id": "8D679D5711D3E4981000E787EC6DE8A4", "name": "Month", "forms": ["ID", "DESC"]},
-      {"id": "8D679D5511D3E4981000E787EC6DE8A4", "name": "Year", "forms": ["ID"]}
+      {
+        "id": "AU05",
+        "name": "Region",
+        "forms": [
+          "ID"
+        ]
+      },
+      {
+        "id": "AU10",
+        "name": "Category",
+        "forms": [
+          "ID"
+        ]
+      },
+      {
+        "id": "AU16",
+        "name": "Year",
+        "forms": [
+          "ID"
+        ]
+      },
+      {
+        "id": "AU15",
+        "name": "Quarter",
+        "forms": [
+          "ID"
+        ]
+      }
     ],
     "metrics": [
-      {"id": "4C051DB611D3E877C000B3B2D86C964F", "name": "Total Revenue"},
-      {"id": "4C051DB711D3E877C000B3B2D86C964F", "name": "Total Cost"},
-      {"id": "4C051DB811D3E877C000B3B2D86C964F", "name": "Profit"},
-      {"id": "4C051DBC11D3E877C000B3B2D86C964F", "name": "Customer Count"}
+      {
+        "id": "MU01",
+        "name": "Total Revenue"
+      },
+      {
+        "id": "MU02",
+        "name": "Total Cost"
+      },
+      {
+        "id": "MU21",
+        "name": "Profit"
+      }
     ],
     "filter": {
-      "expression": "Year >= 2023",
+      "expression": "Year >= 2024",
       "qualifications": []
     },
     "refresh_policy": "scheduled"
+  },
+  {
+    "id": "CUBE_U02",
+    "name": "Marketing Cube",
+    "description": "Marketing metrics cube",
+    "attributes": [
+      {
+        "id": "AU18",
+        "name": "Channel",
+        "forms": [
+          "ID",
+          "DESC"
+        ]
+      },
+      {
+        "id": "AU16",
+        "name": "Year",
+        "forms": [
+          "ID"
+        ]
+      },
+      {
+        "id": "AU14",
+        "name": "Month",
+        "forms": [
+          "ID",
+          "DESC"
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "MU14",
+        "name": "Marketing Spend"
+      },
+      {
+        "id": "MU16",
+        "name": "Total Clicks"
+      },
+      {
+        "id": "MU17",
+        "name": "Total Conversions"
+      }
+    ],
+    "filter": {
+      "expression": "",
+      "qualifications": []
+    },
+    "refresh_policy": "on_demand"
   }
 ]

@@ -1,0 +1,293 @@
+[
+  {
+    "name": "Revenue Growth 25%",
+    "description": "",
+    "scorecardName": "Company Performance Scorecard",
+    "status": "AtRisk",
+    "owner": "",
+    "startDate": null,
+    "dueDate": null,
+    "values": {
+      "current": 42000000,
+      "target": 50000000,
+      "unit": ""
+    },
+    "statusRules": [
+      {
+        "status": "OnTrack"
+      },
+      {
+        "status": "AtRisk"
+      },
+      {
+        "status": "Behind"
+      }
+    ],
+    "subGoals": [
+      {
+        "name": "AMER Revenue",
+        "description": "",
+        "scorecardName": "Company Performance Scorecard",
+        "status": "AtRisk",
+        "owner": "",
+        "startDate": null,
+        "dueDate": null,
+        "values": {
+          "current": 22000000,
+          "target": 25000000,
+          "unit": ""
+        },
+        "statusRules": [],
+        "subGoals": [],
+        "notes": [],
+        "connectedMeasure": {
+          "measureName": "Total Revenue"
+        }
+      },
+      {
+        "name": "EMEA Revenue",
+        "description": "",
+        "scorecardName": "Company Performance Scorecard",
+        "status": "Behind",
+        "owner": "",
+        "startDate": null,
+        "dueDate": null,
+        "values": {
+          "current": 12000000,
+          "target": 15000000,
+          "unit": ""
+        },
+        "statusRules": [],
+        "subGoals": [],
+        "notes": [],
+        "connectedMeasure": {
+          "measureName": "Total Revenue"
+        }
+      },
+      {
+        "name": "APAC Revenue",
+        "description": "",
+        "scorecardName": "Company Performance Scorecard",
+        "status": "AtRisk",
+        "owner": "",
+        "startDate": null,
+        "dueDate": null,
+        "values": {
+          "current": 8000000,
+          "target": 10000000,
+          "unit": ""
+        },
+        "statusRules": [],
+        "subGoals": [],
+        "notes": [],
+        "connectedMeasure": {
+          "measureName": "Total Revenue"
+        }
+      }
+    ],
+    "notes": [],
+    "connectedMeasure": {
+      "measureName": "Total Revenue"
+    }
+  },
+  {
+    "name": "Profit Margin > 30%",
+    "description": "",
+    "scorecardName": "Company Performance Scorecard",
+    "status": "AtRisk",
+    "owner": "",
+    "startDate": null,
+    "dueDate": null,
+    "values": {
+      "current": 0.27,
+      "target": 0.3,
+      "unit": ""
+    },
+    "statusRules": [],
+    "subGoals": [],
+    "notes": [],
+    "connectedMeasure": {
+      "measureName": "Profit Margin"
+    }
+  },
+  {
+    "name": "Return Rate < 3%",
+    "description": "",
+    "scorecardName": "Company Performance Scorecard",
+    "status": "Behind",
+    "owner": "",
+    "startDate": null,
+    "dueDate": null,
+    "values": {
+      "current": 0.045,
+      "target": 0.03,
+      "unit": ""
+    },
+    "statusRules": [],
+    "subGoals": [],
+    "notes": [],
+    "connectedMeasure": {
+      "measureName": "Return Rate"
+    }
+  },
+  {
+    "name": "Customer Count > 50K",
+    "description": "",
+    "scorecardName": "Company Performance Scorecard",
+    "status": "OnTrack",
+    "owner": "",
+    "startDate": null,
+    "dueDate": null,
+    "values": {
+      "current": 47200,
+      "target": 50000,
+      "unit": ""
+    },
+    "statusRules": [],
+    "subGoals": [],
+    "notes": [],
+    "connectedMeasure": {
+      "measureName": "Customer Count"
+    }
+  },
+  {
+    "name": "ROAS > 5x",
+    "description": "",
+    "scorecardName": "Company Performance Scorecard",
+    "status": "AtRisk",
+    "owner": "",
+    "startDate": null,
+    "dueDate": null,
+    "values": {
+      "current": 4.2,
+      "target": 5.0,
+      "unit": ""
+    },
+    "statusRules": [],
+    "subGoals": [],
+    "notes": [],
+    "connectedMeasure": {
+      "measureName": "ROAS"
+    }
+  },
+  {
+    "name": "Monthly Revenue",
+    "description": "",
+    "scorecardName": "Company Performance Scorecard",
+    "status": "NotStarted",
+    "owner": "",
+    "startDate": null,
+    "dueDate": null,
+    "values": {
+      "current": null,
+      "target": 4200000,
+      "unit": "$"
+    },
+    "statusRules": [],
+    "subGoals": [],
+    "connectedMeasure": {
+      "measureName": "Monthly Revenue"
+    },
+    "notes": []
+  },
+  {
+    "name": "Monthly Profit",
+    "description": "",
+    "scorecardName": "Company Performance Scorecard",
+    "status": "NotStarted",
+    "owner": "",
+    "startDate": null,
+    "dueDate": null,
+    "values": {
+      "current": null,
+      "target": 1200000,
+      "unit": "$"
+    },
+    "statusRules": [],
+    "subGoals": [],
+    "connectedMeasure": {
+      "measureName": "Monthly Profit"
+    },
+    "notes": []
+  },
+  {
+    "name": "NPS Score",
+    "description": "",
+    "scorecardName": "Company Performance Scorecard",
+    "status": "NotStarted",
+    "owner": "",
+    "startDate": null,
+    "dueDate": null,
+    "values": {
+      "current": null,
+      "target": 70,
+      "unit": "pts"
+    },
+    "statusRules": [],
+    "subGoals": [],
+    "connectedMeasure": {
+      "measureName": "NPS Score"
+    },
+    "notes": []
+  },
+  {
+    "name": "CTR > 3%",
+    "description": "",
+    "scorecardName": "Digital Marketing Scorecard",
+    "status": "AtRisk",
+    "owner": "",
+    "startDate": null,
+    "dueDate": null,
+    "values": {
+      "current": 0.028,
+      "target": 0.03,
+      "unit": ""
+    },
+    "statusRules": [],
+    "subGoals": [],
+    "notes": [],
+    "connectedMeasure": {
+      "measureName": "Click-Through Rate"
+    }
+  },
+  {
+    "name": "CPC < $2",
+    "description": "",
+    "scorecardName": "Digital Marketing Scorecard",
+    "status": "Behind",
+    "owner": "",
+    "startDate": null,
+    "dueDate": null,
+    "values": {
+      "current": 2.15,
+      "target": 2.0,
+      "unit": ""
+    },
+    "statusRules": [],
+    "subGoals": [],
+    "notes": [],
+    "connectedMeasure": {
+      "measureName": "Cost per Click"
+    }
+  },
+  {
+    "name": "Conversions > 10K/month",
+    "description": "",
+    "scorecardName": "Digital Marketing Scorecard",
+    "status": "AtRisk",
+    "owner": "",
+    "startDate": null,
+    "dueDate": null,
+    "values": {
+      "current": 8700,
+      "target": 10000,
+      "unit": ""
+    },
+    "statusRules": [],
+    "subGoals": [],
+    "notes": [],
+    "connectedMeasure": {
+      "measureName": "Total Conversions"
+    }
+  }
+]

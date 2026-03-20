@@ -1,0 +1,121 @@
+table FACT_SALES
+	lineageTag: DS_0003
+
+	column SALE_ID
+		dataType: int64
+		isHidden
+		sourceColumn: SALE_ID
+		lineageTag: col-33a753bf
+
+	column CUSTOMER_ID
+		dataType: int64
+		isHidden
+		sourceColumn: CUSTOMER_ID
+		lineageTag: col-e54622c8
+
+	column PRODUCT_ID
+		dataType: int64
+		isHidden
+		sourceColumn: PRODUCT_ID
+		lineageTag: col-20b5bf3f
+
+	column SALE_DATE
+		dataType: dateTime
+		isHidden
+		sourceColumn: SALE_DATE
+		lineageTag: col-e71f1d52
+
+	column REVENUE
+		dataType: double
+		isHidden
+		sourceColumn: REVENUE
+		lineageTag: col-06219fc8
+
+	column COST
+		dataType: double
+		isHidden
+		sourceColumn: COST
+		lineageTag: col-c024d3a1
+
+	column QUANTITY
+		dataType: int64
+		isHidden
+		sourceColumn: QUANTITY
+		lineageTag: col-81407e5f
+
+	column DISCOUNT
+		dataType: double
+		isHidden
+		sourceColumn: DISCOUNT
+		lineageTag: col-de208f15
+
+	measure 'Total Revenue' = SUM([Revenue])
+		formatString: $#,##0.00
+		displayFolder: Sales
+		lineageTag: MET_0001
+
+	measure 'Total Cost' = SUM([Cost])
+		formatString: $#,##0.00
+		displayFolder: Sales
+		lineageTag: MET_0002
+
+	measure 'Total Quantity' = SUM([Quantity])
+		formatString: #,##0
+		displayFolder: Sales
+		lineageTag: MET_0003
+
+	measure 'Total Discount' = SUM([Discount])
+		formatString: $#,##0.00
+		displayFolder: Sales
+		lineageTag: MET_0004
+
+	measure Profit = SUM(Revenue) - SUM(Cost)
+		formatString: $#,##0.00
+		displayFolder: Sales
+		lineageTag: MET_0005
+
+	measure 'Profit Margin' = (SUM(Revenue) - SUM(Cost)) / SUM(Revenue)
+		formatString: 0.0%
+		displayFolder: Sales
+		lineageTag: MET_0006
+
+	measure 'Customer Count' = DISTINCTCOUNT([Customer])
+		formatString: #,##0
+		displayFolder: Sales
+		lineageTag: MET_0008
+
+	measure 'Revenue per Customer' = SUM(Revenue) / Count<Distinct=True>(Customer)
+		formatString: $#,##0.00
+		displayFolder: Sales
+		lineageTag: MET_0009
+
+	measure 'Discount Rate' = SUM(Discount) / SUM(Revenue)
+		formatString: 0.0%
+		displayFolder: Sales
+		lineageTag: MET_0010
+
+	measure 'Revenue Rank' = RANKX(ALLSELECTED(), SUM(Revenue,, DESC, SKIP)
+		formatString: #,##0
+		displayFolder: Derived
+		lineageTag: DER_0001
+
+	measure 'Running Revenue' = ```
+			CALCULATE(
+			    SUM(Revenue,
+			    WINDOW(1, ABS, 0, REL, ALLSELECTED(), ORDERBY([SortColumn], ASC))
+			)
+			```
+		formatString: $#,##0.00
+		displayFolder: Derived
+		lineageTag: DER_0002
+
+
+	partition FACT_SALES = m
+		mode: import
+		expression:= ```
+			let
+			    Source = PostgreSQL.Database("pg-prod.company.com", "SalesDB"),
+			    Table = Source{[Schema="public", Item="FACT_SALES"]}[Data]
+			in
+			    Table
+			```

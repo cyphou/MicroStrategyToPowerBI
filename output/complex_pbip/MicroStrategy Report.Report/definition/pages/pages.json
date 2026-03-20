@@ -1,0 +1,15 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/pagesMetadata/1.0.0/schema.json",
+  "pageOrder": [
+    "exec_kpi",
+    "exec_detail",
+    "prod_overview",
+    "cust_seg",
+    "RPT_C01",
+    "RPT_C02",
+    "RPT_C03",
+    "RPT_C04",
+    "RPT_C05"
+  ],
+  "activePageName": "exec_kpi"
+}

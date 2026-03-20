@@ -1,44 +1,325 @@
 [
   {
-    "id": "4C051DBD11D3E877C000B3B2D86C964F",
+    "id": "DU01",
     "name": "Revenue Rank",
-    "description": "Rank of revenue by customer",
+    "description": "Revenue Rank derived metric",
     "metric_type": "derived",
-    "expression": "Rank(Sum(Revenue)) <Customer>",
+    "expression": "Rank(Sum(Revenue), DESC) {~+, Customer}",
     "aggregation": "",
     "column_ref": null,
-    "format_string": "#,##0",
+    "format_string": "#,##0.00",
     "subtotal_type": "none",
-    "folder_path": "\\Public Objects\\Metrics\\Derived Metrics",
+    "folder_path": "\\Metrics\\Derived",
     "is_smart_metric": true,
-    "dependencies": ["4C051DB611D3E877C000B3B2D86C964F"]
+    "dependencies": [
+      "MU01"
+    ]
   },
   {
-    "id": "4C051DBE11D3E877C000B3B2D86C964F",
+    "id": "DU02",
     "name": "Running Revenue",
-    "description": "Running sum of revenue by month",
+    "description": "Running Revenue derived metric",
     "metric_type": "derived",
-    "expression": "RunningSum(Sum(Revenue)) <Month>",
+    "expression": "RunningSum(Sum(Revenue)) {~+, Month}",
     "aggregation": "",
     "column_ref": null,
-    "format_string": "$#,##0.00",
+    "format_string": "#,##0.00",
     "subtotal_type": "none",
-    "folder_path": "\\Public Objects\\Metrics\\Derived Metrics",
+    "folder_path": "\\Metrics\\Derived",
     "is_smart_metric": true,
-    "dependencies": ["4C051DB611D3E877C000B3B2D86C964F"]
+    "dependencies": [
+      "MU01"
+    ]
   },
   {
-    "id": "4C051DBF11D3E877C000B3B2D86C964F",
-    "name": "Revenue YoY Change",
-    "description": "Year over year revenue change",
+    "id": "DU03",
+    "name": "Revenue MoM %",
+    "description": "Revenue MoM % derived metric",
     "metric_type": "derived",
-    "expression": "(Sum(Revenue) - Lag(Sum(Revenue), 1, Year)) / Lag(Sum(Revenue), 1, Year)",
+    "expression": "(Sum(Revenue) - Lag(Sum(Revenue), 1)) / Lag(Sum(Revenue), 1)",
     "aggregation": "",
     "column_ref": null,
-    "format_string": "0.00%",
+    "format_string": "#,##0.00",
     "subtotal_type": "none",
-    "folder_path": "\\Public Objects\\Metrics\\Derived Metrics",
+    "folder_path": "\\Metrics\\Derived",
     "is_smart_metric": true,
-    "dependencies": ["4C051DB611D3E877C000B3B2D86C964F"]
+    "dependencies": [
+      "MU01"
+    ]
+  },
+  {
+    "id": "DU04",
+    "name": "3M Moving Avg",
+    "description": "3M Moving Avg derived metric",
+    "metric_type": "derived",
+    "expression": "MovingAvg(Sum(Revenue), 3) {~+, Month}",
+    "aggregation": "",
+    "column_ref": null,
+    "format_string": "#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics\\Derived",
+    "is_smart_metric": true,
+    "dependencies": [
+      "MU01"
+    ]
+  },
+  {
+    "id": "DU05",
+    "name": "Revenue YoY %",
+    "description": "Revenue YoY % derived metric",
+    "metric_type": "derived",
+    "expression": "(Sum(Revenue) - Lag(Sum(Revenue), 12, Month)) / Lag(Sum(Revenue), 12, Month)",
+    "aggregation": "",
+    "column_ref": null,
+    "format_string": "#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics\\Derived",
+    "is_smart_metric": true,
+    "dependencies": [
+      "MU01"
+    ]
+  },
+  {
+    "id": "DU06",
+    "name": "Profit Quartile",
+    "description": "Profit Quartile derived metric",
+    "metric_type": "derived",
+    "expression": "NTile(Sum(Revenue) - Sum(Cost), 4) {~+, Region}",
+    "aggregation": "",
+    "column_ref": null,
+    "format_string": "#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics\\Derived",
+    "is_smart_metric": true,
+    "dependencies": [
+      "MU01",
+      "MU02"
+    ]
+  },
+  {
+    "id": "DU07",
+    "name": "6M Moving Sum",
+    "description": "6M Moving Sum derived metric",
+    "metric_type": "derived",
+    "expression": "MovingSum(Sum(Revenue), 6) {~+, Month}",
+    "aggregation": "",
+    "column_ref": null,
+    "format_string": "#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics\\Derived",
+    "is_smart_metric": true,
+    "dependencies": [
+      "MU01"
+    ]
+  },
+  {
+    "id": "DU08",
+    "name": "Lead Revenue",
+    "description": "Lead Revenue derived metric",
+    "metric_type": "derived",
+    "expression": "Lead(Sum(Revenue), 1) {~+, Month}",
+    "aggregation": "",
+    "column_ref": null,
+    "format_string": "#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics\\Derived",
+    "is_smart_metric": true,
+    "dependencies": [
+      "MU01"
+    ]
+  },
+  {
+    "id": "DU09",
+    "name": "First Month Revenue",
+    "description": "First Month Revenue derived metric",
+    "metric_type": "derived",
+    "expression": "FirstInRange(Sum(Revenue), Month)",
+    "aggregation": "",
+    "column_ref": null,
+    "format_string": "#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics\\Derived",
+    "is_smart_metric": true,
+    "dependencies": [
+      "MU01"
+    ]
+  },
+  {
+    "id": "DU10",
+    "name": "Last Month Revenue",
+    "description": "Last Month Revenue derived metric",
+    "metric_type": "derived",
+    "expression": "LastInRange(Sum(Revenue), Month)",
+    "aggregation": "",
+    "column_ref": null,
+    "format_string": "#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics\\Derived",
+    "is_smart_metric": true,
+    "dependencies": [
+      "MU01"
+    ]
+  },
+  {
+    "id": "DU11",
+    "name": "Cost Running Avg",
+    "description": "Cost Running Avg derived metric",
+    "metric_type": "derived",
+    "expression": "RunningAvg(Sum(Cost)) {~+, Month}",
+    "aggregation": "",
+    "column_ref": null,
+    "format_string": "#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics\\Derived",
+    "is_smart_metric": true,
+    "dependencies": [
+      "MU02"
+    ]
+  },
+  {
+    "id": "DU12",
+    "name": "Profit Running Sum",
+    "description": "Profit Running Sum derived metric",
+    "metric_type": "derived",
+    "expression": "RunningSum(Sum(Revenue) - Sum(Cost)) {~+, Month}",
+    "aggregation": "",
+    "column_ref": null,
+    "format_string": "#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics\\Derived",
+    "is_smart_metric": true,
+    "dependencies": [
+      "MU01",
+      "MU02"
+    ]
+  },
+  {
+    "id": "DU13",
+    "name": "Rank by Profit",
+    "description": "Rank by Profit derived metric",
+    "metric_type": "derived",
+    "expression": "Rank(Sum(Revenue) - Sum(Cost), DESC, DENSE) {~+, Customer}",
+    "aggregation": "",
+    "column_ref": null,
+    "format_string": "#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics\\Derived",
+    "is_smart_metric": true,
+    "dependencies": [
+      "MU01",
+      "MU02"
+    ]
+  },
+  {
+    "id": "DU14",
+    "name": "Revenue Band",
+    "description": "Revenue Band derived metric",
+    "metric_type": "derived",
+    "expression": "Band(Sum(Revenue), 0, 1000000, 100000)",
+    "aggregation": "",
+    "column_ref": null,
+    "format_string": "#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics\\Derived",
+    "is_smart_metric": true,
+    "dependencies": [
+      "MU01"
+    ]
+  },
+  {
+    "id": "DU15",
+    "name": "ApplyOLAP RowNum",
+    "description": "ApplyOLAP RowNum derived metric",
+    "metric_type": "derived",
+    "expression": "ApplyOLAP(\"ROW_NUMBER() OVER (ORDER BY #0 DESC)\", Revenue)",
+    "aggregation": "",
+    "column_ref": null,
+    "format_string": "#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics\\Derived",
+    "is_smart_metric": true,
+    "dependencies": [
+      "MU01"
+    ]
+  },
+  {
+    "id": "DU16",
+    "name": "ApplyOLAP Rank",
+    "description": "ApplyOLAP Rank derived metric",
+    "metric_type": "derived",
+    "expression": "ApplyOLAP(\"DENSE_RANK() OVER (ORDER BY #0 DESC)\", Revenue)",
+    "aggregation": "",
+    "column_ref": null,
+    "format_string": "#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics\\Derived",
+    "is_smart_metric": true,
+    "dependencies": [
+      "MU01"
+    ]
+  },
+  {
+    "id": "DU17",
+    "name": "ApplyOLAP Lag",
+    "description": "ApplyOLAP Lag derived metric",
+    "metric_type": "derived",
+    "expression": "ApplyOLAP(\"LAG(#0, 1) OVER (ORDER BY #1)\", Revenue, Month)",
+    "aggregation": "",
+    "column_ref": null,
+    "format_string": "#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics\\Derived",
+    "is_smart_metric": true,
+    "dependencies": [
+      "MU01"
+    ]
+  },
+  {
+    "id": "DU18",
+    "name": "ApplyOLAP CumSum",
+    "description": "ApplyOLAP CumSum derived metric",
+    "metric_type": "derived",
+    "expression": "ApplyOLAP(\"SUM(#0) OVER (ORDER BY #1 ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)\", Revenue, Month)",
+    "aggregation": "",
+    "column_ref": null,
+    "format_string": "#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics\\Derived",
+    "is_smart_metric": true,
+    "dependencies": [
+      "MU01"
+    ]
+  },
+  {
+    "id": "DU19",
+    "name": "Conversion Rank",
+    "description": "Conversion Rank derived metric",
+    "metric_type": "derived",
+    "expression": "Rank(Sum(Conversions), DESC) {~+, Channel}",
+    "aggregation": "",
+    "column_ref": null,
+    "format_string": "#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics\\Derived",
+    "is_smart_metric": true,
+    "dependencies": [
+      "MU17"
+    ]
+  },
+  {
+    "id": "DU20",
+    "name": "Spend Running Sum",
+    "description": "Spend Running Sum derived metric",
+    "metric_type": "derived",
+    "expression": "RunningSum(Sum(Marketing Spend)) {~+, Month}",
+    "aggregation": "",
+    "column_ref": null,
+    "format_string": "#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics\\Derived",
+    "is_smart_metric": true,
+    "dependencies": [
+      "MU14"
+    ]
   }
 ]

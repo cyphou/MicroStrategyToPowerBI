@@ -79,6 +79,27 @@ def deploy_to_fabric(project_dir, workspace_id, *,
         _configure_direct_lake(workspace_id, sm_id, lakehouse_id, headers)
         result["direct_lake"] = True
 
+    # Deploy Fabric-native artifacts if present
+    fabric_dir = os.path.join(project_dir, "fabric")
+    if os.path.isdir(fabric_dir):
+        # Notebooks
+        for fname in os.listdir(fabric_dir):
+            if fname.endswith(".ipynb"):
+                try:
+                    nb_id = _create_notebook(workspace_id, fname[:-6], fabric_dir, headers)
+                    result.setdefault("notebooks", []).append(nb_id)
+                except Exception as e:
+                    logger.warning("Notebook deployment failed for %s: %s", fname, e)
+
+        # Pipeline
+        pipeline_path = os.path.join(fabric_dir, "pipeline.json")
+        if os.path.isfile(pipeline_path):
+            try:
+                pl_id = _create_pipeline(workspace_id, name, pipeline_path, headers)
+                result["pipeline_id"] = pl_id
+            except Exception as e:
+                logger.warning("Pipeline deployment failed: %s", e)
+
     logger.info("Fabric deployment complete: SM=%s, Report=%s", sm_id, report_id)
     return result
 
@@ -290,3 +311,69 @@ def _poll_long_running(response, headers, max_wait=300):
         time.sleep(3)
 
     raise RuntimeError(f"Operation timed out after {max_wait}s")
+
+
+# ── Fabric-native item deployment ────────────────────────────────
+
+
+def _create_notebook(workspace_id, name, fabric_dir, headers):
+    """Create a Notebook item in Fabric."""
+    nb_path = os.path.join(fabric_dir, f"{name}.ipynb")
+    with open(nb_path, "rb") as f:
+        content = f.read()
+
+    url = f"{_FABRIC_API_BASE}/workspaces/{workspace_id}/items"
+    payload = {
+        "displayName": name,
+        "type": "Notebook",
+        "definition": {
+            "parts": [{
+                "path": "notebook-content.ipynb",
+                "payload": base64.b64encode(content).decode("ascii"),
+                "payloadType": "InlineBase64",
+            }],
+        },
+    }
+
+    resp = requests.post(url, headers=headers, json=payload, timeout=60)
+    if resp.status_code not in (200, 201, 202):
+        raise RuntimeError(f"Notebook creation failed ({resp.status_code}): {resp.text}")
+
+    if resp.status_code == 202:
+        item_id = _poll_long_running(resp, headers)
+    else:
+        item_id = resp.json().get("id", "")
+
+    logger.info("Notebook created: %s (%s)", name, item_id)
+    return item_id
+
+
+def _create_pipeline(workspace_id, name, pipeline_path, headers):
+    """Create a Data Pipeline item in Fabric."""
+    with open(pipeline_path, "rb") as f:
+        content = f.read()
+
+    url = f"{_FABRIC_API_BASE}/workspaces/{workspace_id}/items"
+    payload = {
+        "displayName": f"{name}-Pipeline",
+        "type": "DataPipeline",
+        "definition": {
+            "parts": [{
+                "path": "pipeline-content.json",
+                "payload": base64.b64encode(content).decode("ascii"),
+                "payloadType": "InlineBase64",
+            }],
+        },
+    }
+
+    resp = requests.post(url, headers=headers, json=payload, timeout=60)
+    if resp.status_code not in (200, 201, 202):
+        raise RuntimeError(f"Pipeline creation failed ({resp.status_code}): {resp.text}")
+
+    if resp.status_code == 202:
+        item_id = _poll_long_running(resp, headers)
+    else:
+        item_id = resp.json().get("id", "")
+
+    logger.info("Pipeline created: %s (%s)", name, item_id)
+    return item_id

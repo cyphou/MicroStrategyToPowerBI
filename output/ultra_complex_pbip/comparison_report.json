@@ -1,0 +1,913 @@
+{
+  "report_name": "MicroStrategy Report",
+  "summary": {
+    "total_items": 111,
+    "status_counts": {
+      "exact": 88,
+      "approximate": 23
+    },
+    "exact_ratio": 0.793,
+    "grade": "B"
+  },
+  "tables": [
+    {
+      "source_type": "Table",
+      "source_name": "DIM_CUSTOMER",
+      "pbi_name": "DIM_CUSTOMER",
+      "status": "exact",
+      "source_columns": 10,
+      "pbi_columns": 10,
+      "notes": ""
+    },
+    {
+      "source_type": "Table",
+      "source_name": "DIM_PRODUCT",
+      "pbi_name": "DIM_PRODUCT",
+      "status": "exact",
+      "source_columns": 8,
+      "pbi_columns": 8,
+      "notes": ""
+    },
+    {
+      "source_type": "Table",
+      "source_name": "DIM_DATE",
+      "pbi_name": "DIM_DATE",
+      "status": "exact",
+      "source_columns": 9,
+      "pbi_columns": 9,
+      "notes": ""
+    },
+    {
+      "source_type": "Table",
+      "source_name": "DIM_CHANNEL",
+      "pbi_name": "DIM_CHANNEL",
+      "status": "exact",
+      "source_columns": 4,
+      "pbi_columns": 4,
+      "notes": ""
+    },
+    {
+      "source_type": "Table",
+      "source_name": "DIM_EMPLOYEE",
+      "pbi_name": "DIM_EMPLOYEE",
+      "status": "exact",
+      "source_columns": 6,
+      "pbi_columns": 6,
+      "notes": ""
+    },
+    {
+      "source_type": "Table",
+      "source_name": "DIM_PROMOTION",
+      "pbi_name": "DIM_PROMOTION",
+      "status": "exact",
+      "source_columns": 6,
+      "pbi_columns": 6,
+      "notes": ""
+    },
+    {
+      "source_type": "Table",
+      "source_name": "FACT_SALES",
+      "pbi_name": "FACT_SALES",
+      "status": "exact",
+      "source_columns": 14,
+      "pbi_columns": 14,
+      "notes": ""
+    },
+    {
+      "source_type": "Table",
+      "source_name": "FACT_RETURNS",
+      "pbi_name": "FACT_RETURNS",
+      "status": "exact",
+      "source_columns": 7,
+      "pbi_columns": 7,
+      "notes": ""
+    },
+    {
+      "source_type": "Table",
+      "source_name": "FACT_INVENTORY",
+      "pbi_name": "FACT_INVENTORY",
+      "status": "exact",
+      "source_columns": 7,
+      "pbi_columns": 7,
+      "notes": ""
+    },
+    {
+      "source_type": "Table",
+      "source_name": "FACT_WEB_VISITS",
+      "pbi_name": "FACT_WEB_VISITS",
+      "status": "exact",
+      "source_columns": 7,
+      "pbi_columns": 7,
+      "notes": ""
+    },
+    {
+      "source_type": "Table",
+      "source_name": "FACT_MARKETING_SPEND",
+      "pbi_name": "FACT_MARKETING_SPEND",
+      "status": "exact",
+      "source_columns": 7,
+      "pbi_columns": 7,
+      "notes": ""
+    },
+    {
+      "source_type": "Table",
+      "source_name": "DIM_WAREHOUSE",
+      "pbi_name": "DIM_WAREHOUSE",
+      "status": "exact",
+      "source_columns": 5,
+      "pbi_columns": 5,
+      "notes": ""
+    }
+  ],
+  "metrics": [
+    {
+      "source_type": "Metric",
+      "source_name": "Total Revenue",
+      "pbi_name": "Total Revenue",
+      "status": "exact",
+      "source_expression": "Sum(Revenue)",
+      "notes": ""
+    },
+    {
+      "source_type": "Metric",
+      "source_name": "Total Cost",
+      "pbi_name": "Total Cost",
+      "status": "exact",
+      "source_expression": "Sum(Cost)",
+      "notes": ""
+    },
+    {
+      "source_type": "Metric",
+      "source_name": "Total Quantity",
+      "pbi_name": "Total Quantity",
+      "status": "exact",
+      "source_expression": "Sum(Quantity)",
+      "notes": ""
+    },
+    {
+      "source_type": "Metric",
+      "source_name": "Total Discount",
+      "pbi_name": "Total Discount",
+      "status": "exact",
+      "source_expression": "Sum(Discount)",
+      "notes": ""
+    },
+    {
+      "source_type": "Metric",
+      "source_name": "Total Tax",
+      "pbi_name": "Total Tax",
+      "status": "exact",
+      "source_expression": "Sum(Tax)",
+      "notes": ""
+    },
+    {
+      "source_type": "Metric",
+      "source_name": "Total Shipping",
+      "pbi_name": "Total Shipping",
+      "status": "exact",
+      "source_expression": "Sum(Shipping)",
+      "notes": ""
+    },
+    {
+      "source_type": "Metric",
+      "source_name": "Total Commission",
+      "pbi_name": "Total Commission",
+      "status": "exact",
+      "source_expression": "Sum(Commission)",
+      "notes": ""
+    },
+    {
+      "source_type": "Metric",
+      "source_name": "Return Quantity",
+      "pbi_name": "Return Quantity",
+      "status": "exact",
+      "source_expression": "Sum(Return Qty)",
+      "notes": ""
+    },
+    {
+      "source_type": "Metric",
+      "source_name": "Return Amount",
+      "pbi_name": "Return Amount",
+      "status": "exact",
+      "source_expression": "Sum(Return Amount)",
+      "notes": ""
+    },
+    {
+      "source_type": "Metric",
+      "source_name": "Inventory On Hand",
+      "pbi_name": "Inventory On Hand",
+      "status": "exact",
+      "source_expression": "Sum(On Hand)",
+      "notes": ""
+    },
+    {
+      "source_type": "Metric",
+      "source_name": "Inventory On Order",
+      "pbi_name": "Inventory On Order",
+      "status": "exact",
+      "source_expression": "Sum(On Order)",
+      "notes": ""
+    },
+    {
+      "source_type": "Metric",
+      "source_name": "Total Page Views",
+      "pbi_name": "Total Page Views",
+      "status": "exact",
+      "source_expression": "Sum(Page Views)",
+      "notes": ""
+    },
+    {
+      "source_type": "Metric",
+      "source_name": "Total Sessions",
+      "pbi_name": "Total Sessions",
+      "status": "exact",
+      "source_expression": "Count(Session Duration)",
+      "notes": ""
+    },
+    {
+      "source_type": "Metric",
+      "source_name": "Marketing Spend",
+      "pbi_name": "Marketing Spend",
+      "status": "exact",
+      "source_expression": "Sum(Marketing Spend)",
+      "notes": ""
+    },
+    {
+      "source_type": "Metric",
+      "source_name": "Total Impressions",
+      "pbi_name": "Total Impressions",
+      "status": "exact",
+      "source_expression": "Sum(Impressions)",
+      "notes": ""
+    },
+    {
+      "source_type": "Metric",
+      "source_name": "Total Clicks",
+      "pbi_name": "Total Clicks",
+      "status": "exact",
+      "source_expression": "Sum(Clicks)",
+      "notes": ""
+    },
+    {
+      "source_type": "Metric",
+      "source_name": "Total Conversions",
+      "pbi_name": "Total Conversions",
+      "status": "exact",
+      "source_expression": "Sum(Conversions)",
+      "notes": ""
+    },
+    {
+      "source_type": "Metric",
+      "source_name": "Customer Count",
+      "pbi_name": "Customer Count",
+      "status": "exact",
+      "source_expression": "Count<Distinct=True>(Customer)",
+      "notes": ""
+    },
+    {
+      "source_type": "Metric",
+      "source_name": "Product Count",
+      "pbi_name": "Product Count",
+      "status": "exact",
+      "source_expression": "Count<Distinct=True>(Product)",
+      "notes": ""
+    },
+    {
+      "source_type": "Metric",
+      "source_name": "Avg Unit Cost",
+      "pbi_name": "Avg Unit Cost",
+      "status": "exact",
+      "source_expression": "Avg(Unit Cost)",
+      "notes": ""
+    },
+    {
+      "source_type": "Metric",
+      "source_name": "Profit",
+      "pbi_name": "Profit",
+      "status": "exact",
+      "source_expression": "Sum(Revenue) - Sum(Cost)",
+      "notes": ""
+    },
+    {
+      "source_type": "Metric",
+      "source_name": "Profit Margin",
+      "pbi_name": "Profit Margin",
+      "status": "exact",
+      "source_expression": "(Sum(Revenue) - Sum(Cost)) / Sum(Revenue)",
+      "notes": ""
+    },
+    {
+      "source_type": "Metric",
+      "source_name": "Gross Revenue",
+      "pbi_name": "Gross Revenue",
+      "status": "exact",
+      "source_expression": "Sum(Revenue) - Sum(Discount)",
+      "notes": ""
+    },
+    {
+      "source_type": "Metric",
+      "source_name": "Net Revenue",
+      "pbi_name": "Net Revenue",
+      "status": "exact",
+      "source_expression": "Sum(Revenue) - Sum(Cost) - Sum(Tax) - Sum(Shipping)",
+      "notes": ""
+    },
+    {
+      "source_type": "Metric",
+      "source_name": "Return Rate",
+      "pbi_name": "Return Rate",
+      "status": "exact",
+      "source_expression": "Sum(Return Qty) / Sum(Quantity)",
+      "notes": ""
+    },
+    {
+      "source_type": "Metric",
+      "source_name": "Revenue per Customer",
+      "pbi_name": "Revenue per Customer",
+      "status": "exact",
+      "source_expression": "Sum(Revenue) / Count<Distinct=True>(Customer)",
+      "notes": ""
+    },
+    {
+      "source_type": "Metric",
+      "source_name": "Avg Order Value",
+      "pbi_name": "Avg Order Value",
+      "status": "exact",
+      "source_expression": "Sum(Revenue) / Count(SALE_ID)",
+      "notes": ""
+    },
+    {
+      "source_type": "Metric",
+      "source_name": "Discount Rate",
+      "pbi_name": "Discount Rate",
+      "status": "exact",
+      "source_expression": "Sum(Discount) / Sum(Revenue)",
+      "notes": ""
+    },
+    {
+      "source_type": "Metric",
+      "source_name": "Click-Through Rate",
+      "pbi_name": "Click-Through Rate",
+      "status": "exact",
+      "source_expression": "Sum(Clicks) / Sum(Impressions)",
+      "notes": ""
+    },
+    {
+      "source_type": "Metric",
+      "source_name": "Cost per Click",
+      "pbi_name": "Cost per Click",
+      "status": "exact",
+      "source_expression": "Sum(Marketing Spend) / Sum(Clicks)",
+      "notes": ""
+    },
+    {
+      "source_type": "Metric",
+      "source_name": "Cost per Conversion",
+      "pbi_name": "Cost per Conversion",
+      "status": "exact",
+      "source_expression": "Sum(Marketing Spend) / Sum(Conversions)",
+      "notes": ""
+    },
+    {
+      "source_type": "Metric",
+      "source_name": "ROAS",
+      "pbi_name": "ROAS",
+      "status": "exact",
+      "source_expression": "Sum(Revenue) / Sum(Marketing Spend)",
+      "notes": ""
+    },
+    {
+      "source_type": "Metric",
+      "source_name": "Avg Session Duration",
+      "pbi_name": "Avg Session Duration",
+      "status": "exact",
+      "source_expression": "Avg(Session Duration)",
+      "notes": ""
+    },
+    {
+      "source_type": "Metric",
+      "source_name": "Bounce Rate",
+      "pbi_name": "Bounce Rate",
+      "status": "exact",
+      "source_expression": "Count(Bounce=True) / Count(Session Duration)",
+      "notes": ""
+    },
+    {
+      "source_type": "Metric",
+      "source_name": "Inventory Weeks of Supply",
+      "pbi_name": "Inventory Weeks of Supply",
+      "status": "exact",
+      "source_expression": "Sum(On Hand) / (Sum(Quantity) / 52)",
+      "notes": ""
+    },
+    {
+      "source_type": "Metric",
+      "source_name": "Fill Rate",
+      "pbi_name": "Fill Rate",
+      "status": "exact",
+      "source_expression": "1 - (Sum(Return Qty) / Sum(Quantity))",
+      "notes": ""
+    },
+    {
+      "source_type": "Metric",
+      "source_name": "Commission Rate",
+      "pbi_name": "Commission Rate",
+      "status": "exact",
+      "source_expression": "Sum(Commission) / Sum(Revenue)",
+      "notes": ""
+    },
+    {
+      "source_type": "Metric",
+      "source_name": "Effective Tax Rate",
+      "pbi_name": "Effective Tax Rate",
+      "status": "exact",
+      "source_expression": "Sum(Tax) / Sum(Revenue)",
+      "notes": ""
+    },
+    {
+      "source_type": "Metric",
+      "source_name": "Revenue per Page View",
+      "pbi_name": "Revenue per Page View",
+      "status": "exact",
+      "source_expression": "Sum(Revenue) / Sum(Page Views)",
+      "notes": ""
+    },
+    {
+      "source_type": "Metric",
+      "source_name": "Customer Lifetime Value",
+      "pbi_name": "Customer Lifetime Value",
+      "status": "exact",
+      "source_expression": "Sum(Revenue) / Count<Distinct=True>(Customer) * 3",
+      "notes": ""
+    },
+    {
+      "source_type": "Derived Metric",
+      "source_name": "Revenue Rank",
+      "pbi_name": "Revenue Rank",
+      "status": "approximate",
+      "source_expression": "Rank(Sum(Revenue), DESC) {~+, Customer}",
+      "notes": "OLAP/derived — verify DAX output"
+    },
+    {
+      "source_type": "Derived Metric",
+      "source_name": "Running Revenue",
+      "pbi_name": "Running Revenue",
+      "status": "approximate",
+      "source_expression": "RunningSum(Sum(Revenue)) {~+, Month}",
+      "notes": "OLAP/derived — verify DAX output"
+    },
+    {
+      "source_type": "Derived Metric",
+      "source_name": "Revenue MoM %",
+      "pbi_name": "Revenue MoM %",
+      "status": "approximate",
+      "source_expression": "(Sum(Revenue) - Lag(Sum(Revenue), 1)) / Lag(Sum(Revenue), 1)",
+      "notes": "OLAP/derived — verify DAX output"
+    },
+    {
+      "source_type": "Derived Metric",
+      "source_name": "3M Moving Avg",
+      "pbi_name": "3M Moving Avg",
+      "status": "approximate",
+      "source_expression": "MovingAvg(Sum(Revenue), 3) {~+, Month}",
+      "notes": "OLAP/derived — verify DAX output"
+    },
+    {
+      "source_type": "Derived Metric",
+      "source_name": "Revenue YoY %",
+      "pbi_name": "Revenue YoY %",
+      "status": "approximate",
+      "source_expression": "(Sum(Revenue) - Lag(Sum(Revenue), 12, Month)) / Lag(Sum(Revenue), 12, Month)",
+      "notes": "OLAP/derived — verify DAX output"
+    },
+    {
+      "source_type": "Derived Metric",
+      "source_name": "Profit Quartile",
+      "pbi_name": "Profit Quartile",
+      "status": "approximate",
+      "source_expression": "NTile(Sum(Revenue) - Sum(Cost), 4) {~+, Region}",
+      "notes": "OLAP/derived — verify DAX output"
+    },
+    {
+      "source_type": "Derived Metric",
+      "source_name": "6M Moving Sum",
+      "pbi_name": "6M Moving Sum",
+      "status": "approximate",
+      "source_expression": "MovingSum(Sum(Revenue), 6) {~+, Month}",
+      "notes": "OLAP/derived — verify DAX output"
+    },
+    {
+      "source_type": "Derived Metric",
+      "source_name": "Lead Revenue",
+      "pbi_name": "Lead Revenue",
+      "status": "approximate",
+      "source_expression": "Lead(Sum(Revenue), 1) {~+, Month}",
+      "notes": "OLAP/derived — verify DAX output"
+    },
+    {
+      "source_type": "Derived Metric",
+      "source_name": "First Month Revenue",
+      "pbi_name": "First Month Revenue",
+      "status": "approximate",
+      "source_expression": "FirstInRange(Sum(Revenue), Month)",
+      "notes": "OLAP/derived — verify DAX output"
+    },
+    {
+      "source_type": "Derived Metric",
+      "source_name": "Last Month Revenue",
+      "pbi_name": "Last Month Revenue",
+      "status": "approximate",
+      "source_expression": "LastInRange(Sum(Revenue), Month)",
+      "notes": "OLAP/derived — verify DAX output"
+    },
+    {
+      "source_type": "Derived Metric",
+      "source_name": "Cost Running Avg",
+      "pbi_name": "Cost Running Avg",
+      "status": "approximate",
+      "source_expression": "RunningAvg(Sum(Cost)) {~+, Month}",
+      "notes": "OLAP/derived — verify DAX output"
+    },
+    {
+      "source_type": "Derived Metric",
+      "source_name": "Profit Running Sum",
+      "pbi_name": "Profit Running Sum",
+      "status": "approximate",
+      "source_expression": "RunningSum(Sum(Revenue) - Sum(Cost)) {~+, Month}",
+      "notes": "OLAP/derived — verify DAX output"
+    },
+    {
+      "source_type": "Derived Metric",
+      "source_name": "Rank by Profit",
+      "pbi_name": "Rank by Profit",
+      "status": "approximate",
+      "source_expression": "Rank(Sum(Revenue) - Sum(Cost), DESC, DENSE) {~+, Customer}",
+      "notes": "OLAP/derived — verify DAX output"
+    },
+    {
+      "source_type": "Derived Metric",
+      "source_name": "Revenue Band",
+      "pbi_name": "Revenue Band",
+      "status": "approximate",
+      "source_expression": "Band(Sum(Revenue), 0, 1000000, 100000)",
+      "notes": "OLAP/derived — verify DAX output"
+    },
+    {
+      "source_type": "Derived Metric",
+      "source_name": "ApplyOLAP RowNum",
+      "pbi_name": "ApplyOLAP RowNum",
+      "status": "approximate",
+      "source_expression": "ApplyOLAP(\"ROW_NUMBER() OVER (ORDER BY #0 DESC)\", Revenue)",
+      "notes": "OLAP/derived — verify DAX output"
+    },
+    {
+      "source_type": "Derived Metric",
+      "source_name": "ApplyOLAP Rank",
+      "pbi_name": "ApplyOLAP Rank",
+      "status": "approximate",
+      "source_expression": "ApplyOLAP(\"DENSE_RANK() OVER (ORDER BY #0 DESC)\", Revenue)",
+      "notes": "OLAP/derived — verify DAX output"
+    },
+    {
+      "source_type": "Derived Metric",
+      "source_name": "ApplyOLAP Lag",
+      "pbi_name": "ApplyOLAP Lag",
+      "status": "approximate",
+      "source_expression": "ApplyOLAP(\"LAG(#0, 1) OVER (ORDER BY #1)\", Revenue, Month)",
+      "notes": "OLAP/derived — verify DAX output"
+    },
+    {
+      "source_type": "Derived Metric",
+      "source_name": "ApplyOLAP CumSum",
+      "pbi_name": "ApplyOLAP CumSum",
+      "status": "approximate",
+      "source_expression": "ApplyOLAP(\"SUM(#0) OVER (ORDER BY #1 ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)\", Revenue, Month)",
+      "notes": "OLAP/derived — verify DAX output"
+    },
+    {
+      "source_type": "Derived Metric",
+      "source_name": "Conversion Rank",
+      "pbi_name": "Conversion Rank",
+      "status": "approximate",
+      "source_expression": "Rank(Sum(Conversions), DESC) {~+, Channel}",
+      "notes": "OLAP/derived — verify DAX output"
+    },
+    {
+      "source_type": "Derived Metric",
+      "source_name": "Spend Running Sum",
+      "pbi_name": "Spend Running Sum",
+      "status": "approximate",
+      "source_expression": "RunningSum(Sum(Marketing Spend)) {~+, Month}",
+      "notes": "OLAP/derived — verify DAX output"
+    }
+  ],
+  "visuals": [
+    {
+      "source_type": "Visual",
+      "source_name": "Revenue",
+      "source_viz_type": "kpi",
+      "pbi_viz_type": "kpi",
+      "status": "exact",
+      "notes": ""
+    },
+    {
+      "source_type": "Visual",
+      "source_name": "Profit",
+      "source_viz_type": "kpi",
+      "pbi_viz_type": "kpi",
+      "status": "exact",
+      "notes": ""
+    },
+    {
+      "source_type": "Visual",
+      "source_name": "Margin",
+      "source_viz_type": "kpi",
+      "pbi_viz_type": "kpi",
+      "status": "exact",
+      "notes": ""
+    },
+    {
+      "source_type": "Visual",
+      "source_name": "Customers",
+      "source_viz_type": "kpi",
+      "pbi_viz_type": "kpi",
+      "status": "exact",
+      "notes": ""
+    },
+    {
+      "source_type": "Visual",
+      "source_name": "Revenue Trend",
+      "source_viz_type": "area",
+      "pbi_viz_type": "area",
+      "status": "exact",
+      "notes": ""
+    },
+    {
+      "source_type": "Visual",
+      "source_name": "Region Breakdown",
+      "source_viz_type": "treemap",
+      "pbi_viz_type": "treemap",
+      "status": "exact",
+      "notes": ""
+    },
+    {
+      "source_type": "Visual",
+      "source_name": "Revenue Map",
+      "source_viz_type": "map",
+      "pbi_viz_type": "map",
+      "status": "exact",
+      "notes": ""
+    },
+    {
+      "source_type": "Visual",
+      "source_name": "Region Table",
+      "source_viz_type": "grid",
+      "pbi_viz_type": "grid",
+      "status": "exact",
+      "notes": ""
+    },
+    {
+      "source_type": "Visual",
+      "source_name": "Channel Revenue",
+      "source_viz_type": "stacked_vertical_bar",
+      "pbi_viz_type": "stacked_vertical_bar",
+      "status": "exact",
+      "notes": ""
+    },
+    {
+      "source_type": "Visual",
+      "source_name": "Monthly Waterfall",
+      "source_viz_type": "waterfall",
+      "pbi_viz_type": "waterfall",
+      "status": "exact",
+      "notes": ""
+    },
+    {
+      "source_type": "Visual",
+      "source_name": "Employee Leaderboard",
+      "source_viz_type": "grid",
+      "pbi_viz_type": "grid",
+      "status": "exact",
+      "notes": ""
+    },
+    {
+      "source_type": "Visual",
+      "source_name": "Category Revenue",
+      "source_viz_type": "pie",
+      "pbi_viz_type": "pie",
+      "status": "exact",
+      "notes": ""
+    },
+    {
+      "source_type": "Visual",
+      "source_name": "Brand Comparison",
+      "source_viz_type": "horizontal_bar",
+      "pbi_viz_type": "horizontal_bar",
+      "status": "exact",
+      "notes": ""
+    },
+    {
+      "source_type": "Visual",
+      "source_name": "Product Grid",
+      "source_viz_type": "grid",
+      "pbi_viz_type": "grid",
+      "status": "exact",
+      "notes": ""
+    },
+    {
+      "source_type": "Visual",
+      "source_name": "Stock Levels",
+      "source_viz_type": "stacked_vertical_bar",
+      "pbi_viz_type": "stacked_vertical_bar",
+      "status": "exact",
+      "notes": ""
+    },
+    {
+      "source_type": "Visual",
+      "source_name": "Weeks of Supply",
+      "source_viz_type": "gauge",
+      "pbi_viz_type": "gauge",
+      "status": "exact",
+      "notes": ""
+    },
+    {
+      "source_type": "Visual",
+      "source_name": "Segment Breakdown",
+      "source_viz_type": "stacked_vertical_bar",
+      "pbi_viz_type": "stacked_vertical_bar",
+      "status": "exact",
+      "notes": ""
+    },
+    {
+      "source_type": "Visual",
+      "source_name": "Tier Analysis",
+      "source_viz_type": "grid",
+      "pbi_viz_type": "grid",
+      "status": "exact",
+      "notes": ""
+    },
+    {
+      "source_type": "Visual",
+      "source_name": "Customer Scatter",
+      "source_viz_type": "scatter",
+      "pbi_viz_type": "scatter",
+      "status": "exact",
+      "notes": ""
+    },
+    {
+      "source_type": "Visual",
+      "source_name": "Spend vs Revenue",
+      "source_viz_type": "combo",
+      "pbi_viz_type": "combo",
+      "status": "exact",
+      "notes": ""
+    },
+    {
+      "source_type": "Visual",
+      "source_name": "CTR by Channel",
+      "source_viz_type": "horizontal_bar",
+      "pbi_viz_type": "horizontal_bar",
+      "status": "exact",
+      "notes": ""
+    },
+    {
+      "source_type": "Visual",
+      "source_name": "ROAS Trend",
+      "source_viz_type": "line",
+      "pbi_viz_type": "line",
+      "status": "exact",
+      "notes": ""
+    },
+    {
+      "source_type": "Visual",
+      "source_name": "Funnel",
+      "source_viz_type": "funnel",
+      "pbi_viz_type": "funnel",
+      "status": "exact",
+      "notes": ""
+    },
+    {
+      "source_type": "Visual",
+      "source_name": "Page Views Trend",
+      "source_viz_type": "area",
+      "pbi_viz_type": "area",
+      "status": "exact",
+      "notes": ""
+    },
+    {
+      "source_type": "Visual",
+      "source_name": "Device Split",
+      "source_viz_type": "donutchart",
+      "pbi_viz_type": "donutchart",
+      "status": "exact",
+      "notes": ""
+    },
+    {
+      "source_type": "Visual",
+      "source_name": "Bounce Rate",
+      "source_viz_type": "kpi",
+      "pbi_viz_type": "kpi",
+      "status": "exact",
+      "notes": ""
+    },
+    {
+      "source_type": "Visual",
+      "source_name": "Revenue vs Cost",
+      "source_viz_type": "line",
+      "pbi_viz_type": "line",
+      "status": "exact",
+      "notes": ""
+    },
+    {
+      "source_type": "Visual",
+      "source_name": "Tax & Shipping",
+      "source_viz_type": "stacked_vertical_bar",
+      "pbi_viz_type": "stacked_vertical_bar",
+      "status": "exact",
+      "notes": ""
+    },
+    {
+      "source_type": "Visual",
+      "source_name": "Net Revenue Trend",
+      "source_viz_type": "line",
+      "pbi_viz_type": "line",
+      "status": "exact",
+      "notes": ""
+    },
+    {
+      "source_type": "Visual",
+      "source_name": "Return Rate Trend",
+      "source_viz_type": "line",
+      "pbi_viz_type": "line",
+      "status": "exact",
+      "notes": ""
+    },
+    {
+      "source_type": "Visual",
+      "source_name": "Returns by Reason",
+      "source_viz_type": "horizontal_bar",
+      "pbi_viz_type": "horizontal_bar",
+      "status": "exact",
+      "notes": ""
+    },
+    {
+      "source_type": "Visual",
+      "source_name": "Top Returned Products",
+      "source_viz_type": "grid",
+      "pbi_viz_type": "grid",
+      "status": "exact",
+      "notes": ""
+    }
+  ],
+  "filters": [
+    {
+      "source_type": "Security Filter",
+      "source_name": "Region Filter - Americas",
+      "pbi_name": "Region Filter - Americas",
+      "status": "approximate",
+      "notes": "Migrated as RLS role"
+    },
+    {
+      "source_type": "Security Filter",
+      "source_name": "Region Filter - EMEA",
+      "pbi_name": "Region Filter - EMEA",
+      "status": "approximate",
+      "notes": "Migrated as RLS role"
+    },
+    {
+      "source_type": "Security Filter",
+      "source_name": "Channel Filter - Digital",
+      "pbi_name": "Channel Filter - Digital",
+      "status": "approximate",
+      "notes": "Migrated as RLS role"
+    },
+    {
+      "source_type": "Prompt",
+      "source_name": "Select Year",
+      "pbi_name": "Select Year",
+      "status": "exact",
+      "notes": "Prompt type: "
+    },
+    {
+      "source_type": "Prompt",
+      "source_name": "Select Region",
+      "pbi_name": "Select Region",
+      "status": "exact",
+      "notes": "Prompt type: "
+    },
+    {
+      "source_type": "Prompt",
+      "source_name": "Revenue Min",
+      "pbi_name": "Revenue Min",
+      "status": "exact",
+      "notes": "Prompt type: "
+    },
+    {
+      "source_type": "Prompt",
+      "source_name": "Date Range",
+      "pbi_name": "Date Range",
+      "status": "exact",
+      "notes": "Prompt type: "
+    }
+  ]
+}

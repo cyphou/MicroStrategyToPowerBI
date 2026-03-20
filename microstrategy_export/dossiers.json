@@ -1,205 +1,1251 @@
 [
   {
-    "id": "D4E5F60711E7A890001122334455DD11",
-    "name": "Sales Executive Dashboard",
-    "description": "Executive-level dashboard with KPIs, trends, and breakdowns",
+    "id": "DOSS_U01",
+    "name": "CEO Dashboard",
+    "description": "CEO Dashboard dossier",
     "chapters": [
       {
-        "key": "K52_ch_01",
-        "name": "Overview",
+        "key": "DOSS_U01_ch01",
+        "name": "Main",
         "pages": [
           {
-            "key": "K52_pg_01",
-            "name": "KPI Summary",
+            "key": "ceo_kpi",
+            "name": "KPI Wall",
             "visualizations": [
               {
-                "key": "K52_viz_01",
-                "name": "Revenue KPI",
+                "key": "ck1",
+                "name": "Revenue",
                 "viz_type": "kpi",
-                "mstr_viz_type": "kpi",
-                "pbi_visual_type": "kpi",
-                "data": {"attributes": [], "metrics": [{"id": "4C051DB611D3E877C000B3B2D86C964F", "name": "Total Revenue"}]},
-                "formatting": {"showTrend": true, "numberFormat": "$#,##0"},
-                "thresholds": [],
-                "position": {"x": 0, "y": 0, "width": 320, "height": 200},
-                "actions": [],
-                "info_window": null
-              },
-              {
-                "key": "K52_viz_04",
-                "name": "Revenue Trend",
-                "viz_type": "line",
-                "mstr_viz_type": "line_chart",
-                "pbi_visual_type": "lineChart",
                 "data": {
-                  "attributes": [{"id": "8D679D5711D3E4981000E787EC6DE8A4", "name": "Month"}],
+                  "attributes": [],
                   "metrics": [
-                    {"id": "4C051DB611D3E877C000B3B2D86C964F", "name": "Total Revenue"},
-                    {"id": "4C051DB711D3E877C000B3B2D86C964F", "name": "Total Cost"}
+                    {
+                      "id": "MU01",
+                      "name": "MU01"
+                    }
                   ]
                 },
-                "formatting": {"showDataLabels": false, "showLegend": true},
+                "formatting": {},
                 "thresholds": [],
-                "position": {"x": 0, "y": 220, "width": 660, "height": 380},
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
                 "actions": [],
                 "info_window": null
               },
               {
-                "key": "K52_viz_05",
-                "name": "Revenue by Category",
-                "viz_type": "pie",
-                "mstr_viz_type": "pie_chart",
-                "pbi_visual_type": "pieChart",
+                "key": "ck2",
+                "name": "Profit",
+                "viz_type": "kpi",
                 "data": {
-                  "attributes": [{"id": "8D679D4611D3E4981000E787EC6DE8A4", "name": "Category"}],
-                  "metrics": [{"id": "4C051DB611D3E877C000B3B2D86C964F", "name": "Total Revenue"}]
+                  "attributes": [],
+                  "metrics": [
+                    {
+                      "id": "MU21",
+                      "name": "MU21"
+                    }
+                  ]
                 },
-                "formatting": {"showDataLabels": true, "showPercentage": true},
+                "formatting": {},
                 "thresholds": [],
-                "position": {"x": 680, "y": 220, "width": 320, "height": 380},
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
+                "actions": [],
+                "info_window": null
+              },
+              {
+                "key": "ck3",
+                "name": "Margin",
+                "viz_type": "kpi",
+                "data": {
+                  "attributes": [],
+                  "metrics": [
+                    {
+                      "id": "MU22",
+                      "name": "MU22"
+                    }
+                  ]
+                },
+                "formatting": {},
+                "thresholds": [],
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
+                "actions": [],
+                "info_window": null
+              },
+              {
+                "key": "ck4",
+                "name": "Customers",
+                "viz_type": "kpi",
+                "data": {
+                  "attributes": [],
+                  "metrics": [
+                    {
+                      "id": "MU18",
+                      "name": "MU18"
+                    }
+                  ]
+                },
+                "formatting": {},
+                "thresholds": [],
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
+                "actions": [],
+                "info_window": null
+              },
+              {
+                "key": "ck5",
+                "name": "Revenue Trend",
+                "viz_type": "area",
+                "data": {
+                  "attributes": [
+                    {
+                      "id": "AU14",
+                      "name": "AU14"
+                    }
+                  ],
+                  "metrics": [
+                    {
+                      "id": "MU01",
+                      "name": "MU01"
+                    },
+                    {
+                      "id": "MU02",
+                      "name": "MU02"
+                    }
+                  ]
+                },
+                "formatting": {},
+                "thresholds": [],
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
+                "actions": [],
+                "info_window": null
+              },
+              {
+                "key": "ck6",
+                "name": "Region Breakdown",
+                "viz_type": "treemap",
+                "data": {
+                  "attributes": [
+                    {
+                      "id": "AU05",
+                      "name": "AU05"
+                    }
+                  ],
+                  "metrics": [
+                    {
+                      "id": "MU01",
+                      "name": "MU01"
+                    }
+                  ]
+                },
+                "formatting": {},
+                "thresholds": [],
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
                 "actions": [],
                 "info_window": null
               }
             ],
-            "panel_stacks": [],
             "selectors": [],
-            "layout": {"width": 1024, "height": 768}
+            "layout": {
+              "width": 1920,
+              "height": 1080
+            }
           },
           {
-            "key": "K52_pg_02",
-            "name": "Regional Analysis",
+            "key": "ceo_geo",
+            "name": "Geographic View",
             "visualizations": [
               {
-                "key": "K52_viz_07",
-                "name": "Top Customers by Revenue",
-                "viz_type": "grid",
-                "mstr_viz_type": "grid_visualization",
-                "pbi_visual_type": "tableEx",
+                "key": "cg1",
+                "name": "Revenue Map",
+                "viz_type": "map",
                 "data": {
                   "attributes": [
-                    {"id": "8D679D3511D3E4981000E787EC6DE8A4", "name": "Customer"},
-                    {"id": "8D679D3711D3E4981000E787EC6DE8A4", "name": "Customer Region"}
+                    {
+                      "id": "AU03",
+                      "name": "AU03"
+                    }
                   ],
                   "metrics": [
-                    {"id": "4C051DB611D3E877C000B3B2D86C964F", "name": "Total Revenue"},
-                    {"id": "4C051DB811D3E877C000B3B2D86C964F", "name": "Profit"},
-                    {"id": "4C051DBD11D3E877C000B3B2D86C964F", "name": "Revenue Rank"}
+                    {
+                      "id": "MU01",
+                      "name": "MU01"
+                    }
                   ]
                 },
-                "formatting": {"showBanding": true, "maxRows": 25},
+                "formatting": {},
                 "thresholds": [],
-                "position": {"x": 0, "y": 0, "width": 1000, "height": 400},
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
                 "actions": [],
                 "info_window": null
               },
               {
-                "key": "K52_viz_08",
-                "name": "Region Revenue Bar",
-                "viz_type": "vertical_bar",
-                "mstr_viz_type": "vertical_bar_chart",
-                "pbi_visual_type": "clusteredColumnChart",
+                "key": "cg2",
+                "name": "Region Table",
+                "viz_type": "grid",
                 "data": {
-                  "attributes": [{"id": "8D679D3711D3E4981000E787EC6DE8A4", "name": "Customer Region"}],
+                  "attributes": [
+                    {
+                      "id": "AU05",
+                      "name": "AU05"
+                    },
+                    {
+                      "id": "AU04",
+                      "name": "AU04"
+                    }
+                  ],
                   "metrics": [
-                    {"id": "4C051DB611D3E877C000B3B2D86C964F", "name": "Total Revenue"},
-                    {"id": "4C051DB711D3E877C000B3B2D86C964F", "name": "Total Cost"}
+                    {
+                      "id": "MU01",
+                      "name": "MU01"
+                    },
+                    {
+                      "id": "MU21",
+                      "name": "MU21"
+                    },
+                    {
+                      "id": "MU22",
+                      "name": "MU22"
+                    }
                   ]
                 },
-                "formatting": {"showDataLabels": true, "stacked": false},
+                "formatting": {},
                 "thresholds": [],
-                "position": {"x": 0, "y": 420, "width": 1000, "height": 280},
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
                 "actions": [],
                 "info_window": null
               }
             ],
-            "panel_stacks": [],
-            "selectors": [
-              {
-                "key": "K52_sel_01",
-                "name": "Year Selector",
-                "type": "attribute_element",
-                "attribute": {"id": "8D679D5511D3E4981000E787EC6DE8A4", "name": "Year"},
-                "multi_select": false,
-                "style": "dropdown"
-              }
-            ],
-            "layout": {"width": 1024, "height": 768}
+            "selectors": [],
+            "layout": {
+              "width": 1920,
+              "height": 1080
+            }
           }
         ]
-      },
+      }
+    ]
+  },
+  {
+    "id": "DOSS_U02",
+    "name": "Sales Operations",
+    "description": "Sales Operations dossier",
+    "chapters": [
       {
-        "key": "K52_ch_02",
-        "name": "Product Deep Dive",
+        "key": "DOSS_U02_ch01",
+        "name": "Main",
         "pages": [
           {
-            "key": "K52_pg_03",
-            "name": "Product Performance",
+            "key": "so_main",
+            "name": "Sales Pipeline",
             "visualizations": [
               {
-                "key": "K52_viz_09",
-                "name": "Product Revenue vs Quantity Scatter",
-                "viz_type": "scatter",
-                "mstr_viz_type": "scatter_plot",
-                "pbi_visual_type": "scatterChart",
+                "key": "so1",
+                "name": "Channel Revenue",
+                "viz_type": "stacked_vertical_bar",
                 "data": {
-                  "attributes": [{"id": "8D679D4511D3E4981000E787EC6DE8A4", "name": "Product"}],
+                  "attributes": [
+                    {
+                      "id": "AU18",
+                      "name": "AU18"
+                    }
+                  ],
                   "metrics": [
-                    {"id": "4C051DB611D3E877C000B3B2D86C964F", "name": "Total Revenue"},
-                    {"id": "4C051DBC11D3E877C000B3B2D86C964F", "name": "Customer Count"}
+                    {
+                      "id": "MU01",
+                      "name": "MU01"
+                    },
+                    {
+                      "id": "MU02",
+                      "name": "MU02"
+                    }
                   ]
                 },
-                "formatting": {"showTrendLine": true},
+                "formatting": {},
                 "thresholds": [],
-                "position": {"x": 0, "y": 0, "width": 500, "height": 400},
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
                 "actions": [],
                 "info_window": null
               },
               {
-                "key": "K52_viz_10",
-                "name": "Category Breakdown Treemap",
-                "viz_type": "treemap",
-                "mstr_viz_type": "tree_map",
-                "pbi_visual_type": "treemap",
+                "key": "so2",
+                "name": "Monthly Waterfall",
+                "viz_type": "waterfall",
                 "data": {
                   "attributes": [
-                    {"id": "8D679D4611D3E4981000E787EC6DE8A4", "name": "Category"},
-                    {"id": "8D679D4511D3E4981000E787EC6DE8A4", "name": "Product"}
+                    {
+                      "id": "AU14",
+                      "name": "AU14"
+                    }
                   ],
-                  "metrics": [{"id": "4C051DB611D3E877C000B3B2D86C964F", "name": "Total Revenue"}]
+                  "metrics": [
+                    {
+                      "id": "MU01",
+                      "name": "MU01"
+                    }
+                  ]
                 },
-                "formatting": {"showLabels": true},
+                "formatting": {},
                 "thresholds": [],
-                "position": {"x": 520, "y": 0, "width": 480, "height": 400},
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
+                "actions": [],
+                "info_window": null
+              },
+              {
+                "key": "so3",
+                "name": "Employee Leaderboard",
+                "viz_type": "grid",
+                "data": {
+                  "attributes": [
+                    {
+                      "id": "AU20",
+                      "name": "AU20"
+                    }
+                  ],
+                  "metrics": [
+                    {
+                      "id": "MU01",
+                      "name": "MU01"
+                    },
+                    {
+                      "id": "MU03",
+                      "name": "MU03"
+                    },
+                    {
+                      "id": "MU27",
+                      "name": "MU27"
+                    }
+                  ]
+                },
+                "formatting": {},
+                "thresholds": [],
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
                 "actions": [],
                 "info_window": null
               }
             ],
-            "panel_stacks": [],
-            "selectors": [],
-            "layout": {"width": 1024, "height": 768}
+            "selectors": [
+              {
+                "key": "sel_yr",
+                "name": "Year Selector",
+                "selector_type": "attribute_selector",
+                "attribute": {
+                  "id": "AU16",
+                  "name": "Year"
+                },
+                "items": [
+                  {
+                    "name": "2024"
+                  },
+                  {
+                    "name": "2025"
+                  },
+                  {
+                    "name": "2026"
+                  }
+                ]
+              }
+            ],
+            "layout": {
+              "width": 1920,
+              "height": 1080
+            }
           }
         ]
       }
-    ],
-    "filter_panels": [
+    ]
+  },
+  {
+    "id": "DOSS_U03",
+    "name": "Product Intelligence",
+    "description": "Product Intelligence dossier",
+    "chapters": [
       {
-        "key": "K52_gfp_01",
-        "name": "Global Year Filter",
-        "attribute": {"id": "8D679D5511D3E4981000E787EC6DE8A4", "name": "Year"},
-        "default_selection": ["2025"]
+        "key": "DOSS_U03_ch01",
+        "name": "Main",
+        "pages": [
+          {
+            "key": "pi_cat",
+            "name": "Category Analysis",
+            "visualizations": [
+              {
+                "key": "pi1",
+                "name": "Category Revenue",
+                "viz_type": "pie",
+                "data": {
+                  "attributes": [
+                    {
+                      "id": "AU10",
+                      "name": "AU10"
+                    }
+                  ],
+                  "metrics": [
+                    {
+                      "id": "MU01",
+                      "name": "MU01"
+                    }
+                  ]
+                },
+                "formatting": {},
+                "thresholds": [],
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
+                "actions": [],
+                "info_window": null
+              },
+              {
+                "key": "pi2",
+                "name": "Brand Comparison",
+                "viz_type": "horizontal_bar",
+                "data": {
+                  "attributes": [
+                    {
+                      "id": "AU12",
+                      "name": "AU12"
+                    }
+                  ],
+                  "metrics": [
+                    {
+                      "id": "MU01",
+                      "name": "MU01"
+                    }
+                  ]
+                },
+                "formatting": {},
+                "thresholds": [],
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
+                "actions": [],
+                "info_window": null
+              },
+              {
+                "key": "pi3",
+                "name": "Product Grid",
+                "viz_type": "grid",
+                "data": {
+                  "attributes": [
+                    {
+                      "id": "AU09",
+                      "name": "AU09"
+                    },
+                    {
+                      "id": "AU10",
+                      "name": "AU10"
+                    },
+                    {
+                      "id": "AU11",
+                      "name": "AU11"
+                    }
+                  ],
+                  "metrics": [
+                    {
+                      "id": "MU01",
+                      "name": "MU01"
+                    },
+                    {
+                      "id": "MU03",
+                      "name": "MU03"
+                    },
+                    {
+                      "id": "MU25",
+                      "name": "MU25"
+                    }
+                  ]
+                },
+                "formatting": {},
+                "thresholds": [],
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
+                "actions": [],
+                "info_window": null
+              }
+            ],
+            "selectors": [],
+            "layout": {
+              "width": 1920,
+              "height": 1080
+            }
+          },
+          {
+            "key": "pi_inv",
+            "name": "Inventory Health",
+            "visualizations": [
+              {
+                "key": "pi4",
+                "name": "Stock Levels",
+                "viz_type": "stacked_vertical_bar",
+                "data": {
+                  "attributes": [
+                    {
+                      "id": "AU24",
+                      "name": "AU24"
+                    }
+                  ],
+                  "metrics": [
+                    {
+                      "id": "MU10",
+                      "name": "MU10"
+                    },
+                    {
+                      "id": "MU11",
+                      "name": "MU11"
+                    }
+                  ]
+                },
+                "formatting": {},
+                "thresholds": [],
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
+                "actions": [],
+                "info_window": null
+              },
+              {
+                "key": "pi5",
+                "name": "Weeks of Supply",
+                "viz_type": "gauge",
+                "data": {
+                  "attributes": [],
+                  "metrics": [
+                    {
+                      "id": "MU35",
+                      "name": "MU35"
+                    }
+                  ]
+                },
+                "formatting": {},
+                "thresholds": [],
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
+                "actions": [],
+                "info_window": null
+              }
+            ],
+            "selectors": [],
+            "layout": {
+              "width": 1920,
+              "height": 1080
+            }
+          }
+        ]
       }
-    ],
-    "themes": {
-      "color_palette": ["#1F77B4", "#FF7F0E", "#2CA02C", "#D62728", "#9467BD"],
-      "font_family": "Segoe UI"
-    },
-    "prompts": [
+    ]
+  },
+  {
+    "id": "DOSS_U04",
+    "name": "Customer 360",
+    "description": "Customer 360 dossier",
+    "chapters": [
       {
-        "id": "prompt_01",
-        "name": "Select Region",
-        "type": "element",
-        "required": false,
-        "attribute_name": "Customer Region"
+        "key": "DOSS_U04_ch01",
+        "name": "Main",
+        "pages": [
+          {
+            "key": "c360_seg",
+            "name": "Segments",
+            "visualizations": [
+              {
+                "key": "c1",
+                "name": "Segment Breakdown",
+                "viz_type": "stacked_vertical_bar",
+                "data": {
+                  "attributes": [
+                    {
+                      "id": "AU06",
+                      "name": "AU06"
+                    }
+                  ],
+                  "metrics": [
+                    {
+                      "id": "MU01",
+                      "name": "MU01"
+                    },
+                    {
+                      "id": "MU02",
+                      "name": "MU02"
+                    }
+                  ]
+                },
+                "formatting": {},
+                "thresholds": [],
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
+                "actions": [],
+                "info_window": null
+              },
+              {
+                "key": "c2",
+                "name": "Tier Analysis",
+                "viz_type": "grid",
+                "data": {
+                  "attributes": [
+                    {
+                      "id": "AU07",
+                      "name": "AU07"
+                    }
+                  ],
+                  "metrics": [
+                    {
+                      "id": "MU01",
+                      "name": "MU01"
+                    },
+                    {
+                      "id": "MU18",
+                      "name": "MU18"
+                    },
+                    {
+                      "id": "MU26",
+                      "name": "MU26"
+                    },
+                    {
+                      "id": "MU40",
+                      "name": "MU40"
+                    }
+                  ]
+                },
+                "formatting": {},
+                "thresholds": [],
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
+                "actions": [],
+                "info_window": null
+              },
+              {
+                "key": "c3",
+                "name": "Customer Scatter",
+                "viz_type": "scatter",
+                "data": {
+                  "attributes": [
+                    {
+                      "id": "AU01",
+                      "name": "AU01"
+                    }
+                  ],
+                  "metrics": [
+                    {
+                      "id": "MU01",
+                      "name": "MU01"
+                    },
+                    {
+                      "id": "MU21",
+                      "name": "MU21"
+                    }
+                  ]
+                },
+                "formatting": {},
+                "thresholds": [],
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
+                "actions": [],
+                "info_window": null
+              }
+            ],
+            "selectors": [],
+            "layout": {
+              "width": 1920,
+              "height": 1080
+            },
+            "panel_stacks": [
+              {
+                "name": "ViewToggle",
+                "panels": [
+                  {
+                    "name": "Chart View",
+                    "visual_keys": [
+                      "c1",
+                      "c3"
+                    ]
+                  },
+                  {
+                    "name": "Table View",
+                    "visual_keys": [
+                      "c2"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "DOSS_U05",
+    "name": "Marketing Analytics",
+    "description": "Marketing Analytics dossier",
+    "chapters": [
+      {
+        "key": "DOSS_U05_ch01",
+        "name": "Main",
+        "pages": [
+          {
+            "key": "mkt_perf",
+            "name": "Campaign Performance",
+            "visualizations": [
+              {
+                "key": "m1",
+                "name": "Spend vs Revenue",
+                "viz_type": "combo",
+                "data": {
+                  "attributes": [
+                    {
+                      "id": "AU18",
+                      "name": "AU18"
+                    }
+                  ],
+                  "metrics": [
+                    {
+                      "id": "MU14",
+                      "name": "MU14"
+                    },
+                    {
+                      "id": "MU01",
+                      "name": "MU01"
+                    }
+                  ]
+                },
+                "formatting": {},
+                "thresholds": [],
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
+                "actions": [],
+                "info_window": null
+              },
+              {
+                "key": "m2",
+                "name": "CTR by Channel",
+                "viz_type": "horizontal_bar",
+                "data": {
+                  "attributes": [
+                    {
+                      "id": "AU18",
+                      "name": "AU18"
+                    }
+                  ],
+                  "metrics": [
+                    {
+                      "id": "MU29",
+                      "name": "MU29"
+                    }
+                  ]
+                },
+                "formatting": {},
+                "thresholds": [],
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
+                "actions": [],
+                "info_window": null
+              },
+              {
+                "key": "m3",
+                "name": "ROAS Trend",
+                "viz_type": "line",
+                "data": {
+                  "attributes": [
+                    {
+                      "id": "AU14",
+                      "name": "AU14"
+                    }
+                  ],
+                  "metrics": [
+                    {
+                      "id": "MU32",
+                      "name": "MU32"
+                    }
+                  ]
+                },
+                "formatting": {},
+                "thresholds": [],
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
+                "actions": [],
+                "info_window": null
+              },
+              {
+                "key": "m4",
+                "name": "Funnel",
+                "viz_type": "funnel",
+                "data": {
+                  "attributes": [],
+                  "metrics": [
+                    {
+                      "id": "MU15",
+                      "name": "MU15"
+                    },
+                    {
+                      "id": "MU16",
+                      "name": "MU16"
+                    },
+                    {
+                      "id": "MU17",
+                      "name": "MU17"
+                    }
+                  ]
+                },
+                "formatting": {},
+                "thresholds": [],
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
+                "actions": [],
+                "info_window": null
+              }
+            ],
+            "selectors": [],
+            "layout": {
+              "width": 1920,
+              "height": 1080
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "DOSS_U06",
+    "name": "Web & Digital",
+    "description": "Web & Digital dossier",
+    "chapters": [
+      {
+        "key": "DOSS_U06_ch01",
+        "name": "Main",
+        "pages": [
+          {
+            "key": "web_traffic",
+            "name": "Traffic Overview",
+            "visualizations": [
+              {
+                "key": "w1",
+                "name": "Page Views Trend",
+                "viz_type": "area",
+                "data": {
+                  "attributes": [
+                    {
+                      "id": "AU14",
+                      "name": "AU14"
+                    }
+                  ],
+                  "metrics": [
+                    {
+                      "id": "MU12",
+                      "name": "MU12"
+                    }
+                  ]
+                },
+                "formatting": {},
+                "thresholds": [],
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
+                "actions": [],
+                "info_window": null
+              },
+              {
+                "key": "w2",
+                "name": "Device Split",
+                "viz_type": "donutChart",
+                "data": {
+                  "attributes": [
+                    {
+                      "id": "AU25",
+                      "name": "AU25"
+                    }
+                  ],
+                  "metrics": [
+                    {
+                      "id": "MU12",
+                      "name": "MU12"
+                    }
+                  ]
+                },
+                "formatting": {},
+                "thresholds": [],
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
+                "actions": [],
+                "info_window": null
+              },
+              {
+                "key": "w3",
+                "name": "Bounce Rate",
+                "viz_type": "kpi",
+                "data": {
+                  "attributes": [],
+                  "metrics": [
+                    {
+                      "id": "MU34",
+                      "name": "MU34"
+                    }
+                  ]
+                },
+                "formatting": {},
+                "thresholds": [],
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
+                "actions": [],
+                "info_window": null
+              }
+            ],
+            "selectors": [],
+            "layout": {
+              "width": 1920,
+              "height": 1080
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "DOSS_U07",
+    "name": "Finance Dashboard",
+    "description": "Finance Dashboard dossier",
+    "chapters": [
+      {
+        "key": "DOSS_U07_ch01",
+        "name": "Main",
+        "pages": [
+          {
+            "key": "fin_main",
+            "name": "P&L Summary",
+            "visualizations": [
+              {
+                "key": "f1",
+                "name": "Revenue vs Cost",
+                "viz_type": "line",
+                "data": {
+                  "attributes": [
+                    {
+                      "id": "AU14",
+                      "name": "AU14"
+                    }
+                  ],
+                  "metrics": [
+                    {
+                      "id": "MU01",
+                      "name": "MU01"
+                    },
+                    {
+                      "id": "MU02",
+                      "name": "MU02"
+                    },
+                    {
+                      "id": "MU21",
+                      "name": "MU21"
+                    }
+                  ]
+                },
+                "formatting": {},
+                "thresholds": [],
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
+                "actions": [],
+                "info_window": {
+                  "text": "Shows monthly P&L trend. Revenue (blue), Cost (red), Profit (green)."
+                }
+              },
+              {
+                "key": "f2",
+                "name": "Tax & Shipping",
+                "viz_type": "stacked_vertical_bar",
+                "data": {
+                  "attributes": [
+                    {
+                      "id": "AU15",
+                      "name": "AU15"
+                    }
+                  ],
+                  "metrics": [
+                    {
+                      "id": "MU05",
+                      "name": "MU05"
+                    },
+                    {
+                      "id": "MU06",
+                      "name": "MU06"
+                    }
+                  ]
+                },
+                "formatting": {},
+                "thresholds": [],
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
+                "actions": [],
+                "info_window": null
+              },
+              {
+                "key": "f3",
+                "name": "Net Revenue Trend",
+                "viz_type": "line",
+                "data": {
+                  "attributes": [
+                    {
+                      "id": "AU14",
+                      "name": "AU14"
+                    }
+                  ],
+                  "metrics": [
+                    {
+                      "id": "MU24",
+                      "name": "MU24"
+                    }
+                  ]
+                },
+                "formatting": {},
+                "thresholds": [],
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
+                "actions": [],
+                "info_window": null
+              }
+            ],
+            "selectors": [],
+            "layout": {
+              "width": 1920,
+              "height": 1080
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "DOSS_U08",
+    "name": "Returns & Quality",
+    "description": "Returns & Quality dossier",
+    "chapters": [
+      {
+        "key": "DOSS_U08_ch01",
+        "name": "Main",
+        "pages": [
+          {
+            "key": "ret_overview",
+            "name": "Returns Overview",
+            "visualizations": [
+              {
+                "key": "r1",
+                "name": "Return Rate Trend",
+                "viz_type": "line",
+                "data": {
+                  "attributes": [
+                    {
+                      "id": "AU14",
+                      "name": "AU14"
+                    }
+                  ],
+                  "metrics": [
+                    {
+                      "id": "MU25",
+                      "name": "MU25"
+                    }
+                  ]
+                },
+                "formatting": {},
+                "thresholds": [],
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
+                "actions": [],
+                "info_window": null
+              },
+              {
+                "key": "r2",
+                "name": "Returns by Reason",
+                "viz_type": "horizontal_bar",
+                "data": {
+                  "attributes": [
+                    {
+                      "id": "AU26",
+                      "name": "AU26"
+                    }
+                  ],
+                  "metrics": [
+                    {
+                      "id": "MU08",
+                      "name": "MU08"
+                    }
+                  ]
+                },
+                "formatting": {},
+                "thresholds": [],
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
+                "actions": [],
+                "info_window": null
+              },
+              {
+                "key": "r3",
+                "name": "Top Returned Products",
+                "viz_type": "grid",
+                "data": {
+                  "attributes": [
+                    {
+                      "id": "AU09",
+                      "name": "AU09"
+                    }
+                  ],
+                  "metrics": [
+                    {
+                      "id": "MU08",
+                      "name": "MU08"
+                    },
+                    {
+                      "id": "MU09",
+                      "name": "MU09"
+                    },
+                    {
+                      "id": "MU25",
+                      "name": "MU25"
+                    }
+                  ]
+                },
+                "formatting": {},
+                "thresholds": [],
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
+                "actions": [],
+                "info_window": null
+              }
+            ],
+            "selectors": [],
+            "layout": {
+              "width": 1920,
+              "height": 1080
+            }
+          }
+        ]
       }
     ]
   }

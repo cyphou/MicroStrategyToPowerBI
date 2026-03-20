@@ -1,0 +1,22 @@
+{
+  "report_name": "MicroStrategy Report",
+  "output_dir": "output/complex_pbip/",
+  "tables": 7,
+  "columns": 40,
+  "measures": 25,
+  "relationships": 7,
+  "hierarchies": 3,
+  "roles": 2,
+  "pages": 9,
+  "visuals": 19,
+  "slicers": 1,
+  "unsupported_visuals": 0,
+  "attributes": 15,
+  "facts": 10,
+  "metrics": 18,
+  "reports": 5,
+  "dossiers": 3,
+  "security_filters": 2,
+  "status": "complete",
+  "warnings": []
+}

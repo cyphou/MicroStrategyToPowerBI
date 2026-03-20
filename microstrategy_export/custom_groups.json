@@ -1,12 +1,58 @@
 [
   {
-    "id": "SEARCH_001",
-    "name": "Customer Segments",
+    "id": "CGU01",
+    "name": "Customer Tier Groups",
+    "type": "custom_group",
     "elements": [
-      {"name": "High Value", "filter": {"expression": "Sum(Revenue) > 100000"}},
-      {"name": "Medium Value", "filter": {"expression": "Sum(Revenue) Between 10000 And 100000"}},
-      {"name": "Low Value", "filter": {"expression": "Sum(Revenue) < 10000"}}
-    ],
-    "type": "custom_group"
+      {
+        "name": "Enterprise",
+        "filter": {
+          "expression": "Sum(Revenue) > 1000000"
+        }
+      },
+      {
+        "name": "Mid-Market",
+        "filter": {
+          "expression": "Sum(Revenue) Between 100000 And 1000000"
+        }
+      },
+      {
+        "name": "SMB",
+        "filter": {
+          "expression": "Sum(Revenue) Between 10000 And 100000"
+        }
+      },
+      {
+        "name": "Micro",
+        "filter": {
+          "expression": "Sum(Revenue) < 10000"
+        }
+      }
+    ]
+  },
+  {
+    "id": "CGU02",
+    "name": "Product Performance",
+    "type": "custom_group",
+    "elements": [
+      {
+        "name": "Star Products",
+        "filter": {
+          "expression": "Sum(Quantity) > 10000 And (Sum(Revenue)-Sum(Cost))/Sum(Revenue) > 0.3"
+        }
+      },
+      {
+        "name": "Cash Cows",
+        "filter": {
+          "expression": "Sum(Quantity) <= 10000 And (Sum(Revenue)-Sum(Cost))/Sum(Revenue) > 0.3"
+        }
+      },
+      {
+        "name": "Dogs",
+        "filter": {
+          "expression": "(Sum(Revenue)-Sum(Cost))/Sum(Revenue) < 0.1"
+        }
+      }
+    ]
   }
 ]

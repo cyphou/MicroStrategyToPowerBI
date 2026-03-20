@@ -1,0 +1,28 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["DIM_CUSTOMER","DIM_PRODUCT","DIM_DATE","DIM_CHANNEL","FACT_SALES","FACT_RETURNS"]
+
+ref table DIM_CUSTOMER
+ref table DIM_PRODUCT
+ref table DIM_DATE
+ref table DIM_CHANNEL
+ref table FACT_SALES
+ref table FACT_RETURNS
+
+ref relationship rel_DIM_CUSTOMER_FACT_SALES
+ref relationship rel_DIM_PRODUCT_FACT_SALES
+ref relationship rel_DIM_DATE_FACT_SALES
+ref relationship rel_DIM_CHANNEL_FACT_SALES
+ref relationship rel_DIM_PRODUCT_FACT_RETURNS
+ref relationship rel_DIM_DATE_FACT_RETURNS
+ref relationship rel_FACT_SALES_FACT_RETURNS
+
+ref role 'Region Filter - East'
+ref role 'Channel Filter - Online'
+

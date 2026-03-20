@@ -1,0 +1,54 @@
+table LU_CUSTOMER
+	lineageTag: DS_0001
+
+	column CUSTOMER_ID
+		dataType: int64
+		isHidden
+		isKey
+		sourceColumn: CUSTOMER_ID
+		lineageTag: col-35e33ea3
+
+	column Customer
+		dataType: string
+		sourceColumn: CUSTOMER_NAME
+		lineageTag: col-4a106a13
+
+	column CITY
+		dataType: string
+		isHidden
+		sourceColumn: CITY
+		lineageTag: col-899171c4
+		dataCategory: City
+
+	column REGION
+		dataType: string
+		isHidden
+		sourceColumn: REGION
+		lineageTag: col-84564d0d
+		dataCategory: StateOrProvince
+
+	hierarchy Geography
+		lineageTag: hier-7bedeec3
+
+		level Region
+			column: REGION
+			lineageTag: hier-3c70113e
+
+		level City
+			column: CITY
+			lineageTag: hier-61008e35
+
+		level Customer
+			column: Customer
+			lineageTag: hier-2df7ffa8
+
+
+	partition LU_CUSTOMER = m
+		mode: import
+		expression:= ```
+			let
+			    Source = PostgreSQL.Database("pg-prod.company.com", "SalesDB"),
+			    Table = Source{[Schema="public", Item="LU_CUSTOMER"]}[Data]
+			in
+			    Table
+			```

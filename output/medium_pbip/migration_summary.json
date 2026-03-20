@@ -1,0 +1,22 @@
+{
+  "report_name": "MicroStrategy Report",
+  "output_dir": "output/medium_pbip/",
+  "tables": 4,
+  "columns": 16,
+  "measures": 12,
+  "relationships": 2,
+  "hierarchies": 2,
+  "roles": 0,
+  "pages": 4,
+  "visuals": 8,
+  "slicers": 0,
+  "unsupported_visuals": 0,
+  "attributes": 8,
+  "facts": 5,
+  "metrics": 10,
+  "reports": 3,
+  "dossiers": 1,
+  "security_filters": 0,
+  "status": "complete",
+  "warnings": []
+}

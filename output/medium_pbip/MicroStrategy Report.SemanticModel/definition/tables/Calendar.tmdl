@@ -1,0 +1,89 @@
+table Calendar
+	lineageTag: calendar-auto-generated
+
+	column Date
+		dataType: dateTime
+		isKey
+		sourceColumn: Date
+		lineageTag: cal-date
+
+	column Year
+		dataType: int64
+		sourceColumn: Year
+		lineageTag: cal-year
+
+	column Quarter
+		dataType: string
+		sourceColumn: Quarter
+		lineageTag: cal-quarter
+
+	column Month
+		dataType: int64
+		sourceColumn: Month
+		lineageTag: cal-month
+
+	column MonthName
+		dataType: string
+		sourceColumn: MonthName
+		lineageTag: cal-monthname
+
+	column Day
+		dataType: int64
+		sourceColumn: Day
+		lineageTag: cal-day
+
+	column DayOfWeek
+		dataType: int64
+		sourceColumn: DayOfWeek
+		lineageTag: cal-dayofweek
+
+	column DayName
+		dataType: string
+		sourceColumn: DayName
+		lineageTag: cal-dayname
+
+	column WeekOfYear
+		dataType: int64
+		sourceColumn: WeekOfYear
+		lineageTag: cal-weekofyear
+
+	hierarchy 'Date Hierarchy'
+		lineageTag: cal-hierarchy
+
+		level Year
+			column: Year
+			lineageTag: cal-level-year
+
+		level Quarter
+			column: Quarter
+			lineageTag: cal-level-quarter
+
+		level Month
+			column: MonthName
+			lineageTag: cal-level-month
+
+		level Day
+			column: Date
+			lineageTag: cal-level-day
+
+	partition Calendar = m
+		mode: import
+		expression:= ```
+			let
+			    StartDate = #date(2020, 1, 1),
+			    EndDate = #date(2030, 12, 31),
+			    DayCount = Duration.Days(EndDate - StartDate) + 1,
+			    DateList = List.Dates(StartDate, DayCount, #duration(1, 0, 0, 0)),
+			    #"Date Table" = Table.FromList(DateList, Splitter.SplitByNothing(), {"Date"}, null, ExtraValues.Error),
+			    #"Changed Type" = Table.TransformColumnTypes(#"Date Table", {"Date", type date}),
+			    #"Added Year" = Table.AddColumn(#"Changed Type", "Year", each Date.Year([Date]), Int64.Type),
+			    #"Added Quarter" = Table.AddColumn(#"Added Year", "Quarter", each "Q" & Text.From(Date.QuarterOfYear([Date]))),
+			    #"Added Month" = Table.AddColumn(#"Added Quarter", "Month", each Date.Month([Date]), Int64.Type),
+			    #"Added MonthName" = Table.AddColumn(#"Added Month", "MonthName", each Date.MonthName([Date])),
+			    #"Added Day" = Table.AddColumn(#"Added MonthName", "Day", each Date.Day([Date]), Int64.Type),
+			    #"Added DayOfWeek" = Table.AddColumn(#"Added Day", "DayOfWeek", each Date.DayOfWeek([Date], Day.Monday) + 1, Int64.Type),
+			    #"Added DayName" = Table.AddColumn(#"Added DayOfWeek", "DayName", each Date.DayOfWeekName([Date])),
+			    #"Added WeekOfYear" = Table.AddColumn(#"Added DayName", "WeekOfYear", each Date.WeekOfYear([Date]), Int64.Type)
+			in
+			    #"Added WeekOfYear"
+			```

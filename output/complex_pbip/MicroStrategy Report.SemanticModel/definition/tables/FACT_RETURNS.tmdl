@@ -1,0 +1,59 @@
+table FACT_RETURNS
+	lineageTag: DS_C06
+
+	column RETURN_ID
+		dataType: int64
+		isHidden
+		sourceColumn: RETURN_ID
+		lineageTag: col-133c376d
+
+	column SALE_ID
+		dataType: int64
+		isHidden
+		sourceColumn: SALE_ID
+		lineageTag: col-c82125b6
+
+	column PROD_ID
+		dataType: int64
+		isHidden
+		sourceColumn: PROD_ID
+		lineageTag: col-469aa8a6
+
+	column DATE_KEY
+		dataType: dateTime
+		isHidden
+		sourceColumn: DATE_KEY
+		lineageTag: col-3378bd0b
+
+	column RETURN_QTY
+		dataType: int64
+		isHidden
+		sourceColumn: RETURN_QTY
+		lineageTag: col-544ad6a4
+
+	column RETURN_AMOUNT
+		dataType: double
+		isHidden
+		sourceColumn: RETURN_AMOUNT
+		lineageTag: col-155501aa
+
+	measure 'Return Quantity' = SUM([Return Qty])
+		formatString: #,##0
+		displayFolder: Metrics
+		lineageTag: MC06
+
+	measure 'Return Amount' = SUM([Return Amount])
+		formatString: $#,##0.00
+		displayFolder: Metrics
+		lineageTag: MC07
+
+
+	partition FACT_RETURNS = m
+		mode: import
+		expression:= ```
+			let
+			    Source = Oracle.Database("db-prod.company.com"),
+			    Table = Source{[Schema="SALES", Name="FACT_RETURNS"]}[Data]
+			in
+			    Table
+			```

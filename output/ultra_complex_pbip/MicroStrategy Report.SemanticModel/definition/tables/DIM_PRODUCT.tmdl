@@ -1,0 +1,81 @@
+table DIM_PRODUCT
+	lineageTag: DU02
+
+	column PROD_ID
+		dataType: int64
+		isHidden
+		sourceColumn: PROD_ID
+		lineageTag: col-38e0966e
+
+	column Product
+		dataType: string
+		isHidden
+		sourceColumn: PROD_NAME
+		lineageTag: col-8316fb1e
+
+	column CATEGORY
+		dataType: string
+		isHidden
+		sourceColumn: CATEGORY
+		lineageTag: col-22130ef3
+
+	column SUBCATEGORY
+		dataType: string
+		isHidden
+		sourceColumn: SUBCATEGORY
+		lineageTag: col-39b3a929
+
+	column BRAND
+		dataType: string
+		isHidden
+		sourceColumn: BRAND
+		lineageTag: col-174345b2
+
+	column UNIT_COST
+		dataType: double
+		isHidden
+		sourceColumn: UNIT_COST
+		lineageTag: col-a6cbce53
+
+	column WEIGHT_KG
+		dataType: double
+		isHidden
+		sourceColumn: WEIGHT_KG
+		lineageTag: col-12c1692e
+
+	column IS_ACTIVE
+		dataType: boolean
+		isHidden
+		sourceColumn: IS_ACTIVE
+		lineageTag: col-89d21866
+
+	measure 'Avg Unit Cost' = AVERAGE([Unit Cost])
+		formatString: $#,##0.00
+		displayFolder: Metrics
+		lineageTag: MU20
+
+	hierarchy 'Product Hierarchy'
+		lineageTag: hier-428675ef
+
+		level Category
+			column: CATEGORY
+			lineageTag: hier-e888071c
+
+		level Subcategory
+			column: SUBCATEGORY
+			lineageTag: hier-df8e5460
+
+		level Product
+			column: Product
+			lineageTag: hier-3f47c711
+
+
+	partition DIM_PRODUCT = m
+		mode: import
+		expression:= ```
+			let
+			    Source = Oracle.Database("ora-prod"),
+			    Table = Source{[Schema="SALES", Name="DIM_PRODUCT"]}[Data]
+			in
+			    Table
+			```

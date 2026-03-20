@@ -1,0 +1,65 @@
+table FACT_RETURNS
+	lineageTag: DU08
+
+	column RETURN_ID
+		dataType: int64
+		isHidden
+		sourceColumn: RETURN_ID
+		lineageTag: col-133c376d
+
+	column SALE_ID
+		dataType: int64
+		isHidden
+		sourceColumn: SALE_ID
+		lineageTag: col-c82125b6
+
+	column PROD_ID
+		dataType: int64
+		isHidden
+		sourceColumn: PROD_ID
+		lineageTag: col-469aa8a6
+
+	column DATE_KEY
+		dataType: dateTime
+		isHidden
+		sourceColumn: DATE_KEY
+		lineageTag: col-3378bd0b
+
+	column RETURN_QTY
+		dataType: int64
+		isHidden
+		sourceColumn: RETURN_QTY
+		lineageTag: col-544ad6a4
+
+	column RETURN_AMT
+		dataType: double
+		isHidden
+		sourceColumn: RETURN_AMT
+		lineageTag: col-544a99b6
+
+	column REASON_CODE
+		dataType: string
+		isHidden
+		sourceColumn: REASON_CODE
+		lineageTag: col-c580432b
+
+	measure 'Return Quantity' = SUM([Return Qty])
+		formatString: #,##0
+		displayFolder: Metrics
+		lineageTag: MU08
+
+	measure 'Return Amount' = SUM([Return Amount])
+		formatString: $#,##0.00
+		displayFolder: Metrics
+		lineageTag: MU09
+
+
+	partition FACT_RETURNS = m
+		mode: import
+		expression:= ```
+			let
+			    Source = Sql.Database("sql-prod", "SALESDB"),
+			    Table = Source{[Schema="dbo", Item="FACT_RETURNS"]}[Data]
+			in
+			    Table
+			```

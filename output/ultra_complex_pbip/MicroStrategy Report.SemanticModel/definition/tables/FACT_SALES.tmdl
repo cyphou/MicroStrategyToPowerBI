@@ -1,0 +1,377 @@
+table FACT_SALES
+	lineageTag: DU07
+
+	column SALE_ID
+		dataType: int64
+		isHidden
+		sourceColumn: SALE_ID
+		lineageTag: col-33a753bf
+
+	column CUST_ID
+		dataType: int64
+		isHidden
+		sourceColumn: CUST_ID
+		lineageTag: col-07ce0233
+
+	column PROD_ID
+		dataType: int64
+		isHidden
+		sourceColumn: PROD_ID
+		lineageTag: col-b220d6af
+
+	column DATE_KEY
+		dataType: dateTime
+		isHidden
+		sourceColumn: DATE_KEY
+		lineageTag: col-38b85022
+
+	column CHANNEL_ID
+		dataType: int64
+		isHidden
+		sourceColumn: CHANNEL_ID
+		lineageTag: col-452326ab
+
+	column EMP_ID
+		dataType: int64
+		isHidden
+		sourceColumn: EMP_ID
+		lineageTag: col-4d8a52c6
+
+	column PROMO_ID
+		dataType: int64
+		isHidden
+		sourceColumn: PROMO_ID
+		lineageTag: col-927ff41f
+
+	column REVENUE
+		dataType: double
+		isHidden
+		sourceColumn: REVENUE
+		lineageTag: col-06219fc8
+
+	column COST
+		dataType: double
+		isHidden
+		sourceColumn: COST
+		lineageTag: col-c024d3a1
+
+	column QUANTITY
+		dataType: int64
+		isHidden
+		sourceColumn: QUANTITY
+		lineageTag: col-81407e5f
+
+	column DISCOUNT
+		dataType: double
+		isHidden
+		sourceColumn: DISCOUNT
+		lineageTag: col-de208f15
+
+	column TAX
+		dataType: double
+		isHidden
+		sourceColumn: TAX
+		lineageTag: col-718dd157
+
+	column SHIPPING
+		dataType: double
+		isHidden
+		sourceColumn: SHIPPING
+		lineageTag: col-af12f782
+
+	column COMMISSION
+		dataType: double
+		isHidden
+		sourceColumn: COMMISSION
+		lineageTag: col-f4ea71bf
+
+	measure 'Total Revenue' = SUM([Revenue])
+		formatString: $#,##0.00
+		displayFolder: Metrics
+		lineageTag: MU01
+
+	measure 'Total Cost' = SUM([Cost])
+		formatString: $#,##0.00
+		displayFolder: Metrics
+		lineageTag: MU02
+
+	measure 'Total Quantity' = SUM([Quantity])
+		formatString: #,##0
+		displayFolder: Metrics
+		lineageTag: MU03
+
+	measure 'Total Discount' = SUM([Discount])
+		formatString: $#,##0.00
+		displayFolder: Metrics
+		lineageTag: MU04
+
+	measure 'Total Tax' = SUM([Tax])
+		formatString: $#,##0.00
+		displayFolder: Metrics
+		lineageTag: MU05
+
+	measure 'Total Shipping' = SUM([Shipping])
+		formatString: $#,##0.00
+		displayFolder: Metrics
+		lineageTag: MU06
+
+	measure 'Total Commission' = SUM([Commission])
+		formatString: $#,##0.00
+		displayFolder: Metrics
+		lineageTag: MU07
+
+	measure 'Customer Count' = DISTINCTCOUNT([Customer])
+		formatString: #,##0
+		displayFolder: Metrics
+		lineageTag: MU18
+
+	measure 'Product Count' = DISTINCTCOUNT([Product])
+		formatString: #,##0
+		displayFolder: Metrics
+		lineageTag: MU19
+
+	measure Profit = SUM(Revenue) - SUM(Cost)
+		formatString: $#,##0.00
+		displayFolder: Metrics
+		lineageTag: MU21
+
+	measure 'Profit Margin' = (SUM(Revenue) - SUM(Cost)) / SUM(Revenue)
+		formatString: 0.0%
+		displayFolder: Metrics
+		lineageTag: MU22
+
+	measure 'Gross Revenue' = SUM(Revenue) - SUM(Discount)
+		formatString: $#,##0.00
+		displayFolder: Metrics
+		lineageTag: MU23
+
+	measure 'Net Revenue' = SUM(Revenue) - SUM(Cost) - SUM(Tax) - SUM(Shipping)
+		formatString: $#,##0.00
+		displayFolder: Metrics
+		lineageTag: MU24
+
+	measure 'Return Rate' = SUM(Return Qty) / SUM(Quantity)
+		formatString: 0.0%
+		displayFolder: Metrics
+		lineageTag: MU25
+
+	measure 'Revenue per Customer' = SUM(Revenue) / Count<Distinct=True>(Customer)
+		formatString: $#,##0.00
+		displayFolder: Metrics
+		lineageTag: MU26
+
+	measure 'Avg Order Value' = SUM(Revenue) / COUNT(SALE_ID)
+		formatString: $#,##0.00
+		displayFolder: Metrics
+		lineageTag: MU27
+
+	measure 'Discount Rate' = SUM(Discount) / SUM(Revenue)
+		formatString: 0.0%
+		displayFolder: Metrics
+		lineageTag: MU28
+
+	measure 'Click-Through Rate' = SUM(Clicks) / SUM(Impressions)
+		formatString: 0.00%
+		displayFolder: Metrics
+		lineageTag: MU29
+
+	measure 'Cost per Click' = SUM(Marketing Spend) / SUM(Clicks)
+		formatString: $#,##0.00
+		displayFolder: Metrics
+		lineageTag: MU30
+
+	measure 'Cost per Conversion' = SUM(Marketing Spend) / SUM(Conversions)
+		formatString: $#,##0.00
+		displayFolder: Metrics
+		lineageTag: MU31
+
+	measure ROAS = SUM(Revenue) / SUM(Marketing Spend)
+		formatString: #,##0.00
+		displayFolder: Metrics
+		lineageTag: MU32
+
+	measure 'Bounce Rate' = COUNT(Bounce=True) / COUNT(Session Duration)
+		formatString: 0.0%
+		displayFolder: Metrics
+		lineageTag: MU34
+
+	measure 'Inventory Weeks of Supply' = SUM(On Hand) / (SUM(Quantity) / 52)
+		formatString: #,##0.0
+		displayFolder: Metrics
+		lineageTag: MU35
+
+	measure 'Fill Rate' = 1 - (SUM(Return Qty) / SUM(Quantity))
+		formatString: 0.0%
+		displayFolder: Metrics
+		lineageTag: MU36
+
+	measure 'Commission Rate' = SUM(Commission) / SUM(Revenue)
+		formatString: 0.0%
+		displayFolder: Metrics
+		lineageTag: MU37
+
+	measure 'Effective Tax Rate' = SUM(Tax) / SUM(Revenue)
+		formatString: 0.0%
+		displayFolder: Metrics
+		lineageTag: MU38
+
+	measure 'Revenue per Page View' = SUM(Revenue) / SUM(Page Views)
+		formatString: $#,##0.00
+		displayFolder: Metrics
+		lineageTag: MU39
+
+	measure 'Customer Lifetime Value' = SUM(Revenue) / Count<Distinct=True>(Customer) * 3
+		formatString: $#,##0.00
+		displayFolder: Metrics
+		lineageTag: MU40
+
+	measure 'Revenue Rank' = RANKX(ALLSELECTED(), SUM(Revenue,, DESC, SKIP)
+		formatString: #,##0.00
+		displayFolder: Derived
+		lineageTag: DU01
+
+	measure 'Running Revenue' = ```
+			CALCULATE(
+			    SUM(Revenue,
+			    WINDOW(1, ABS, 0, REL, ALLSELECTED(), ORDERBY([SortColumn], ASC))
+			)
+			```
+		formatString: #,##0.00
+		displayFolder: Derived
+		lineageTag: DU02
+
+	measure 'Revenue MoM %' = (SUM(Revenue) - Lag(SUM(Revenue), 1)) / Lag(SUM(Revenue), 1)
+		formatString: #,##0.00
+		displayFolder: Derived
+		lineageTag: DU03
+
+	measure '3M Moving Avg' = ```
+			VAR __rows = WINDOW(-2, REL, 0, REL, ALLSELECTED(), ORDERBY([Month], ASC))
+			RETURN
+			    AVERAGEX(__rows, SUM(Revenue))
+			```
+		formatString: #,##0.00
+		displayFolder: Derived
+		lineageTag: DU04
+
+	measure 'Revenue YoY %' = (SUM(Revenue) - Lag(SUM(Revenue), 12, Month)) / Lag(SUM(Revenue), 12, Month)
+		formatString: #,##0.00
+		displayFolder: Derived
+		lineageTag: DU05
+
+	measure 'Profit Quartile' = ```
+			VAR __rank = RANKX(ALL(Region), SUM(Revenue) - SUM(Cost))
+			VAR __count = COUNTROWS(ALL(Region))
+			RETURN
+			    INT(CEILING(DIVIDE(__rank, __count) * 4, 1))
+			```
+		formatString: #,##0.00
+		displayFolder: Derived
+		lineageTag: DU06
+
+	measure '6M Moving Sum' = ```
+			VAR __rows = WINDOW(-5, REL, 0, REL, ALLSELECTED(), ORDERBY([Month], ASC))
+			RETURN
+			    SUMX(__rows, SUM(Revenue))
+			```
+		formatString: #,##0.00
+		displayFolder: Derived
+		lineageTag: DU07
+
+	measure 'Lead Revenue' = CALCULATE(SUM(Revenue), OFFSET(1, ALLSELECTED(), ORDERBY([Month], ASC)))
+		formatString: #,##0.00
+		displayFolder: Derived
+		lineageTag: DU08
+
+	measure 'First Month Revenue' = CALCULATE(SUM(Revenue), TOPN(1, ALLSELECTED(), [Month], ASC))
+		formatString: #,##0.00
+		displayFolder: Derived
+		lineageTag: DU09
+
+	measure 'Last Month Revenue' = CALCULATE(SUM(Revenue), TOPN(1, ALLSELECTED(), [Month], DESC))
+		formatString: #,##0.00
+		displayFolder: Derived
+		lineageTag: DU10
+
+	measure 'Cost Running Avg' = ```
+			VAR __rows = WINDOW(1, ABS, 0, REL, ALLSELECTED(), ORDERBY([SortColumn], ASC))
+			RETURN
+			    DIVIDE(SUMX(__rows, SUM(Cost), COUNTROWS(__rows))
+			```
+		formatString: #,##0.00
+		displayFolder: Derived
+		lineageTag: DU11
+
+	measure 'Profit Running Sum' = ```
+			CALCULATE(
+			    SUM(Revenue,
+			    WINDOW(1, ABS, 0, REL, ALLSELECTED(), ORDERBY([SortColumn], ASC))
+			)
+			```
+		formatString: #,##0.00
+		displayFolder: Derived
+		lineageTag: DU12
+
+	measure 'Rank by Profit' = RANKX(ALLSELECTED(), SUM(Revenue,, DESC, SKIP)
+		formatString: #,##0.00
+		displayFolder: Derived
+		lineageTag: DU13
+
+	measure 'Revenue Band' = ```
+			VAR __val = SUM(Revenue)
+			RETURN
+			    IF(__val < 0, "Below 0",
+			        IF(__val >= 1000000, "1000000+",
+			            INT((__val - 0) / 100000) * 100000 + 0
+			        )
+			    )
+			```
+		formatString: #,##0.00
+		displayFolder: Derived
+		lineageTag: DU14
+
+	measure 'ApplyOLAP RowNum' = RANKX(ALLSELECTED(), [Revenue],, DESC, DENSE)
+		formatString: #,##0.00
+		displayFolder: Derived
+		lineageTag: DU15
+
+	measure 'ApplyOLAP Rank' = RANKX(ALLSELECTED(), [Revenue],, DESC, DENSE)
+		formatString: #,##0.00
+		displayFolder: Derived
+		lineageTag: DU16
+
+	measure 'ApplyOLAP Lag' = CALCULATE([Revenue], OFFSET(-1, ALLSELECTED(), ORDERBY([Month], ASC)))
+		formatString: #,##0.00
+		displayFolder: Derived
+		lineageTag: DU17
+
+	measure 'ApplyOLAP CumSum' = CALCULATE([Revenue], WINDOW(1, ABS, 0, REL, ALLSELECTED(), ORDERBY([Month], ASC)))
+		formatString: #,##0.00
+		displayFolder: Derived
+		lineageTag: DU18
+
+	measure 'Conversion Rank' = RANKX(ALLSELECTED(), SUM(Conversions,, DESC, SKIP)
+		formatString: #,##0.00
+		displayFolder: Derived
+		lineageTag: DU19
+
+	measure 'Spend Running Sum' = ```
+			CALCULATE(
+			    SUM(Marketing Spend,
+			    WINDOW(1, ABS, 0, REL, ALLSELECTED(), ORDERBY([SortColumn], ASC))
+			)
+			```
+		formatString: #,##0.00
+		displayFolder: Derived
+		lineageTag: DU20
+
+
+	partition FACT_SALES = m
+		mode: import
+		expression:= ```
+			let
+			    Source = Sql.Database("sql-prod", "SALESDB"),
+			    Table = Source{[Schema="dbo", Item="FACT_SALES"]}[Data]
+			in
+			    Table
+			```

@@ -92,7 +92,7 @@ def _convert_format_string(mstr_format):
     return mstr_format
 
 
-def generate_all_tmdl(data, output_dir):
+def generate_all_tmdl(data, output_dir, *, direct_lake=False, lakehouse_name=None):
     """Generate all TMDL files from intermediate JSON data.
 
     Args:
@@ -100,6 +100,8 @@ def generate_all_tmdl(data, output_dir):
               facts, metrics, derived_metrics, hierarchies, relationships,
               security_filters, freeform_sql)
         output_dir: Directory to write .tmdl files
+        direct_lake: If True, generate DirectLake partitions instead of Import/M.
+        lakehouse_name: Fabric lakehouse name for DirectLake entity references.
 
     Returns:
         dict with generation statistics
@@ -146,6 +148,8 @@ def generate_all_tmdl(data, output_dir):
             derived_by_table.get(table_name, []),
             hier_by_table.get(table_name, []),
             attr_by_id,
+            direct_lake=direct_lake,
+            lakehouse_name=lakehouse_name,
         )
 
         table_path = os.path.join(tables_dir, f"{table_name}.tmdl")
@@ -205,7 +209,8 @@ def generate_all_tmdl(data, output_dir):
 
 
 def generate_table_tmdl(datasource, table_attrs, table_facts, table_metrics,
-                        table_derived, table_hierarchies, attr_by_id):
+                        table_derived, table_hierarchies, attr_by_id,
+                        *, direct_lake=False, lakehouse_name=None):
     """Generate TMDL content for a single table.
 
     Args:
@@ -216,6 +221,8 @@ def generate_table_tmdl(datasource, table_attrs, table_facts, table_metrics,
         table_derived: List of derived metrics assigned to this table
         table_hierarchies: List of (hierarchy_name, levels) tuples for this table
         attr_by_id: Attribute lookup dict
+        direct_lake: If True, generate DirectLake partition.
+        lakehouse_name: Fabric lakehouse name for DirectLake.
 
     Returns:
         str: TMDL content
@@ -326,8 +333,9 @@ def generate_table_tmdl(datasource, table_attrs, table_facts, table_metrics,
         hier_lines = _generate_hierarchy(hier_name, levels, attr_by_id, table_name, columns, col_display_names)
         lines.extend(hier_lines)
 
-    # Generate M partition
-    partition_lines = _generate_partition(datasource)
+    # Generate partition (DirectLake or Import M)
+    partition_lines = _generate_partition(datasource, direct_lake=direct_lake,
+                                          lakehouse_name=lakehouse_name)
     lines.extend(partition_lines)
 
     return '\n'.join(lines).rstrip() + '\n'
@@ -666,9 +674,22 @@ def _resolve_hierarchy_level_column(attr, table_name, table_col_names, level_nam
     return chosen
 
 
-def _generate_partition(datasource):
-    """Generate TMDL M partition block."""
+def _generate_partition(datasource, *, direct_lake=False, lakehouse_name=None):
+    """Generate TMDL partition block (DirectLake or Import M)."""
     table_name = datasource["name"]
+
+    if direct_lake:
+        # DirectLake partition references a Delta table entity in the Lakehouse
+        entity_name = datasource.get("physical_table", table_name)
+        lines = [""]
+        lines.append(f"\tpartition {table_name} = entity")
+        lines.append("\t\tmode: directLake")
+        lines.append(f"\t\tentityName: {entity_name}")
+        if lakehouse_name:
+            lines.append(f"\t\tannotation LakehouseName = {lakehouse_name}")
+        return lines
+
+    # Standard Import M partition
     connection = datasource.get("db_connection", {})
     schema = connection.get("schema", "")
     sql = datasource.get("sql_statement", "")
@@ -684,7 +705,6 @@ def _generate_partition(datasource):
     lines.append(f"\tpartition {table_name} = m")
     lines.append("\t\tmode: import")
     lines.append("\t\texpression:= ```")
-    # Indent M query
     for m_line in m_query.split('\n'):
         lines.append(f"\t\t\t{m_line}")
     lines.append("\t\t\t```")

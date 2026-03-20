@@ -1,0 +1,53 @@
+table LU_PRODUCT
+	lineageTag: DS_0002
+
+	column PRODUCT_ID
+		dataType: int64
+		isHidden
+		sourceColumn: PRODUCT_ID
+		lineageTag: col-db5d207f
+
+	column Product
+		dataType: string
+		isHidden
+		sourceColumn: PRODUCT_NAME
+		lineageTag: col-789944ef
+
+	column CATEGORY
+		dataType: string
+		isHidden
+		sourceColumn: CATEGORY
+		lineageTag: col-34698812
+
+	column UNIT_PRICE
+		dataType: double
+		isHidden
+		sourceColumn: UNIT_PRICE
+		lineageTag: col-0a0310e2
+
+	measure 'Avg Unit Price' = AVERAGE([Unit Price])
+		formatString: $#,##0.00
+		displayFolder: Product
+		lineageTag: MET_0007
+
+	hierarchy 'Product Hierarchy'
+		lineageTag: hier-bc4ccfb0
+
+		level Category
+			column: CATEGORY
+			lineageTag: hier-c134167b
+
+		level Product
+			column: Product
+			lineageTag: hier-253ccfd2
+
+
+	partition LU_PRODUCT = m
+		mode: import
+		expression:= ```
+			let
+			    Source = PostgreSQL.Database("pg-prod.company.com", "SalesDB"),
+			    Table = Source{[Schema="public", Item="LU_PRODUCT"]}[Data]
+			in
+			    Table
+			```

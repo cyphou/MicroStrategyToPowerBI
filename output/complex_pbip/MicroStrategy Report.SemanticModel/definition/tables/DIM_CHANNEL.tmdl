@@ -1,0 +1,30 @@
+table DIM_CHANNEL
+	lineageTag: DS_C04
+
+	column CHANNEL_ID
+		dataType: int64
+		isHidden
+		isKey
+		sourceColumn: CHANNEL_ID
+		lineageTag: col-a62315f8
+
+	column Channel
+		dataType: string
+		sourceColumn: CHANNEL_NAME
+		lineageTag: col-a9b7c028
+
+	column CHANNEL_TYPE
+		dataType: string
+		sourceColumn: CHANNEL_TYPE
+		lineageTag: col-a9bad4d7
+
+
+	partition DIM_CHANNEL = m
+		mode: import
+		expression:= ```
+			let
+			    Source = Oracle.Database("db-prod.company.com"),
+			    Table = Source{[Schema="SALES", Name="DIM_CHANNEL"]}[Data]
+			in
+			    Table
+			```

@@ -1,0 +1,98 @@
+table DIM_CUSTOMER
+	lineageTag: DU01
+
+	column CUST_ID
+		dataType: int64
+		isHidden
+		isKey
+		sourceColumn: CUST_ID
+		lineageTag: col-f69aca6f
+
+	column Customer
+		dataType: string
+		sourceColumn: CUST_NAME
+		lineageTag: col-bb1432df
+
+	column CUST_EMAIL
+		dataType: string
+		sourceColumn: CUST_EMAIL
+		lineageTag: col-a6f89dc8
+
+	column CITY
+		dataType: string
+		isHidden
+		sourceColumn: CITY
+		lineageTag: col-985b3e83
+		dataCategory: City
+
+	column STATE
+		dataType: string
+		isHidden
+		sourceColumn: STATE
+		lineageTag: col-73f2c279
+		dataCategory: StateOrProvince
+
+	column COUNTRY
+		dataType: string
+		isHidden
+		sourceColumn: COUNTRY
+		lineageTag: col-ec777b7e
+		dataCategory: Country
+
+	column REGION
+		dataType: string
+		isHidden
+		sourceColumn: REGION
+		lineageTag: col-07dfe60c
+
+	column SEGMENT
+		dataType: string
+		isHidden
+		sourceColumn: SEGMENT
+		lineageTag: col-2904c31b
+
+	column TIER
+		dataType: string
+		isHidden
+		sourceColumn: TIER
+		lineageTag: col-9862f6fa
+
+	column ACCT_MGR
+		dataType: string
+		isHidden
+		sourceColumn: ACCT_MGR
+		lineageTag: col-397e8504
+
+	hierarchy Geography
+		lineageTag: hier-a5514164
+
+		level Country
+			column: COUNTRY
+			lineageTag: hier-8ae7d82d
+
+		level Region
+			column: REGION
+			lineageTag: hier-c2a9b77d
+
+		level State
+			column: STATE
+			lineageTag: hier-16e07ee8
+
+		level City
+			column: CITY
+			lineageTag: hier-9d9cb834
+
+		level Customer
+			column: Customer
+			lineageTag: hier-0c611227
+
+
+	partition DIM_CUSTOMER = m
+		mode: import
+		expression:= ```
+			let
+			    Source = Oracle.Database("ora-prod"),
+			    Table = Source{[Schema="SALES", Name="DIM_CUSTOMER"]}[Data]
+			in
+			    Table
+			```

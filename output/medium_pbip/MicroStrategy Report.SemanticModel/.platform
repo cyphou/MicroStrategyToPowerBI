@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "MicroStrategy Report"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "38af578c-45f4-5348-8109-d4b02a68037a"
+  }
+}

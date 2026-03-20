@@ -1,0 +1,42 @@
+table VW_MONTHLY_REVENUE
+	lineageTag: FFS_C01
+
+	column YEAR
+		dataType: int64
+		sourceColumn: YEAR
+		lineageTag: col-cbb72cfe
+
+	column MONTH_NUM
+		dataType: int64
+		sourceColumn: MONTH_NUM
+		lineageTag: col-89eae926
+
+	column MONTH_NAME
+		dataType: string
+		sourceColumn: MONTH_NAME
+		lineageTag: col-b371f0eb
+
+	column MONTHLY_REV
+		dataType: double
+		sourceColumn: MONTHLY_REV
+		lineageTag: col-d1955990
+
+	column MONTHLY_COST
+		dataType: double
+		sourceColumn: MONTHLY_COST
+		lineageTag: col-610f2c80
+
+	column CUST_CNT
+		dataType: int64
+		sourceColumn: CUST_CNT
+		lineageTag: col-124671be
+
+	partition VW_MONTHLY_REVENUE = m
+		mode: import
+		expression:= ```
+			let
+			    Source = Oracle.Database("ora-prod.company.com"),
+			    Query = Value.NativeQuery(Source, "SELECT d.YEAR, d.MONTH_NUM, d.MONTH_NAME, SUM(s.REVENUE) AS MONTHLY_REV, SUM(s.COST) AS MONTHLY_COST, COUNT(DISTINCT s.CUST_ID) AS CUST_CNT FROM FACT_SALES s JOIN DIM_DATE d ON s.DATE_KEY = d.DATE_KEY GROUP BY d.YEAR, d.MONTH_NUM, d.MONTH_NAME")
+			in
+			    Query
+			```

@@ -1,0 +1,46 @@
+{
+  "verdict": "CERTIFIED",
+  "score": 100,
+  "threshold": 80,
+  "checks": [
+    {
+      "name": "TMDL Files Exist",
+      "passed": true,
+      "detail": "15 table TMDL files found"
+    },
+    {
+      "name": "PBIR Pages Exist",
+      "passed": true,
+      "detail": "25 report pages found"
+    },
+    {
+      "name": "Measure Count",
+      "passed": true,
+      "detail": "60/60 measures generated (100%)"
+    },
+    {
+      "name": "Relationships",
+      "passed": true,
+      "detail": "relationships.tmdl found (16 source relationships)"
+    },
+    {
+      "name": "Visual Coverage",
+      "passed": true,
+      "detail": "52/47 visuals generated (111%)"
+    },
+    {
+      "name": "Expression Fidelity",
+      "passed": true,
+      "detail": "No fidelity data"
+    },
+    {
+      "name": "Manual Review Ratio",
+      "passed": true,
+      "detail": "No fidelity data"
+    }
+  ],
+  "warnings": [],
+  "timestamp": "2026-03-20T14:39:22.275332",
+  "passed_checks": 7,
+  "total_checks": 7
+}

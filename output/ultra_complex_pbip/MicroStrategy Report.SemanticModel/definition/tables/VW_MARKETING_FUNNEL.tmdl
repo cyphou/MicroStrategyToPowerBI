@@ -1,0 +1,52 @@
+table VW_MARKETING_FUNNEL
+	lineageTag: FFU02
+
+	column CHANNEL_NAME
+		dataType: string
+		sourceColumn: CHANNEL_NAME
+		lineageTag: col-7e638467
+
+	column YEAR
+		dataType: int64
+		sourceColumn: YEAR
+		lineageTag: col-1f6acc5d
+
+	column MONTH_NUM
+		dataType: int64
+		sourceColumn: MONTH_NUM
+		lineageTag: col-82bf0d27
+
+	column IMPRESSIONS
+		dataType: int64
+		sourceColumn: IMPRESSIONS
+		lineageTag: col-6f80876a
+
+	column CLICKS
+		dataType: int64
+		sourceColumn: CLICKS
+		lineageTag: col-cac4a80b
+
+	column CONVERSIONS
+		dataType: int64
+		sourceColumn: CONVERSIONS
+		lineageTag: col-4ffe35fd
+
+	column SPEND
+		dataType: double
+		sourceColumn: SPEND
+		lineageTag: col-cd9f413e
+
+	column ATTRIBUTED_REVENUE
+		dataType: double
+		sourceColumn: ATTRIBUTED_REVENUE
+		lineageTag: col-6d2a5845
+
+	partition VW_MARKETING_FUNNEL = m
+		mode: import
+		expression:= ```
+			let
+			    Source = Snowflake.Databases("acme.snowflakecomputing.com", "ANALYTICS_DB"),
+			    Query = Value.NativeQuery(Source, "SELECT c.CHANNEL_NAME, d.YEAR, d.MONTH_NUM, SUM(m.IMPRESSIONS) AS IMPRESSIONS, SUM(m.CLICKS) AS CLICKS, SUM(m.CONVERSIONS) AS CONVERSIONS, SUM(m.SPEND_AMOUNT) AS SPEND, SUM(s.REVENUE) AS ATTRIBUTED_REVENUE FROM FACT_MARKETING_SPEND m JOIN DIM_CHANNEL c ON m.CHANNEL_ID=c.CHANNEL_ID JOIN DIM_DATE d ON m.DATE_KEY=d.DATE_KEY LEFT JOIN FACT_SALES s ON s.CHANNEL_ID=m.CHANNEL_ID AND s.DATE_KEY=m.DATE_KEY GROUP BY c.CHANNEL_NAME,d.YEAR,d.MONTH_NUM")
+			in
+			    Query
+			```

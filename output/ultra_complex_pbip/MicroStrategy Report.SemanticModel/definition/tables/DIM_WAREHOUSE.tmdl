@@ -1,0 +1,43 @@
+table DIM_WAREHOUSE
+	lineageTag: DU12
+
+	column WAREHOUSE_ID
+		dataType: int64
+		isHidden
+		sourceColumn: WAREHOUSE_ID
+		lineageTag: col-e9461c78
+
+	column Warehouse
+		dataType: string
+		isHidden
+		sourceColumn: WAREHOUSE_NAME
+		lineageTag: col-b03326a8
+
+	column CITY
+		dataType: string
+		isHidden
+		sourceColumn: CITY
+		lineageTag: col-3f1f0acc
+
+	column COUNTRY
+		dataType: string
+		isHidden
+		sourceColumn: COUNTRY
+		lineageTag: col-87b15e95
+
+	column CAPACITY
+		dataType: int64
+		isHidden
+		sourceColumn: CAPACITY
+		lineageTag: col-809bed9b
+
+
+	partition DIM_WAREHOUSE = m
+		mode: import
+		expression:= ```
+			let
+			    Source = Sql.Database("sql-prod", "SALESDB"),
+			    Table = Source{[Schema="dbo", Item="DIM_WAREHOUSE"]}[Data]
+			in
+			    Table
+			```

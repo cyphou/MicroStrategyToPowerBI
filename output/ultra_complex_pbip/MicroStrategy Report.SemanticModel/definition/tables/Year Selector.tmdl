@@ -1,0 +1,27 @@
+table 'Year Selector'
+	lineageTag: fp-23091b62
+
+	column 'Year Selector'
+		dataType: string
+		lineageTag: fp-235d9446
+		isNameInferred: false
+		isHidden: false
+		sortByColumn: 'Year Selector Order'
+
+	column 'Year Selector Fields'
+		dataType: string
+		lineageTag: fp-2d74d684
+		isHidden: true
+
+	column 'Year Selector Order'
+		dataType: int64
+		lineageTag: fp-23028a23
+		isHidden: true
+
+	partition 'Year Selector' = calculated
+		mode: import
+		expression:= {
+    ("2024", NAMEOF([2024]), 0),
+    ("2025", NAMEOF([2025]), 1),
+    ("2026", NAMEOF([2026]), 2)
+}

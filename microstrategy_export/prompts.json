@@ -1,16 +1,28 @@
 [
   {
-    "id": "prompt_01",
+    "id": "PU01",
     "name": "Select Year",
     "type": "element",
     "required": true,
     "allow_multi_select": false,
-    "default_value": "2025",
+    "default_value": "2026",
     "options": [
-      {"id": "h2023", "name": "2023"},
-      {"id": "h2024", "name": "2024"},
-      {"id": "h2025", "name": "2025"},
-      {"id": "h2026", "name": "2026"}
+      {
+        "id": "y23",
+        "name": "2023"
+      },
+      {
+        "id": "y24",
+        "name": "2024"
+      },
+      {
+        "id": "y25",
+        "name": "2025"
+      },
+      {
+        "id": "y26",
+        "name": "2026"
+      }
     ],
     "pbi_type": "slicer",
     "attribute_name": "Year",
@@ -18,28 +30,58 @@
     "max_value": null
   },
   {
-    "id": "prompt_02",
-    "name": "Revenue Threshold",
+    "id": "PU02",
+    "name": "Select Region",
+    "type": "element",
+    "required": false,
+    "allow_multi_select": true,
+    "default_value": "",
+    "options": [
+      {
+        "id": "r1",
+        "name": "North America"
+      },
+      {
+        "id": "r2",
+        "name": "Europe"
+      },
+      {
+        "id": "r3",
+        "name": "Asia Pacific"
+      },
+      {
+        "id": "r4",
+        "name": "South America"
+      }
+    ],
+    "pbi_type": "slicer",
+    "attribute_name": "Region",
+    "min_value": null,
+    "max_value": null
+  },
+  {
+    "id": "PU03",
+    "name": "Revenue Min",
     "type": "value",
     "required": false,
     "allow_multi_select": false,
-    "default_value": "100000",
+    "default_value": "0",
     "options": [],
     "pbi_type": "what_if_parameter",
     "attribute_name": "",
     "min_value": 0,
-    "max_value": 10000000
+    "max_value": 100000000
   },
   {
-    "id": "prompt_03",
+    "id": "PU04",
     "name": "Date Range",
     "type": "date",
     "required": true,
     "allow_multi_select": false,
-    "default_value": "2025-01-01",
+    "default_value": "2026-01-01",
     "options": [],
     "pbi_type": "date_slicer",
-    "attribute_name": "Order Date",
+    "attribute_name": "Date",
     "min_value": "2020-01-01",
     "max_value": "2026-12-31"
   }

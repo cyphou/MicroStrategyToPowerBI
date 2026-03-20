@@ -1,0 +1,18 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["LU_CUSTOMER","LU_PRODUCT","FACT_SALES","Calendar"]
+
+ref table LU_CUSTOMER
+ref table LU_PRODUCT
+ref table FACT_SALES
+ref table Calendar
+
+ref relationship rel_LU_CUSTOMER_FACT_SALES
+ref relationship rel_LU_PRODUCT_FACT_SALES
+

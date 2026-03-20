@@ -1,0 +1,34 @@
+relationship rel_DIM_CUSTOMER_FACT_SALES
+	fromColumn: DIM_CUSTOMER.CUST_ID
+	toColumn: FACT_SALES.CUST_ID
+	crossFilteringBehavior: oneDirection
+
+relationship rel_DIM_PRODUCT_FACT_SALES
+	fromColumn: DIM_PRODUCT.PROD_ID
+	toColumn: FACT_SALES.PROD_ID
+	crossFilteringBehavior: oneDirection
+
+relationship rel_DIM_DATE_FACT_SALES
+	fromColumn: DIM_DATE.DATE_KEY
+	toColumn: FACT_SALES.DATE_KEY
+	crossFilteringBehavior: oneDirection
+
+relationship rel_DIM_CHANNEL_FACT_SALES
+	fromColumn: DIM_CHANNEL.CHANNEL_ID
+	toColumn: FACT_SALES.CHANNEL_ID
+	crossFilteringBehavior: oneDirection
+
+relationship rel_DIM_PRODUCT_FACT_RETURNS
+	fromColumn: DIM_PRODUCT.PROD_ID
+	toColumn: FACT_RETURNS.PROD_ID
+	crossFilteringBehavior: oneDirection
+
+relationship rel_DIM_DATE_FACT_RETURNS
+	fromColumn: DIM_DATE.DATE_KEY
+	toColumn: FACT_RETURNS.DATE_KEY
+	crossFilteringBehavior: oneDirection
+
+relationship rel_FACT_SALES_FACT_RETURNS
+	fromColumn: FACT_SALES.SALE_ID
+	toColumn: FACT_RETURNS.SALE_ID
+	crossFilteringBehavior: oneDirection

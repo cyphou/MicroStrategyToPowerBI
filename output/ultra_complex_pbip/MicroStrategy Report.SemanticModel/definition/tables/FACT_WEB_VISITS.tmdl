@@ -1,0 +1,72 @@
+table FACT_WEB_VISITS
+	lineageTag: DU10
+
+	column VISIT_ID
+		dataType: int64
+		isHidden
+		sourceColumn: VISIT_ID
+		lineageTag: col-f256caf6
+
+	column CUST_ID
+		dataType: int64
+		isHidden
+		sourceColumn: CUST_ID
+		lineageTag: col-dca50f40
+
+	column DATE_KEY
+		dataType: dateTime
+		isHidden
+		sourceColumn: DATE_KEY
+		lineageTag: col-fec2e4b5
+
+	column PAGE_VIEWS
+		dataType: int64
+		isHidden
+		sourceColumn: PAGE_VIEWS
+		lineageTag: col-873b2965
+
+	column SESSION_DURATION_SEC
+		dataType: int64
+		isHidden
+		sourceColumn: SESSION_DURATION_SEC
+		lineageTag: col-2953e616
+
+	column BOUNCE
+		dataType: boolean
+		isHidden
+		sourceColumn: BOUNCE
+		lineageTag: col-cb4712af
+
+	column DEVICE_TYPE
+		dataType: string
+		isHidden
+		sourceColumn: DEVICE_TYPE
+		lineageTag: col-3c2f13bc
+
+	measure 'Total Page Views' = SUM([Page Views])
+		formatString: #,##0
+		displayFolder: Metrics
+		lineageTag: MU12
+
+	measure 'Total Sessions' = COUNT([Session Duration])
+		formatString: #,##0
+		displayFolder: Metrics
+		lineageTag: MU13
+
+	measure 'Avg Session Duration' = AVERAGE([Session Duration])
+		formatString: #,##0
+		displayFolder: Metrics
+		lineageTag: MU33
+
+
+	partition FACT_WEB_VISITS = m
+		mode: import
+		expression:= ```
+			let
+			    Source = Snowflake.Databases("acme.snowflakecomputing.com", "SALESDB"),
+			    DB = Source{[Name="SALESDB"]}[Data],
+			    Schema = DB{[Name="SALES"]}[Data],
+			    Table = Schema{[Name="FACT_WEB_VISITS"]}[Data]
+			in
+			    Table
+			```

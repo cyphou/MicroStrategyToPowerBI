@@ -1,0 +1,65 @@
+table FACT_INVENTORY
+	lineageTag: DU09
+
+	column INV_ID
+		dataType: int64
+		isHidden
+		sourceColumn: INV_ID
+		lineageTag: col-81f40b2d
+
+	column PROD_ID
+		dataType: int64
+		isHidden
+		sourceColumn: PROD_ID
+		lineageTag: col-354bd87f
+
+	column DATE_KEY
+		dataType: dateTime
+		isHidden
+		sourceColumn: DATE_KEY
+		lineageTag: col-1aed8852
+
+	column WAREHOUSE_ID
+		dataType: int64
+		isHidden
+		sourceColumn: WAREHOUSE_ID
+		lineageTag: col-9cb54c1b
+
+	column ON_HAND
+		dataType: int64
+		isHidden
+		sourceColumn: ON_HAND
+		lineageTag: col-f8b29c4b
+
+	column ON_ORDER
+		dataType: int64
+		isHidden
+		sourceColumn: ON_ORDER
+		lineageTag: col-1e0b26f2
+
+	column REORDER_POINT
+		dataType: int64
+		isHidden
+		sourceColumn: REORDER_POINT
+		lineageTag: col-f92981c8
+
+	measure 'Inventory On Hand' = SUM([On Hand])
+		formatString: #,##0
+		displayFolder: Metrics
+		lineageTag: MU10
+
+	measure 'Inventory On Order' = SUM([On Order])
+		formatString: #,##0
+		displayFolder: Metrics
+		lineageTag: MU11
+
+
+	partition FACT_INVENTORY = m
+		mode: import
+		expression:= ```
+			let
+			    Source = Sql.Database("sql-prod", "SALESDB"),
+			    Table = Source{[Schema="dbo", Item="FACT_INVENTORY"]}[Data]
+			in
+			    Table
+			```

@@ -1,0 +1,72 @@
+[
+  {
+    "name": "Grow Revenue 20%",
+    "description": "",
+    "scorecardName": "Sales Performance Scorecard",
+    "status": "AtRisk",
+    "owner": "",
+    "startDate": null,
+    "dueDate": null,
+    "values": {
+      "current": 10500000,
+      "target": 12000000,
+      "unit": ""
+    },
+    "statusRules": [
+      {
+        "status": "OnTrack"
+      },
+      {
+        "status": "AtRisk"
+      },
+      {
+        "status": "Behind"
+      }
+    ],
+    "subGoals": [],
+    "notes": [],
+    "connectedMeasure": {
+      "measureName": "Total Revenue"
+    }
+  },
+  {
+    "name": "Margin Above 25%",
+    "description": "",
+    "scorecardName": "Sales Performance Scorecard",
+    "status": "AtRisk",
+    "owner": "",
+    "startDate": null,
+    "dueDate": null,
+    "values": {
+      "current": 0.22,
+      "target": 0.25,
+      "unit": ""
+    },
+    "statusRules": [],
+    "subGoals": [],
+    "notes": [],
+    "connectedMeasure": {
+      "measureName": "Profit Margin"
+    }
+  },
+  {
+    "name": "Reduce Returns Below 5%",
+    "description": "",
+    "scorecardName": "Sales Performance Scorecard",
+    "status": "Behind",
+    "owner": "",
+    "startDate": null,
+    "dueDate": null,
+    "values": {
+      "current": 0.07,
+      "target": 0.05,
+      "unit": ""
+    },
+    "statusRules": [],
+    "subGoals": [],
+    "notes": [],
+    "connectedMeasure": {
+      "measureName": "Return Rate"
+    }
+  }
+]

@@ -84,9 +84,16 @@ def _decide(signals, fabric_available):
     reasons = []
     alternatives = []
 
-    # DirectLake preferred on Fabric with cubes
-    if fabric_available and signals["has_cubes"]:
-        reasons.append("Fabric available with cubes — DirectLake gives best performance")
+    # DirectLake preferred on Fabric — cubes map naturally to Lakehouse Delta
+    # tables, and even standard Import models benefit from DirectLake when a
+    # Lakehouse is available.
+    if fabric_available:
+        if signals["has_cubes"]:
+            reasons.append("Fabric available with cubes — DirectLake gives best performance")
+        elif signals["has_large_tables"]:
+            reasons.append("Fabric available with large tables — DirectLake avoids Import size limits")
+        else:
+            reasons.append("Fabric available — DirectLake recommended for Lakehouse-backed models")
         return {
             "recommended": DIRECT_LAKE,
             "rationale": " | ".join(reasons),

@@ -1,32 +1,59 @@
 [
   {
-    "id": "SF_001_REGION_FILTER",
-    "name": "Region Sales Filter",
-    "description": "Restricts sales data visibility by region",
-    "expression": "Customer Region In (Northeast, Southeast)",
+    "id": "SFU01",
+    "name": "Region Filter - Americas",
+    "expression": "Region In (North America, South America)",
     "target_attributes": [
-      {"id": "8D679D3711D3E4981000E787EC6DE8A4", "name": "Customer Region"}
-    ],
-    "users": [
-      {"id": "user_003", "name": "EastRegionManager"},
-      {"id": "user_004", "name": "EastRegionAnalyst"}
-    ],
-    "groups": [
-      {"id": "group_001", "name": "East Region Team"}
-    ]
-  },
-  {
-    "id": "SF_002_PRODUCT_FILTER",
-    "name": "Product Category Filter",
-    "description": "Restricts product data by category",
-    "expression": "Category In (Electronics, Software)",
-    "target_attributes": [
-      {"id": "8D679D4611D3E4981000E787EC6DE8A4", "name": "Category"}
+      {
+        "id": "AU05",
+        "name": "Region"
+      }
     ],
     "users": [],
     "groups": [
-      {"id": "group_002", "name": "Tech Products Team"},
-      {"id": "group_003", "name": "Electronics Division"}
-    ]
+      {
+        "id": "g1",
+        "name": "Americas Team"
+      }
+    ],
+    "description": ""
+  },
+  {
+    "id": "SFU02",
+    "name": "Region Filter - EMEA",
+    "expression": "Region In (Europe, Middle East, Africa)",
+    "target_attributes": [
+      {
+        "id": "AU05",
+        "name": "Region"
+      }
+    ],
+    "users": [],
+    "groups": [
+      {
+        "id": "g2",
+        "name": "EMEA Team"
+      }
+    ],
+    "description": ""
+  },
+  {
+    "id": "SFU03",
+    "name": "Channel Filter - Digital",
+    "expression": "Channel Type In (Web, Mobile, Social)",
+    "target_attributes": [
+      {
+        "id": "AU19",
+        "name": "Channel Type"
+      }
+    ],
+    "users": [],
+    "groups": [
+      {
+        "id": "g3",
+        "name": "Digital Team"
+      }
+    ],
+    "description": ""
   }
 ]

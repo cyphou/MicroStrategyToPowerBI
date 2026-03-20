@@ -1,0 +1,31 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/pagesMetadata/1.0.0/schema.json",
+  "pageOrder": [
+    "ceo_kpi",
+    "ceo_geo",
+    "so_main",
+    "pi_cat",
+    "pi_inv",
+    "c360_seg",
+    "mkt_perf",
+    "web_traffic",
+    "fin_main",
+    "ret_overview",
+    "RPT_U01",
+    "RPT_U02",
+    "RPT_U03",
+    "RPT_U04",
+    "RPT_U05",
+    "RPT_U06",
+    "RPT_U07",
+    "RPT_U08",
+    "RPT_U09",
+    "RPT_U10",
+    "RPT_U11",
+    "RPT_U12",
+    "RPT_U13",
+    "RPT_U14",
+    "RPT_U15"
+  ],
+  "activePageName": "ceo_kpi"
+}

@@ -33,9 +33,12 @@ microstrategy_export/   # Step 1: Extraction layer (REST API → JSON)
 powerbi_import/         # Step 2: Generation layer (JSON → .pbip)
   import_to_powerbi.py  #   Importer orchestrator
   pbip_generator.py     #   .pbip project assembly
-  tmdl_generator.py     #   TMDL semantic model
+  tmdl_generator.py     #   TMDL semantic model (Import + DirectLake)
   visual_generator.py   #   PBIR v4.0 visual JSON
   m_query_generator.py  #   Power Query M expressions
+  lakehouse_generator.py #  Fabric Lakehouse DDL + OneLake shortcuts
+  notebook_generator.py #   PySpark ETL notebooks (JDBC, Snowflake, BigQuery)
+  pipeline_generator.py #   Data Factory pipeline JSON
   validator.py          #   TMDL/PBIR/DAX validation
   assessment.py         #   14-category pre-migration assessment
   migration_report.py   #   Fidelity report (JSON + HTML)
@@ -51,6 +54,12 @@ powerbi_import/         # Step 2: Generation layer (JSON → .pbip)
   telemetry_dashboard.py #  Historical run dashboard
   progress.py           #   Progress bar wrapper
   plugins.py            #   Plugin extension system
+  deploy/
+    fabric_deployer.py  #   Fabric REST API deployment (SM, report, notebooks, pipelines)
+    fabric_git.py       #   Push .pbip to Fabric workspace Git repos
+    fabric_env.py       #   Fabric environment config + capacity estimation
+    pbi_deployer.py     #   Power BI Service deployment
+    gateway_config.py   #   On-premises gateway configuration
 
 migrate.py              # CLI entry point
 ```
@@ -104,3 +113,15 @@ python migrate.py --help
 - **Plugin system**: Extension hooks for custom transformations
 - **Progress bars**: tqdm-based progress tracking
 - CLI flags: `--global-assess`, `--strategy`, `--compare`, `--no-calendar`
+
+## v5.0 Features
+
+- **DirectLake TMDL**: Auto-generate `mode: directLake` partitions with Delta table entity references
+- **Lakehouse DDL**: Spark SQL `CREATE TABLE ... USING DELTA` scripts from MSTR schema
+- **PySpark ETL notebooks**: JDBC/Snowflake/BigQuery/Databricks connectors for Fabric Spark
+- **OneLake shortcuts**: Zero-copy ADLS/external data references
+- **Data Factory pipelines**: Copy activities + semantic model refresh + notification
+- **Fabric Git integration**: Push .pbip to Fabric workspace Git repos
+- **Fabric environment config**: Spark pool, JDBC libraries, capacity estimation (F2–F64)
+- **Enhanced strategy advisor**: Always recommends DirectLake when Fabric is available
+- CLI flags: `--fabric-mode`, `--lakehouse-name`, `--fabric-git`, `--fabric-git-branch`, `--adls-account`, `--adls-container`, `--env-name`

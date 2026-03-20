@@ -1,111 +1,551 @@
 [
   {
-    "id": "8D67912011D3E4981000E787EC6DE8A4",
-    "name": "LU_CUSTOMER",
-    "physical_table": "LU_CUSTOMER",
+    "id": "DU01",
+    "name": "DIM_CUSTOMER",
+    "physical_table": "DIM_CUSTOMER",
     "db_connection": {
-      "db_type": "sql_server",
-      "server": "sql-prod-01.company.com",
-      "database": "SalesDB",
-      "schema": "dbo"
+      "db_type": "oracle",
+      "server": "ora-prod",
+      "database": "SALESDB",
+      "schema": "SALES"
     },
     "columns": [
-      {"name": "CUSTOMER_ID", "data_type": "integer"},
-      {"name": "CUSTOMER_NAME", "data_type": "nVarChar"},
-      {"name": "CUSTOMER_EMAIL", "data_type": "nVarChar"},
-      {"name": "CUSTOMER_CITY", "data_type": "nVarChar"},
-      {"name": "CUSTOMER_STATE", "data_type": "nVarChar"},
-      {"name": "CUSTOMER_COUNTRY", "data_type": "nVarChar"},
-      {"name": "REGION_ID", "data_type": "integer"}
+      {
+        "name": "CUST_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "CUST_NAME",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "CUST_EMAIL",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "CITY",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "STATE",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "COUNTRY",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "REGION",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "SEGMENT",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "TIER",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "ACCT_MGR",
+        "data_type": "nVarChar"
+      }
     ],
     "is_freeform_sql": false,
     "sql_statement": "",
     "type": "table"
   },
   {
-    "id": "9A78023111D3E49A1000E787EC6DE8A4",
-    "name": "LU_PRODUCT",
-    "physical_table": "LU_PRODUCT",
+    "id": "DU02",
+    "name": "DIM_PRODUCT",
+    "physical_table": "DIM_PRODUCT",
     "db_connection": {
-      "db_type": "sql_server",
-      "server": "sql-prod-01.company.com",
-      "database": "SalesDB",
-      "schema": "dbo"
+      "db_type": "oracle",
+      "server": "ora-prod",
+      "database": "SALESDB",
+      "schema": "SALES"
     },
     "columns": [
-      {"name": "PRODUCT_ID", "data_type": "integer"},
-      {"name": "PRODUCT_NAME", "data_type": "nVarChar"},
-      {"name": "CATEGORY_ID", "data_type": "integer"},
-      {"name": "CATEGORY_NAME", "data_type": "nVarChar"},
-      {"name": "BRAND", "data_type": "nVarChar"},
-      {"name": "UNIT_PRICE", "data_type": "real"}
+      {
+        "name": "PROD_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "PROD_NAME",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "CATEGORY",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "SUBCATEGORY",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "BRAND",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "UNIT_COST",
+        "data_type": "real"
+      },
+      {
+        "name": "WEIGHT_KG",
+        "data_type": "real"
+      },
+      {
+        "name": "IS_ACTIVE",
+        "data_type": "boolean"
+      }
     ],
     "is_freeform_sql": false,
     "sql_statement": "",
     "type": "table"
   },
   {
-    "id": "AB89134211D3E4A51000E787EC6DE8A4",
-    "name": "LU_DATE",
-    "physical_table": "LU_DATE",
+    "id": "DU03",
+    "name": "DIM_DATE",
+    "physical_table": "DIM_DATE",
     "db_connection": {
-      "db_type": "sql_server",
-      "server": "sql-prod-01.company.com",
-      "database": "SalesDB",
-      "schema": "dbo"
+      "db_type": "oracle",
+      "server": "ora-prod",
+      "database": "SALESDB",
+      "schema": "SALES"
     },
     "columns": [
-      {"name": "DATE_ID", "data_type": "date"},
-      {"name": "DAY_OF_WEEK", "data_type": "nVarChar"},
-      {"name": "MONTH_NAME", "data_type": "nVarChar"},
-      {"name": "MONTH_ID", "data_type": "integer"},
-      {"name": "QUARTER_ID", "data_type": "integer"},
-      {"name": "YEAR_ID", "data_type": "integer"}
+      {
+        "name": "DATE_KEY",
+        "data_type": "date"
+      },
+      {
+        "name": "DAY_NAME",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "MONTH_NAME",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "MONTH_NUM",
+        "data_type": "integer"
+      },
+      {
+        "name": "QUARTER",
+        "data_type": "integer"
+      },
+      {
+        "name": "YEAR",
+        "data_type": "integer"
+      },
+      {
+        "name": "FISCAL_QTR",
+        "data_type": "integer"
+      },
+      {
+        "name": "FISCAL_YEAR",
+        "data_type": "integer"
+      },
+      {
+        "name": "IS_HOLIDAY",
+        "data_type": "boolean"
+      }
     ],
     "is_freeform_sql": false,
     "sql_statement": "",
     "type": "table"
   },
   {
-    "id": "BC90245311D3E4B61000E787EC6DE8A4",
+    "id": "DU04",
+    "name": "DIM_CHANNEL",
+    "physical_table": "DIM_CHANNEL",
+    "db_connection": {
+      "db_type": "oracle",
+      "server": "ora-prod",
+      "database": "SALESDB",
+      "schema": "SALES"
+    },
+    "columns": [
+      {
+        "name": "CHANNEL_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "CHANNEL_NAME",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "CHANNEL_TYPE",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "COMMISSION_PCT",
+        "data_type": "real"
+      }
+    ],
+    "is_freeform_sql": false,
+    "sql_statement": "",
+    "type": "table"
+  },
+  {
+    "id": "DU05",
+    "name": "DIM_EMPLOYEE",
+    "physical_table": "DIM_EMPLOYEE",
+    "db_connection": {
+      "db_type": "oracle",
+      "server": "ora-prod",
+      "database": "SALESDB",
+      "schema": "SALES"
+    },
+    "columns": [
+      {
+        "name": "EMP_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "EMP_NAME",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "TITLE",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "DEPARTMENT",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "HIRE_DATE",
+        "data_type": "date"
+      },
+      {
+        "name": "MANAGER_ID",
+        "data_type": "integer"
+      }
+    ],
+    "is_freeform_sql": false,
+    "sql_statement": "",
+    "type": "table"
+  },
+  {
+    "id": "DU06",
+    "name": "DIM_PROMOTION",
+    "physical_table": "DIM_PROMOTION",
+    "db_connection": {
+      "db_type": "oracle",
+      "server": "ora-prod",
+      "database": "SALESDB",
+      "schema": "SALES"
+    },
+    "columns": [
+      {
+        "name": "PROMO_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "PROMO_NAME",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "PROMO_TYPE",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "START_DATE",
+        "data_type": "date"
+      },
+      {
+        "name": "END_DATE",
+        "data_type": "date"
+      },
+      {
+        "name": "DISCOUNT_PCT",
+        "data_type": "real"
+      }
+    ],
+    "is_freeform_sql": false,
+    "sql_statement": "",
+    "type": "table"
+  },
+  {
+    "id": "DU07",
     "name": "FACT_SALES",
     "physical_table": "FACT_SALES",
     "db_connection": {
       "db_type": "sql_server",
-      "server": "sql-prod-01.company.com",
-      "database": "SalesDB",
+      "server": "sql-prod",
+      "database": "SALESDB",
       "schema": "dbo"
     },
     "columns": [
-      {"name": "CUSTOMER_ID", "data_type": "integer"},
-      {"name": "PRODUCT_ID", "data_type": "integer"},
-      {"name": "DATE_ID", "data_type": "date"},
-      {"name": "REVENUE", "data_type": "real"},
-      {"name": "COST", "data_type": "real"},
-      {"name": "QUANTITY", "data_type": "integer"},
-      {"name": "DISCOUNT", "data_type": "real"},
-      {"name": "ORDER_ID", "data_type": "nVarChar"},
-      {"name": "REGION_ID", "data_type": "integer"}
+      {
+        "name": "SALE_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "CUST_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "PROD_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "DATE_KEY",
+        "data_type": "date"
+      },
+      {
+        "name": "CHANNEL_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "EMP_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "PROMO_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "REVENUE",
+        "data_type": "real"
+      },
+      {
+        "name": "COST",
+        "data_type": "real"
+      },
+      {
+        "name": "QUANTITY",
+        "data_type": "integer"
+      },
+      {
+        "name": "DISCOUNT",
+        "data_type": "real"
+      },
+      {
+        "name": "TAX",
+        "data_type": "real"
+      },
+      {
+        "name": "SHIPPING",
+        "data_type": "real"
+      },
+      {
+        "name": "COMMISSION",
+        "data_type": "real"
+      }
     ],
     "is_freeform_sql": false,
     "sql_statement": "",
     "type": "table"
   },
   {
-    "id": "FF01256411D3E4C71000E787EC6DE8A4",
+    "id": "DU08",
+    "name": "FACT_RETURNS",
+    "physical_table": "FACT_RETURNS",
+    "db_connection": {
+      "db_type": "sql_server",
+      "server": "sql-prod",
+      "database": "SALESDB",
+      "schema": "dbo"
+    },
+    "columns": [
+      {
+        "name": "RETURN_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "SALE_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "PROD_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "DATE_KEY",
+        "data_type": "date"
+      },
+      {
+        "name": "RETURN_QTY",
+        "data_type": "integer"
+      },
+      {
+        "name": "RETURN_AMT",
+        "data_type": "real"
+      },
+      {
+        "name": "REASON_CODE",
+        "data_type": "nVarChar"
+      }
+    ],
+    "is_freeform_sql": false,
+    "sql_statement": "",
+    "type": "table"
+  },
+  {
+    "id": "DU09",
     "name": "FACT_INVENTORY",
     "physical_table": "FACT_INVENTORY",
     "db_connection": {
       "db_type": "sql_server",
-      "server": "sql-prod-01.company.com",
-      "database": "SalesDB",
+      "server": "sql-prod",
+      "database": "SALESDB",
       "schema": "dbo"
     },
     "columns": [
-      {"name": "PRODUCT_ID", "data_type": "integer"},
-      {"name": "DATE_ID", "data_type": "date"},
-      {"name": "UNITS_ON_HAND", "data_type": "integer"},
-      {"name": "UNITS_ON_ORDER", "data_type": "integer"}
+      {
+        "name": "INV_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "PROD_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "DATE_KEY",
+        "data_type": "date"
+      },
+      {
+        "name": "WAREHOUSE_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "ON_HAND",
+        "data_type": "integer"
+      },
+      {
+        "name": "ON_ORDER",
+        "data_type": "integer"
+      },
+      {
+        "name": "REORDER_POINT",
+        "data_type": "integer"
+      }
+    ],
+    "is_freeform_sql": false,
+    "sql_statement": "",
+    "type": "table"
+  },
+  {
+    "id": "DU10",
+    "name": "FACT_WEB_VISITS",
+    "physical_table": "FACT_WEB_VISITS",
+    "db_connection": {
+      "db_type": "snowflake",
+      "server": "acme.snowflakecomputing.com",
+      "database": "SALESDB",
+      "schema": "SALES"
+    },
+    "columns": [
+      {
+        "name": "VISIT_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "CUST_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "DATE_KEY",
+        "data_type": "date"
+      },
+      {
+        "name": "PAGE_VIEWS",
+        "data_type": "integer"
+      },
+      {
+        "name": "SESSION_DURATION_SEC",
+        "data_type": "integer"
+      },
+      {
+        "name": "BOUNCE",
+        "data_type": "boolean"
+      },
+      {
+        "name": "DEVICE_TYPE",
+        "data_type": "nVarChar"
+      }
+    ],
+    "is_freeform_sql": false,
+    "sql_statement": "",
+    "type": "table"
+  },
+  {
+    "id": "DU11",
+    "name": "FACT_MARKETING_SPEND",
+    "physical_table": "FACT_MARKETING_SPEND",
+    "db_connection": {
+      "db_type": "snowflake",
+      "server": "acme.snowflakecomputing.com",
+      "database": "SALESDB",
+      "schema": "SALES"
+    },
+    "columns": [
+      {
+        "name": "SPEND_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "CHANNEL_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "DATE_KEY",
+        "data_type": "date"
+      },
+      {
+        "name": "SPEND_AMOUNT",
+        "data_type": "real"
+      },
+      {
+        "name": "IMPRESSIONS",
+        "data_type": "integer"
+      },
+      {
+        "name": "CLICKS",
+        "data_type": "integer"
+      },
+      {
+        "name": "CONVERSIONS",
+        "data_type": "integer"
+      }
+    ],
+    "is_freeform_sql": false,
+    "sql_statement": "",
+    "type": "table"
+  },
+  {
+    "id": "DU12",
+    "name": "DIM_WAREHOUSE",
+    "physical_table": "DIM_WAREHOUSE",
+    "db_connection": {
+      "db_type": "sql_server",
+      "server": "sql-prod",
+      "database": "SALESDB",
+      "schema": "dbo"
+    },
+    "columns": [
+      {
+        "name": "WAREHOUSE_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "WAREHOUSE_NAME",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "CITY",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "COUNTRY",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "CAPACITY",
+        "data_type": "integer"
+      }
     ],
     "is_freeform_sql": false,
     "sql_statement": "",

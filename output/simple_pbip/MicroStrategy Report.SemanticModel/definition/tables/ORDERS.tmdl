@@ -1,0 +1,52 @@
+table ORDERS
+	lineageTag: DS_0001
+
+	column ORDER_ID
+		dataType: int64
+		isHidden
+		sourceColumn: ORDER_ID
+		lineageTag: col-239a9194
+
+	column 'Product Name'
+		dataType: string
+		isHidden
+		sourceColumn: PRODUCT_NAME
+		lineageTag: col-da9381c3
+
+	column AMOUNT
+		dataType: double
+		isHidden
+		sourceColumn: AMOUNT
+		lineageTag: col-0b0e3c40
+
+	column QUANTITY
+		dataType: int64
+		isHidden
+		sourceColumn: QUANTITY
+		lineageTag: col-8d70f673
+
+	measure 'Total Sales' = SUM([Amount])
+		formatString: $#,##0.00
+		displayFolder: Metrics
+		lineageTag: MET_0001
+
+	measure 'Total Quantity' = SUM([Quantity])
+		formatString: #,##0
+		displayFolder: Metrics
+		lineageTag: MET_0002
+
+	measure 'Avg Price' = SUM(Amount) / SUM(Quantity)
+		formatString: $#,##0.00
+		displayFolder: Metrics
+		lineageTag: MET_0003
+
+
+	partition ORDERS = m
+		mode: import
+		expression:= ```
+			let
+			    Source = Sql.Database("localhost", "SimpleDB"),
+			    Table = Source{[Schema="dbo", Item="ORDERS"]}[Data]
+			in
+			    Table
+			```

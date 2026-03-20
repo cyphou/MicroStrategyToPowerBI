@@ -1,0 +1,77 @@
+table FACT_MARKETING_SPEND
+	lineageTag: DU11
+
+	column SPEND_ID
+		dataType: int64
+		isHidden
+		sourceColumn: SPEND_ID
+		lineageTag: col-213598d7
+
+	column CHANNEL_ID
+		dataType: int64
+		isHidden
+		sourceColumn: CHANNEL_ID
+		lineageTag: col-3559dc52
+
+	column DATE_KEY
+		dataType: dateTime
+		isHidden
+		sourceColumn: DATE_KEY
+		lineageTag: col-0a9e4389
+
+	column SPEND_AMOUNT
+		dataType: double
+		isHidden
+		sourceColumn: SPEND_AMOUNT
+		lineageTag: col-db8b9e14
+
+	column IMPRESSIONS
+		dataType: int64
+		isHidden
+		sourceColumn: IMPRESSIONS
+		lineageTag: col-4467546f
+
+	column CLICKS
+		dataType: int64
+		isHidden
+		sourceColumn: CLICKS
+		lineageTag: col-67d90be6
+
+	column CONVERSIONS
+		dataType: int64
+		isHidden
+		sourceColumn: CONVERSIONS
+		lineageTag: col-24e50302
+
+	measure 'Marketing Spend' = SUM([Marketing Spend])
+		formatString: $#,##0.00
+		displayFolder: Metrics
+		lineageTag: MU14
+
+	measure 'Total Impressions' = SUM([Impressions])
+		formatString: #,##0
+		displayFolder: Metrics
+		lineageTag: MU15
+
+	measure 'Total Clicks' = SUM([Clicks])
+		formatString: #,##0
+		displayFolder: Metrics
+		lineageTag: MU16
+
+	measure 'Total Conversions' = SUM([Conversions])
+		formatString: #,##0
+		displayFolder: Metrics
+		lineageTag: MU17
+
+
+	partition FACT_MARKETING_SPEND = m
+		mode: import
+		expression:= ```
+			let
+			    Source = Snowflake.Databases("acme.snowflakecomputing.com", "SALESDB"),
+			    DB = Source{[Name="SALESDB"]}[Data],
+			    Schema = DB{[Name="SALES"]}[Data],
+			    Table = Schema{[Name="FACT_MARKETING_SPEND"]}[Data]
+			in
+			    Table
+			```

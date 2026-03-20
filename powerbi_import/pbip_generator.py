@@ -47,7 +47,8 @@ _PBIP_SCHEMA = (
 
 # ── Public API ───────────────────────────────────────────────────
 
-def generate_pbip(data, output_dir, report_name="MicroStrategy Report", no_calendar=False):
+def generate_pbip(data, output_dir, report_name="MicroStrategy Report", no_calendar=False,
+                  direct_lake=False, lakehouse_name=None):
     """Assemble a complete .pbip project from intermediate JSON data.
 
     Args:
@@ -55,6 +56,8 @@ def generate_pbip(data, output_dir, report_name="MicroStrategy Report", no_calen
         output_dir: root directory to write project into
         report_name: name used for project folders and manifest IDs
         no_calendar: if True, never generate auto Calendar table
+        direct_lake: if True, generate DirectLake partitions instead of Import/M
+        lakehouse_name: Fabric lakehouse name for DirectLake entity references
 
     Returns:
         dict with combined generation statistics
@@ -83,7 +86,8 @@ def generate_pbip(data, output_dir, report_name="MicroStrategy Report", no_calen
     sm_root = os.path.join(output_dir, f"{report_name}.SemanticModel")
     sm_def = os.path.join(sm_root, "definition")
 
-    tmdl_stats = generate_all_tmdl(data, sm_def)
+    tmdl_stats = generate_all_tmdl(data, sm_def, direct_lake=direct_lake,
+                                    lakehouse_name=lakehouse_name)
     _merge_stats(stats, tmdl_stats)
 
     # Calendar table — only if not suppressed and no dedicated date dimension table exists

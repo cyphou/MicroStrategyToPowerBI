@@ -1,0 +1,44 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["DIM_CUSTOMER","DIM_PRODUCT","DIM_DATE","DIM_CHANNEL","DIM_EMPLOYEE","DIM_PROMOTION","FACT_SALES","FACT_RETURNS","FACT_INVENTORY","FACT_WEB_VISITS","FACT_MARKETING_SPEND","DIM_WAREHOUSE"]
+
+ref table DIM_CUSTOMER
+ref table DIM_PRODUCT
+ref table DIM_DATE
+ref table DIM_CHANNEL
+ref table DIM_EMPLOYEE
+ref table DIM_PROMOTION
+ref table FACT_SALES
+ref table FACT_RETURNS
+ref table FACT_INVENTORY
+ref table FACT_WEB_VISITS
+ref table FACT_MARKETING_SPEND
+ref table DIM_WAREHOUSE
+
+ref relationship rel_DIM_CUSTOMER_FACT_SALES
+ref relationship rel_DIM_PRODUCT_FACT_SALES
+ref relationship rel_DIM_DATE_FACT_SALES
+ref relationship rel_DIM_CHANNEL_FACT_SALES
+ref relationship rel_DIM_EMPLOYEE_FACT_SALES
+ref relationship rel_DIM_PROMOTION_FACT_SALES
+ref relationship rel_DIM_PRODUCT_FACT_RETURNS
+ref relationship rel_DIM_DATE_FACT_RETURNS
+ref relationship rel_FACT_SALES_FACT_RETURNS
+ref relationship rel_DIM_PRODUCT_FACT_INVENTORY
+ref relationship rel_DIM_DATE_FACT_INVENTORY
+ref relationship rel_DIM_WAREHOUSE_FACT_INVENTORY
+ref relationship rel_DIM_CUSTOMER_FACT_WEB_VISITS
+ref relationship rel_DIM_DATE_FACT_WEB_VISITS
+ref relationship rel_DIM_CHANNEL_FACT_MARKETING_SPEND
+ref relationship rel_DIM_DATE_FACT_MARKETING_SPEND
+
+ref role 'Region Filter - Americas'
+ref role 'Region Filter - EMEA'
+ref role 'Channel Filter - Digital'
+

@@ -1,0 +1,14 @@
+role 'Region Filter - Americas'
+
+	tablePermission DIM_CUSTOMER
+		filterExpression:= [REGION] IN {"North America", "South America"}
+
+role 'Region Filter - EMEA'
+
+	tablePermission DIM_CUSTOMER
+		filterExpression:= [REGION] IN {"Europe", "Middle East", "Africa"}
+
+role 'Channel Filter - Digital'
+
+	tablePermission DIM_CHANNEL
+		filterExpression:= [CHANNEL_TYPE] IN {"Web", "Mobile", "Social"}

@@ -1,0 +1,4 @@
+# Power BI project ignores
+.pbi/
+*.pbix
+*.bak

@@ -218,7 +218,8 @@ def run_extraction(args):
         return False
 
 
-def run_generation(output_dir=None, report_name=None, culture=None, shared_model=False, no_calendar=False):
+def run_generation(output_dir=None, report_name=None, culture=None, shared_model=False,
+                   no_calendar=False, direct_lake=False, lakehouse_name=None):
     """Run Power BI project generation."""
     global _stats
     print_step(2, 2, "POWER BI PROJECT GENERATION")
@@ -236,6 +237,8 @@ def run_generation(output_dir=None, report_name=None, culture=None, shared_model
                 output_dir=output_dir,
                 culture=culture,
                 no_calendar=no_calendar,
+                direct_lake=direct_lake,
+                lakehouse_name=lakehouse_name,
             )
             # Also generate a shared model if requested
             try:
@@ -253,6 +256,8 @@ def run_generation(output_dir=None, report_name=None, culture=None, shared_model
                 output_dir=output_dir,
                 culture=culture,
                 no_calendar=no_calendar,
+                direct_lake=direct_lake,
+                lakehouse_name=lakehouse_name,
             )
 
         if result:
@@ -568,6 +573,99 @@ def _load_intermediate_data(args):
     return data
 
 
+# ── v5.0 Fabric-native generation ───────────────────────────────
+
+
+def run_fabric_generation(args, fabric_mode, lakehouse_name):
+    """Generate Fabric-native artifacts (Lakehouse DDL, notebooks, pipelines, env)."""
+    data = _load_intermediate_data(args)
+    output_dir = args.output_dir or 'artifacts/'
+    fabric_dir = os.path.join(output_dir, 'fabric')
+    os.makedirs(fabric_dir, exist_ok=True)
+
+    print()
+    print("-" * 80)
+    print("  FABRIC NATIVE ARTIFACTS")
+    print("-" * 80)
+
+    # Lakehouse schema DDL
+    try:
+        from powerbi_import.lakehouse_generator import generate_lakehouse_schema, generate_shortcuts
+        lh_stats = generate_lakehouse_schema(data, fabric_dir, lakehouse_name=lakehouse_name)
+        print(f"  ✓ Lakehouse DDL: {lh_stats['tables_generated']} tables → {fabric_dir}/lakehouse_schema.sql")
+
+        # Shortcuts (only for shortcut mode with ADLS account)
+        if fabric_mode == 'shortcut' and getattr(args, 'adls_account', None):
+            sc_stats = generate_shortcuts(data, fabric_dir,
+                                          adls_account=args.adls_account,
+                                          container=getattr(args, 'adls_container', 'data'))
+            print(f"  ✓ Shortcuts: {sc_stats['shortcuts_generated']} entries")
+    except Exception as e:
+        logger.warning("Lakehouse generation: %s", e)
+
+    # PySpark ETL notebooks
+    try:
+        from powerbi_import.notebook_generator import generate_notebooks
+        nb_stats = generate_notebooks(data, fabric_dir, lakehouse_name=lakehouse_name)
+        print(f"  ✓ Notebooks: {nb_stats['notebooks_generated']} generated")
+    except Exception as e:
+        logger.warning("Notebook generation: %s", e)
+
+    # Data Factory pipeline
+    try:
+        from powerbi_import.pipeline_generator import generate_pipeline
+        workspace_id = getattr(args, 'deploy', None) or ''
+        report_name = getattr(args, 'report_name', None) or 'MicroStrategy Report'
+        pl_stats = generate_pipeline(
+            data, fabric_dir,
+            lakehouse_name=lakehouse_name,
+            semantic_model_name=report_name,
+            workspace_id=workspace_id,
+        )
+        print(f"  ✓ Pipeline: {pl_stats['activities_count']} activities")
+    except Exception as e:
+        logger.warning("Pipeline generation: %s", e)
+
+    # Fabric environment config
+    try:
+        from powerbi_import.deploy.fabric_env import generate_environment, estimate_capacity
+        env_name = getattr(args, 'env_name', 'MstrSparkEnv')
+        generate_environment(data, fabric_dir, env_name=env_name)
+        cap = estimate_capacity(data)
+        print(f"  ✓ Environment: {env_name} (recommended SKU: {cap['recommended_sku']})")
+    except Exception as e:
+        logger.warning("Environment generation: %s", e)
+
+    print()
+
+
+def run_fabric_git_push(args):
+    """Push .pbip to Fabric workspace Git repo."""
+    workspace_id = args.deploy
+    if not workspace_id:
+        print("  ⚠ --deploy WORKSPACE_ID required for --fabric-git")
+        return
+
+    token = getattr(args, 'client_secret', None)
+    if not token:
+        print("  ⚠ --client-secret (bearer token) required for --fabric-git")
+        return
+
+    try:
+        from powerbi_import.deploy.fabric_git import push_to_fabric_git
+        output_dir = args.output_dir or 'artifacts/'
+        branch = getattr(args, 'fabric_git_branch', 'main')
+        result = push_to_fabric_git(
+            output_dir, workspace_id,
+            token=token,
+            branch=branch,
+        )
+        print(f"  ✓ Pushed to Fabric Git: {result['status']}")
+    except Exception as e:
+        logger.error("Fabric Git push failed: %s", e, exc_info=True)
+        print(f"  ✗ Fabric Git push failed: {e}")
+
+
 
 def print_summary():
     """Print migration summary."""
@@ -722,7 +820,24 @@ Examples:
     parser.add_argument('--config', help='Path to configuration JSON file')
 
     # Version
-    parser.add_argument('--version', action='version', version='%(prog)s 4.0.0')
+    parser.add_argument('--version', action='version', version='%(prog)s 5.0.0')
+
+    # v5.0 features — Fabric Native Integration
+    v5_group = parser.add_argument_group('v5.0 Fabric Native Integration')
+    v5_group.add_argument('--fabric-mode', choices=['lakehouse', 'warehouse', 'shortcut'],
+                         help='Generate Fabric-native artifacts (Lakehouse DDL, PySpark notebooks, pipeline)')
+    v5_group.add_argument('--lakehouse-name', default='MstrLakehouse',
+                         help='Fabric Lakehouse name (default: MstrLakehouse)')
+    v5_group.add_argument('--fabric-git', action='store_true',
+                         help='Push generated .pbip to Fabric workspace Git repo')
+    v5_group.add_argument('--fabric-git-branch', default='main',
+                         help='Branch for Fabric Git push (default: main)')
+    v5_group.add_argument('--adls-account',
+                         help='ADLS account name for OneLake shortcuts (with --fabric-mode shortcut)')
+    v5_group.add_argument('--adls-container', default='data',
+                         help='ADLS container for shortcuts (default: data)')
+    v5_group.add_argument('--env-name', default='MstrSparkEnv',
+                         help='Fabric Spark environment name (default: MstrSparkEnv)')
 
     # v4.0 features
     v4_group = parser.add_argument_group('v4.0 Features')
@@ -846,6 +961,10 @@ def main():
         sys.exit(ExitCode.SUCCESS)
 
     # Step 2: Generation (batch or single)
+    fabric_mode = getattr(args, 'fabric_mode', None)
+    use_direct_lake = getattr(args, 'direct_lake', False) or bool(fabric_mode)
+    lh_name = getattr(args, 'lakehouse_name', None) or 'MstrLakehouse'
+
     if getattr(args, 'batch', False):
         generation_ok = run_batch_generation(args)
     else:
@@ -855,10 +974,16 @@ def main():
             culture=args.culture,
             shared_model=getattr(args, 'shared_model', False),
             no_calendar=getattr(args, 'no_calendar', False),
+            direct_lake=use_direct_lake,
+            lakehouse_name=lh_name if use_direct_lake else None,
         )
     if not generation_ok:
         print_summary()
         sys.exit(ExitCode.GENERATION_FAILED)
+
+    # Step 2b: Fabric-native artifact generation (v5.0)
+    if fabric_mode:
+        run_fabric_generation(args, fabric_mode, lh_name)
 
     # Step 3: Validate (automatic)
     run_validation(args.output_dir)
@@ -895,6 +1020,11 @@ def main():
             run_benchmark(args)
         except Exception as e:
             logger.warning("Benchmark failed: %s", e)
+
+    # Step 3f: Fabric Git push (optional, v5.0)
+    if getattr(args, 'fabric_git', False):
+        run_fabric_git_push(args)
+
     # Step 4: Deploy (optional)
     if args.deploy:
         deploy_ok = run_deploy(args)

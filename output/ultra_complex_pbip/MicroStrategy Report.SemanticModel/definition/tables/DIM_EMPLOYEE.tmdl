@@ -1,0 +1,58 @@
+table DIM_EMPLOYEE
+	lineageTag: DU05
+
+	column EMP_ID
+		dataType: int64
+		isHidden
+		isKey
+		sourceColumn: EMP_ID
+		lineageTag: col-bad9e23a
+
+	column Employee
+		dataType: string
+		sourceColumn: EMP_NAME
+		lineageTag: col-6bec83ea
+
+	column TITLE
+		dataType: string
+		sourceColumn: TITLE
+		lineageTag: col-48e92b10
+
+	column DEPARTMENT
+		dataType: string
+		isHidden
+		sourceColumn: DEPARTMENT
+		lineageTag: col-fe19ed9a
+
+	column HIRE_DATE
+		dataType: dateTime
+		sourceColumn: HIRE_DATE
+		lineageTag: col-a223eed1
+
+	column MANAGER_ID
+		dataType: int64
+		isHidden
+		sourceColumn: MANAGER_ID
+		lineageTag: col-60445135
+
+	hierarchy Organization
+		lineageTag: hier-5d8f257b
+
+		level Department
+			column: DEPARTMENT
+			lineageTag: hier-a113dee4
+
+		level Employee
+			column: Employee
+			lineageTag: hier-c71e3ec0
+
+
+	partition DIM_EMPLOYEE = m
+		mode: import
+		expression:= ```
+			let
+			    Source = Oracle.Database("ora-prod"),
+			    Table = Source{[Schema="SALES", Name="DIM_EMPLOYEE"]}[Data]
+			in
+			    Table
+			```

@@ -1,0 +1,9 @@
+role 'Region Filter - East'
+
+	tablePermission DIM_CUSTOMER
+		filterExpression:= [REGION] IN {"East", "Northeast"}
+
+role 'Channel Filter - Online'
+
+	tablePermission DIM_CHANNEL
+		filterExpression:= [CHANNEL_NAME] IN {"Web", "Mobile"}

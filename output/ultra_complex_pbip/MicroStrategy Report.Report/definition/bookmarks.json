@@ -1,0 +1,38 @@
+{
+  "bookmarks": [
+    {
+      "name": "ViewToggle_Chart View",
+      "displayName": "Chart View",
+      "explorationState": {
+        "activeSection": null,
+        "filters": []
+      },
+      "options": {
+        "targetVisualNames": [
+          "c1",
+          "c3"
+        ],
+        "hiddenVisualNames": [
+          "c2"
+        ]
+      }
+    },
+    {
+      "name": "ViewToggle_Table View",
+      "displayName": "Table View",
+      "explorationState": {
+        "activeSection": null,
+        "filters": []
+      },
+      "options": {
+        "targetVisualNames": [
+          "c2"
+        ],
+        "hiddenVisualNames": [
+          "c1",
+          "c3"
+        ]
+      }
+    }
+  ]
+}

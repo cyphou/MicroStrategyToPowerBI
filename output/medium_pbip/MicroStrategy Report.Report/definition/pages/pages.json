@@ -1,0 +1,10 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/pagesMetadata/1.0.0/schema.json",
+  "pageOrder": [
+    "pg_01",
+    "RPT_0001",
+    "RPT_0002",
+    "RPT_0003"
+  ],
+  "activePageName": "pg_01"
+}

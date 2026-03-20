@@ -1,0 +1,202 @@
+table FACT_SALES
+	lineageTag: DS_C05
+
+	column SALE_ID
+		dataType: int64
+		isHidden
+		sourceColumn: SALE_ID
+		lineageTag: col-33a753bf
+
+	column CUST_ID
+		dataType: int64
+		isHidden
+		sourceColumn: CUST_ID
+		lineageTag: col-07ce0233
+
+	column PROD_ID
+		dataType: int64
+		isHidden
+		sourceColumn: PROD_ID
+		lineageTag: col-b220d6af
+
+	column DATE_KEY
+		dataType: dateTime
+		isHidden
+		sourceColumn: DATE_KEY
+		lineageTag: col-38b85022
+
+	column CHANNEL_ID
+		dataType: int64
+		isHidden
+		sourceColumn: CHANNEL_ID
+		lineageTag: col-452326ab
+
+	column REVENUE
+		dataType: double
+		isHidden
+		sourceColumn: REVENUE
+		lineageTag: col-06219fc8
+
+	column COST
+		dataType: double
+		isHidden
+		sourceColumn: COST
+		lineageTag: col-c024d3a1
+
+	column QUANTITY
+		dataType: int64
+		isHidden
+		sourceColumn: QUANTITY
+		lineageTag: col-81407e5f
+
+	column DISCOUNT
+		dataType: double
+		isHidden
+		sourceColumn: DISCOUNT
+		lineageTag: col-de208f15
+
+	column TAX
+		dataType: double
+		isHidden
+		sourceColumn: TAX
+		lineageTag: col-718dd157
+
+	measure 'Total Revenue' = SUM([Revenue])
+		formatString: $#,##0.00
+		displayFolder: Metrics
+		lineageTag: MC01
+
+	measure 'Total Cost' = SUM([Cost])
+		formatString: $#,##0.00
+		displayFolder: Metrics
+		lineageTag: MC02
+
+	measure 'Total Quantity' = SUM([Quantity])
+		formatString: #,##0
+		displayFolder: Metrics
+		lineageTag: MC03
+
+	measure 'Total Discount' = SUM([Discount])
+		formatString: $#,##0.00
+		displayFolder: Metrics
+		lineageTag: MC04
+
+	measure 'Total Tax' = SUM([Tax])
+		formatString: $#,##0.00
+		displayFolder: Metrics
+		lineageTag: MC05
+
+	measure 'Customer Count' = DISTINCTCOUNT([Customer])
+		formatString: #,##0
+		displayFolder: Metrics
+		lineageTag: MC09
+
+	measure 'Product Count' = DISTINCTCOUNT([Product])
+		formatString: #,##0
+		displayFolder: Metrics
+		lineageTag: MC10
+
+	measure Profit = SUM(Revenue) - SUM(Cost)
+		formatString: $#,##0.00
+		displayFolder: Metrics
+		lineageTag: MC11
+
+	measure 'Profit Margin' = (SUM(Revenue) - SUM(Cost)) / SUM(Revenue)
+		formatString: 0.0%
+		displayFolder: Metrics
+		lineageTag: MC12
+
+	measure 'Gross Revenue' = SUM(Revenue) - SUM(Discount)
+		formatString: $#,##0.00
+		displayFolder: Metrics
+		lineageTag: MC13
+
+	measure 'Net Revenue' = SUM(Revenue) - SUM(Cost) - SUM(Tax)
+		formatString: $#,##0.00
+		displayFolder: Metrics
+		lineageTag: MC14
+
+	measure 'Return Rate' = SUM(Return Qty) / SUM(Quantity)
+		formatString: 0.0%
+		displayFolder: Metrics
+		lineageTag: MC15
+
+	measure 'Revenue per Customer' = SUM(Revenue) / Count<Distinct=True>(Customer)
+		formatString: $#,##0.00
+		displayFolder: Metrics
+		lineageTag: MC16
+
+	measure 'Avg Order Value' = SUM(Revenue) / COUNT(SALE_ID)
+		formatString: $#,##0.00
+		displayFolder: Metrics
+		lineageTag: MC17
+
+	measure 'Discount Rate' = SUM(Discount) / SUM(Revenue)
+		formatString: 0.0%
+		displayFolder: Metrics
+		lineageTag: MC18
+
+	measure 'Revenue Rank' = RANKX(ALLSELECTED(), SUM(Revenue,, DESC, SKIP)
+		formatString: #,##0.00
+		displayFolder: Derived
+		lineageTag: DC01
+
+	measure 'Running Revenue' = ```
+			CALCULATE(
+			    SUM(Revenue,
+			    WINDOW(1, ABS, 0, REL, ALLSELECTED(), ORDERBY([SortColumn], ASC))
+			)
+			```
+		formatString: #,##0.00
+		displayFolder: Derived
+		lineageTag: DC02
+
+	measure 'Revenue MoM Change' = (SUM(Revenue) - Lag(SUM(Revenue), 1)) / Lag(SUM(Revenue), 1)
+		formatString: #,##0.00
+		displayFolder: Derived
+		lineageTag: DC03
+
+	measure '3M Moving Avg Revenue' = ```
+			VAR __rows = WINDOW(-2, REL, 0, REL, ALLSELECTED(), ORDERBY([Month], ASC))
+			RETURN
+			    AVERAGEX(__rows, SUM(Revenue))
+			```
+		formatString: #,##0.00
+		displayFolder: Derived
+		lineageTag: DC04
+
+	measure 'Revenue YoY' = (SUM(Revenue) - Lag(SUM(Revenue), 12, Month)) / Lag(SUM(Revenue), 12, Month)
+		formatString: #,##0.00
+		displayFolder: Derived
+		lineageTag: DC05
+
+	measure 'Profit NTile' = ```
+			VAR __rank = RANKX(ALLSELECTED(), SUM(Revenue) - SUM(Cost))
+			VAR __count = COUNTROWS(ALLSELECTED())
+			RETURN
+			    INT(CEILING(DIVIDE(__rank, __count) * 4, 1))
+			```
+		formatString: #,##0.00
+		displayFolder: Derived
+		lineageTag: DC06
+
+	measure 'Revenue Quartile' = ```
+			VAR __rank = RANKX(ALL(Region), SUM(Revenue))
+			VAR __count = COUNTROWS(ALL(Region))
+			RETURN
+			    INT(CEILING(DIVIDE(__rank, __count) * 4, 1))
+			```
+		formatString: #,##0.00
+		displayFolder: Derived
+		lineageTag: DC07
+
+
+	partition FACT_SALES = m
+		mode: import
+		expression:= ```
+			let
+			    Source = Oracle.Database("db-prod.company.com"),
+			    Table = Source{[Schema="SALES", Name="FACT_SALES"]}[Data]
+			in
+			    Table
+			```
