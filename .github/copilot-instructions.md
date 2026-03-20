@@ -155,3 +155,11 @@ python migrate.py --help
 - **Sensitivity classification**: Security-filter attributes → Purview sensitivity labels + pattern-based classification
 - **Governance report**: 6-category pre-migration checklist (ownership, classification, RLS, lineage, documentation, readiness) with scoring
 - CLI flags: `--lineage`, `--purview ACCOUNT`, `--governance`
+
+## v10.0 Features
+
+- **Property-based testing**: 100+ randomized invariant tests for expression converter, TMDL, visual generator, validator
+- **Fuzz testing**: 50+ adversarial input tests (malformed expressions, SQL injection, unicode, nested parens)
+- **Test generation from mappings**: Auto-generated parametrized tests from `_FUNCTION_MAP`, `_VIZ_TYPE_MAP`, `_DATA_TYPE_MAP`, `_GEO_ROLE_MAP` (181 test cases)
+- **Gap-filling tests**: Comprehensive tests for 20+ under-tested modules (semantic matcher, notebook generator, pipeline generator, dashboard, shared model, etc.)
+- **2,073 total tests**: From 885 pre-v10.0 → 2,073 (140% increase)
