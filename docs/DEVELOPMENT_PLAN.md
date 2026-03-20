@@ -1,9 +1,9 @@
 # Development Plan — MicroStrategy to Power BI / Fabric Migration Tool
 
-**Version:** v3.0.0 (released)  
+**Version:** v3.0.0 (released) → v4.0.0 (next)  
 **Date:** 2026-03-20  
 **Based on:** Tableau to Power BI Migration Tool (v17.0.0 architecture)  
-**Current state:** v3.0 complete — 623 tests passing, 11 new modules in v3.0
+**Current state:** v3.0 complete — 623 tests passing, 21 generation modules
 
 ---
 
@@ -465,13 +465,15 @@ These modules from `TableauToPowerBI/powerbi_import/` can be reused directly or 
 
 ## Milestones
 
-| Milestone | Sprints | Target | Deliverable |
-|-----------|---------|--------|-------------|
-| **M1 — Proof of Concept** | 1-3 | Sprint 3 | Extracts MSTR schema + converts basic metrics to DAX |
-| **M2 — Single Report** | 4-6 | Sprint 6 | Migrates one report/dossier → .pbip (opens in PBI Desktop) |
-| **M3 — Full Pipeline** | 7-9 | Sprint 9 | Complete extraction + generation + report + assessment |
-| **M4 — Enterprise Ready** | 10-13 | Sprint 13 | Deployment, shared models, batch, security |
-| **M5 — Production** | 14-15 | Sprint 15 | Hardened, documented, tested (target: 2000+ tests) |
+| Milestone | Sprints | Target | Deliverable | Status |
+|-----------|---------|--------|-------------|--------|
+| **M1 — Proof of Concept** | 1-3 | Sprint 3 | Extracts MSTR schema + converts basic metrics to DAX | ✅ v1.0 |
+| **M2 — Single Report** | 4-6 | Sprint 6 | Migrates one report/dossier → .pbip (opens in PBI Desktop) | ✅ v1.0 |
+| **M3 — Full Pipeline** | 7-9 | Sprint 9 | Complete extraction + generation + report + assessment | ✅ v1.0 |
+| **M4 — Enterprise Ready** | 10-13 | Sprint 13 | Deployment, shared models, batch, security | ✅ v1.0 |
+| **M5 — Production Tooling** | F-L | v2.0 | CI/CD, wizard, DAX depth, parallel, incremental, dashboard | ✅ v2.0 |
+| **M6 — Enterprise Assessment** | F-K | v3.0 | 14-category assessment, strategy, comparison, telemetry, plugins | ✅ v3.0 |
+| **M7 — Production Maturity** | L-Q | v4.0 | OLAP hardening, merge consolidation, scale, scorecard→goals, 1000+ tests | 🔜 v4.0 |
 
 ---
 
@@ -485,3 +487,156 @@ These modules from `TableauToPowerBI/powerbi_import/` can be reused directly or 
 | API version differences (10.x vs 11.x vs 2021+) | Missing endpoints | Version detection + fallback paths |
 | Large project scale (10,000+ objects) | Memory/time constraints | Streaming extraction, parallel processing |
 | ApplySimple SQL diversity | Database-specific SQL not convertible | Classify common patterns, fallback to NativeQuery |
+
+---
+---
+
+# v4.0 Development Plan — Production Maturity
+
+**Target:** v4.0.0  
+**Theme:** OLAP hardening, merge consolidation, scale optimization, scorecard→goals, 1,000+ tests  
+**Prerequisite:** v3.0.0 complete (623 tests, 21 generation modules)
+
+---
+
+## Phase 4 — Production Maturity (Sprints L–Q)
+
+### Sprint L — OLAP Metric Hardening ✨CRITICAL
+
+**Goal:** Raise derived metric (OLAP) fidelity from ~80% (approximated) to ~98% (full DAX). This is the #1 gap identified by v3.0 assessments.
+
+| # | Item | File(s) | Est. | Details |
+|---|------|---------|------|---------|
+| L.1 | **RunningSum → DAX WINDOW** | `expression_converter.py` | High | Replace placeholder VAR pattern with proper `WINDOW(1, ABS, 0, REL, ...)` for accurate running totals. Handle multi-attribute sort keys. |
+| L.2 | **RunningAvg → DAX WINDOW** | `expression_converter.py` | High | `WINDOW` with averaging over expanding range. Handle partition-by attributes. |
+| L.3 | **MovingAvg → OFFSET range** | `expression_converter.py` | High | `MovingAvg(Metric, N)` → `AVERAGEX(OFFSET(..., -N+1, ..., N), [Metric])`. Handle edge cases: window at start, null handling. |
+| L.4 | **Rank with ties** | `expression_converter.py` | Medium | `Rank` with `{attr}` → `RANKX(ALL(T), [M], , ASC, DENSE)`. Support ASC/DESC, DENSE/SKIP tie handling. |
+| L.5 | **NTile partitioning** | `expression_converter.py` | Medium | `NTile(Metric, N) {Attr}` → RANKX-based quartile/decile pattern with `CEILING(DIVIDE(RANKX(...), COUNTROWS(...)) * N)`. |
+| L.6 | **FirstInRange / LastInRange** | `expression_converter.py` | Medium | `FirstInRange(Metric) {Attr}` → `CALCULATE([M], TOPN(1, ALL(T), T[SortCol], ASC))`. |
+| L.7 | **Nested OLAP metrics** | `expression_converter.py` | Very High | `Rank(RunningSum(Revenue))` → resolved inner-to-outer. Use DAX variables for intermediate results. Detect circular references. |
+| L.8 | **ApplyOLAP passthrough** | `expression_converter.py` | High | Parse `ApplyOLAP("function", args)` → attempt DAX conversion. Common: `LAG`, `LEAD`, `ROW_NUMBER`, `DENSE_RANK`, `SUM OVER (PARTITION BY ... ORDER BY ...)`. |
+| L.9 | **OLAP fidelity tests** | `tests/test_olap_metrics.py` | High | 60+ parametrized tests: every OLAP function × simple/nested/partitioned × edge cases. Target: 98% fidelity on test corpus. |
+
+**Success criteria:** Running `--assess` on a complex MSTR project shows <2% metrics flagged as `manual_review` (was ~5-10%).
+
+---
+
+### Sprint M — Merge & Consolidation Tools
+
+**Goal:** Enable multi-project migrations where many MSTR projects share schema objects. Consolidate into minimal shared semantic models.
+
+| # | Item | File(s) | Est. | Details |
+|---|------|---------|------|---------|
+| M.1 | **Merge assessment** | `powerbi_import/merge_assessment.py` | High | Analyze N projects: common attributes, shared facts, overlapping metrics. Score merge candidates. Output: JSON report with overlap matrix, recommended groupings. |
+| M.2 | **Merge configuration** | `powerbi_import/merge_config.py` | Medium | User-editable JSON config: which projects merge, field name normalizations, conflict resolution rules (rename, alias, drop). |
+| M.3 | **Multi-project merge execution** | `powerbi_import/shared_model.py` | Very High | Extend `shared_model.py`: accept N intermediate JSON sets → deduplicate attributes/facts/metrics → generate one consolidated TMDL model. Handle column name collisions. |
+| M.4 | **Merge impact report** | `powerbi_import/merge_report_html.py` | Medium | HTML report: merged vs. not-merged objects, naming conflicts resolved, thin report bindings per project. Visual overlap heatmap. |
+| M.5 | **Thin report per source project** | `powerbi_import/thin_report_generator.py` | Medium | Extend: each source dossier/report → thin report bound to merged model. Validate all bindings resolve. |
+| M.6 | **CLI: `--merge DIR`** | `migrate.py` | Low | `--merge ./projects/` → scan all subdirectories as separate migrations → merge into consolidated output. |
+| M.7 | **Tests** | `tests/test_merge.py` | High | 40+ tests: overlap detection, conflict resolution, merged TMDL correctness, thin report bindings, edge cases (empty projects, no overlap). |
+
+---
+
+### Sprint N — Advanced Dossier Features
+
+**Goal:** Close the dossier layout fidelity gap. Handle panel stacks, nested selectors, info windows, and theme CSS.
+
+| # | Item | File(s) | Est. | Details |
+|---|------|---------|------|---------|
+| N.1 | **Deep panel stacks** | `visual_generator.py` | High | Nested panel stacks (tabs within tabs) → PBI bookmark groups with toggle buttons. Auto-generate bookmark definitions + button visuals. |
+| N.2 | **Info windows → Tooltip pages** | `visual_generator.py` | Medium | MSTR info windows → PBI tooltip report pages. Map viz-in-tooltip content to tooltip-sized page (320×240). |
+| N.3 | **Selector controls → Field parameters** | `visual_generator.py`, `tmdl_generator.py` | High | Attribute/metric selectors → PBI field parameter tables with `NAMEOF()` DAX. Generate parameter table TMDL + slicer visual. |
+| N.4 | **URL actions → Drillthrough** | `visual_generator.py` | Medium | MSTR URL link actions → PBI drillthrough pages or web URL buttons. Preserve target parameters. |
+| N.5 | **Dossier themes → Report theme JSON** | `powerbi_import/theme_generator.py` | Medium | Extract MSTR color palettes, font settings → PBI `reportTheme.json`. Map primary/secondary/accent colors. |
+| N.6 | **Layout pixel accuracy** | `visual_generator.py` | High | Improve proportional scaling: use MSTR canvas dimensions directly, apply aspect-ratio-preserving layout. Handle multi-chapter page sizes. |
+| N.7 | **Tests** | `tests/test_dossier_advanced.py` | Medium | 30+ tests: panel stacks (nested), tooltips, selectors, themes, layout accuracy, URL actions. |
+
+---
+
+### Sprint O — Scorecard → Power BI Goals
+
+**Goal:** Migrate MicroStrategy scorecards (KPIs, targets, statuses) to Power BI Goals API. New extraction + generation modules.
+
+| # | Item | File(s) | Est. | Details |
+|---|------|---------|------|---------|
+| O.1 | **Scorecard extraction** | `microstrategy_export/scorecard_extractor.py` | High | `GET /api/v2/documents/{id}` for scorecard documents. Extract: KPI name, current value metric, target metric, status thresholds (on-track/at-risk/behind), owner, time period, initiative links. Map to `scorecards.json`. |
+| O.2 | **Goals generation** | `powerbi_import/goals_generator.py` | High | Convert scorecards → Power BI Goals API payload: `POST /v1.0/myorg/groups/{groupId}/scorecards`. Map: KPI→goal, target→goal target, status→goal status rules, owner→goal owner. |
+| O.3 | **Scorecard visual fallback** | `powerbi_import/visual_generator.py` | Medium | When Goals API not available: scorecard → PBI KPI/card visuals with conditional formatting matching status thresholds. |
+| O.4 | **CLI: `--scorecards`** | `migrate.py` | Low | Flag to include scorecard extraction + goals generation. Requires Power BI REST API permissions. |
+| O.5 | **Tests** | `tests/test_scorecard.py` | Medium | 20+ tests: scorecard extraction, goals payload generation, status threshold mapping, visual fallback. |
+
+---
+
+### Sprint P — Scale & Performance Optimization
+
+**Goal:** Validate and optimize for large MSTR projects (1,000–10,000+ objects). Add benchmarking suite.
+
+| # | Item | File(s) | Est. | Details |
+|---|------|---------|------|---------|
+| P.1 | **Large fixture generation** | `tests/fixtures/large/` | Medium | Script to generate synthetic MSTR API fixtures: 500 attributes, 1,000 metrics, 100 reports, 50 dossiers. Parametrized scale factor. |
+| P.2 | **Memory profiling** | `tests/test_scale.py` | Medium | `tracemalloc` peak memory tests: extraction <500 MB for 10K objects, generation <200 MB. Fail if thresholds exceeded. |
+| P.3 | **Streaming generation** | `powerbi_import/tmdl_generator.py`, `visual_generator.py` | High | Stream TMDL output file-by-file instead of building full model in memory. Yield-based generation for pages/visuals. |
+| P.4 | **Parallel generation** | `microstrategy_export/parallel.py` | Medium | Extend parallel generation: each report/dossier → separate thread. Shared model lock for merge operations. |
+| P.5 | **Benchmark suite** | `tests/benchmarks/` | Medium | `pytest-benchmark` markers: extraction throughput (objects/sec), generation throughput (files/sec), expression conversion rate. Track over time. |
+| P.6 | **CI benchmark gates** | `.github/workflows/ci.yml` | Low | Benchmark comparison in CI: fail if throughput drops >20% from baseline. |
+| P.7 | **Tests** | `tests/test_scale.py` | High | 20+ tests: 1K/5K/10K object scale, memory bounds, parallel correctness, streaming vs. batch equivalence. |
+
+---
+
+### Sprint Q — E2E Regression & Certification
+
+**Goal:** Build a comprehensive snapshot-based regression suite and migration certification framework.
+
+| # | Item | File(s) | Est. | Details |
+|---|------|---------|------|---------|
+| Q.1 | **Snapshot expansion** | `tests/fixtures/expected_output/` | High | Expand from 4 snapshots to 20+: every TMDL table type, every visual JSON type, M query variants, full .pbip structure. Auto-update mechanism (`--snapshot-update`). |
+| Q.2 | **Visual fidelity tests** | `tests/test_visual_fidelity.py` | High | For each of 30+ visual types: generate from fixture → compare JSON output against baseline. Detect unintended field/property changes. |
+| Q.3 | **DAX equivalence tests** | `tests/test_dax_equivalence.py` | Very High | For top-50 expression patterns: generate DAX → evaluate against known values (using DAX.do API or tabular model). Verify numeric equivalence. |
+| Q.4 | **Migration certification report** | `powerbi_import/certification.py` | Medium | Post-migration certification: run all validators + comparison + visual diff → produce YES/NO certification with detailed findings. Score ≥95% = auto-certified. |
+| Q.5 | **Expert troubleshooting guide** | `docs/TROUBLESHOOTING.md` | Medium | Top-20 migration issues with root cause + fix. Generated from telemetry data patterns. |
+| Q.6 | **Tests** | Multiple test files | High | 100+ new tests across snapshots, fidelity, DAX equivalence. **Target: 1,000+ total tests.** |
+
+---
+
+## v4.0 Summary
+
+| Sprint | Theme | New Modules | New Tests | Priority |
+|--------|-------|-------------|-----------|----------|
+| **L** | OLAP Metric Hardening | — (extend `expression_converter.py`) | ~60 | ✨ CRITICAL |
+| **M** | Merge & Consolidation | `merge_assessment.py`, `merge_config.py`, `merge_report_html.py` | ~40 | HIGH |
+| **N** | Advanced Dossier Features | `theme_generator.py` | ~30 | MEDIUM |
+| **O** | Scorecard → Goals | `scorecard_extractor.py`, `goals_generator.py` | ~20 | MEDIUM |
+| **P** | Scale & Performance | `tests/benchmarks/`, `tests/fixtures/large/` | ~20 | HIGH |
+| **Q** | E2E Regression & Certification | `certification.py`, `docs/TROUBLESHOOTING.md` | ~100 | HIGH |
+
+**Totals:**
+- **5 new modules** + 1 new doc + extensions to 6 existing modules
+- **~270 new tests** → target: **~900 total** (623 + 270)
+- **4 new CLI flags**: `--merge`, `--scorecards`, `--certify`, `--benchmark`
+- **1,000+ test milestone** achievable with Sprint Q
+
+---
+
+## v4.0 Milestones
+
+| Milestone | Sprint | Deliverable |
+|-----------|--------|-------------|
+| **M7a — OLAP Maturity** | L | 98% metric conversion fidelity (was ~90%) |
+| **M7b — Multi-Project Merge** | M | N-project consolidation into shared models |
+| **M7c — Visual Fidelity** | N | Panel stacks, tooltips, themes, layout accuracy |
+| **M7d — Scorecard Migration** | O | MSTR scorecards → PBI Goals / KPI visuals |
+| **M7e — Enterprise Scale** | P | Validated at 10K objects, <500 MB memory |
+| **M7f — Certification** | Q | Auto-certification with 1,000+ regression tests |
+
+---
+
+## v4.0 Risk Register
+
+| Risk | Impact | Mitigation |
+|------|--------|------------|
+| DAX WINDOW function complexity | OLAP conversion may produce incorrect results for edge cases | Extensive parametrized testing with known values; DAX equivalence validation |
+| Multi-project merge conflicts | Attribute/metric name collisions across projects | User-configurable conflict resolution; merge preview report before execution |
+| Scorecard API availability | Power BI Goals API may require Premium/PPU capacity | Dual-path: Goals API if available, KPI visuals as fallback |
+| Scale testing infrastructure | Large fixtures slow CI pipeline | Separate benchmark CI job; scale tests only on demand (`--benchmark` marker) |
+| Snapshot maintenance burden | 20+ snapshots need updating on any generation change | Auto-update flag; snapshot diff in PR review; minimal snapshot scope |
+| MicroStrategy API version drift | MSTR 2024+ may introduce new endpoints | Version detection + graceful degradation; monitor REST API changelog |
