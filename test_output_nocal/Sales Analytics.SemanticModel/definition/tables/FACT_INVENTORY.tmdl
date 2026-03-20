@@ -1,0 +1,37 @@
+table FACT_INVENTORY
+	lineageTag: FF01256411D3E4C71000E787EC6DE8A4
+
+	column PRODUCT_ID
+		dataType: int64
+		isHidden
+		sourceColumn: PRODUCT_ID
+		lineageTag: col-4a7dab6f
+
+	column DATE_ID
+		dataType: dateTime
+		isHidden
+		sourceColumn: DATE_ID
+		lineageTag: col-9dc598c8
+
+	column UNITS_ON_HAND
+		dataType: int64
+		isHidden
+		sourceColumn: UNITS_ON_HAND
+		lineageTag: col-2fd6ae7b
+
+	column UNITS_ON_ORDER
+		dataType: int64
+		isHidden
+		sourceColumn: UNITS_ON_ORDER
+		lineageTag: col-cb695ac2
+
+
+	partition FACT_INVENTORY = m
+		mode: import
+		expression:= ```
+			let
+			    Source = Sql.Database("sql-prod-01.company.com", "SalesDB"),
+			    Table = Source{[Schema="dbo", Item="FACT_INVENTORY"]}[Data]
+			in
+			    Table
+			```

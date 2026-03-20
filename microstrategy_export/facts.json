@@ -1,0 +1,47 @@
+[
+  {
+    "id": "7A4ABE9111D5AC6FC000D98A4CC5F24F",
+    "name": "Revenue",
+    "description": "Total revenue from sales",
+    "expressions": [{"table": "FACT_SALES", "column": "REVENUE"}],
+    "data_type": "real",
+    "default_aggregation": "sum",
+    "format_string": "$#,##0.00"
+  },
+  {
+    "id": "7A4ABE9211D5AC6FC000D98A4CC5F24F",
+    "name": "Cost",
+    "description": "Cost of goods sold",
+    "expressions": [{"table": "FACT_SALES", "column": "COST"}],
+    "data_type": "real",
+    "default_aggregation": "sum",
+    "format_string": "$#,##0.00"
+  },
+  {
+    "id": "7A4ABE9311D5AC6FC000D98A4CC5F24F",
+    "name": "Quantity",
+    "description": "Units sold",
+    "expressions": [{"table": "FACT_SALES", "column": "QUANTITY"}],
+    "data_type": "integer",
+    "default_aggregation": "sum",
+    "format_string": "#,##0"
+  },
+  {
+    "id": "7A4ABE9411D5AC6FC000D98A4CC5F24F",
+    "name": "Discount",
+    "description": "Discount amount",
+    "expressions": [{"table": "FACT_SALES", "column": "DISCOUNT"}],
+    "data_type": "real",
+    "default_aggregation": "sum",
+    "format_string": "$#,##0.00"
+  },
+  {
+    "id": "7A4ABE9511D5AC6FC000D98A4CC5F24F",
+    "name": "Units On Hand",
+    "description": "Current inventory on hand",
+    "expressions": [{"table": "FACT_INVENTORY", "column": "UNITS_ON_HAND"}],
+    "data_type": "integer",
+    "default_aggregation": "sum",
+    "format_string": "#,##0"
+  }
+]

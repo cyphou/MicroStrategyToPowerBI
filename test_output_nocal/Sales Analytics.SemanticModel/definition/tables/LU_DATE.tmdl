@@ -1,0 +1,66 @@
+table LU_DATE
+	lineageTag: AB89134211D3E4A51000E787EC6DE8A4
+
+	column DATE_ID
+		dataType: dateTime
+		isHidden
+		isKey
+		sourceColumn: DATE_ID
+		lineageTag: col-da7ce323
+
+	column DAY_OF_WEEK
+		dataType: string
+		sourceColumn: DAY_OF_WEEK
+		lineageTag: col-7c860c10
+
+	column Month
+		dataType: string
+		sourceColumn: MONTH_NAME
+		lineageTag: col-16a255b3
+
+	column MONTH_ID
+		dataType: int64
+		isHidden
+		sourceColumn: MONTH_ID
+		lineageTag: col-f73b9243
+
+	column QUARTER_ID
+		dataType: int64
+		sourceColumn: QUARTER_ID
+		lineageTag: col-c5f77457
+
+	column YEAR_ID
+		dataType: int64
+		isHidden
+		sourceColumn: YEAR_ID
+		lineageTag: col-372d4c34
+
+	hierarchy Time
+		lineageTag: hier-e1229256
+
+		level Year
+			column: YEAR_ID
+			lineageTag: hier-3d1c1d54
+
+		level Quarter
+			column: QUARTER_ID
+			lineageTag: hier-ded66235
+
+		level Month
+			column: Month
+			lineageTag: hier-65c33049
+
+		level 'Order Date'
+			column: DATE_ID
+			lineageTag: hier-b165e117
+
+
+	partition LU_DATE = m
+		mode: import
+		expression:= ```
+			let
+			    Source = Sql.Database("sql-prod-01.company.com", "SalesDB"),
+			    Table = Source{[Schema="dbo", Item="LU_DATE"]}[Data]
+			in
+			    Table
+			```

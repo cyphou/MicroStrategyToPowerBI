@@ -1,0 +1,206 @@
+[
+  {
+    "id": "D4E5F60711E7A890001122334455DD11",
+    "name": "Sales Executive Dashboard",
+    "description": "Executive-level dashboard with KPIs, trends, and breakdowns",
+    "chapters": [
+      {
+        "key": "K52_ch_01",
+        "name": "Overview",
+        "pages": [
+          {
+            "key": "K52_pg_01",
+            "name": "KPI Summary",
+            "visualizations": [
+              {
+                "key": "K52_viz_01",
+                "name": "Revenue KPI",
+                "viz_type": "kpi",
+                "mstr_viz_type": "kpi",
+                "pbi_visual_type": "kpi",
+                "data": {"attributes": [], "metrics": [{"id": "4C051DB611D3E877C000B3B2D86C964F", "name": "Total Revenue"}]},
+                "formatting": {"showTrend": true, "numberFormat": "$#,##0"},
+                "thresholds": [],
+                "position": {"x": 0, "y": 0, "width": 320, "height": 200},
+                "actions": [],
+                "info_window": null
+              },
+              {
+                "key": "K52_viz_04",
+                "name": "Revenue Trend",
+                "viz_type": "line",
+                "mstr_viz_type": "line_chart",
+                "pbi_visual_type": "lineChart",
+                "data": {
+                  "attributes": [{"id": "8D679D5711D3E4981000E787EC6DE8A4", "name": "Month"}],
+                  "metrics": [
+                    {"id": "4C051DB611D3E877C000B3B2D86C964F", "name": "Total Revenue"},
+                    {"id": "4C051DB711D3E877C000B3B2D86C964F", "name": "Total Cost"}
+                  ]
+                },
+                "formatting": {"showDataLabels": false, "showLegend": true},
+                "thresholds": [],
+                "position": {"x": 0, "y": 220, "width": 660, "height": 380},
+                "actions": [],
+                "info_window": null
+              },
+              {
+                "key": "K52_viz_05",
+                "name": "Revenue by Category",
+                "viz_type": "pie",
+                "mstr_viz_type": "pie_chart",
+                "pbi_visual_type": "pieChart",
+                "data": {
+                  "attributes": [{"id": "8D679D4611D3E4981000E787EC6DE8A4", "name": "Category"}],
+                  "metrics": [{"id": "4C051DB611D3E877C000B3B2D86C964F", "name": "Total Revenue"}]
+                },
+                "formatting": {"showDataLabels": true, "showPercentage": true},
+                "thresholds": [],
+                "position": {"x": 680, "y": 220, "width": 320, "height": 380},
+                "actions": [],
+                "info_window": null
+              }
+            ],
+            "panel_stacks": [],
+            "selectors": [],
+            "layout": {"width": 1024, "height": 768}
+          },
+          {
+            "key": "K52_pg_02",
+            "name": "Regional Analysis",
+            "visualizations": [
+              {
+                "key": "K52_viz_07",
+                "name": "Top Customers by Revenue",
+                "viz_type": "grid",
+                "mstr_viz_type": "grid_visualization",
+                "pbi_visual_type": "tableEx",
+                "data": {
+                  "attributes": [
+                    {"id": "8D679D3511D3E4981000E787EC6DE8A4", "name": "Customer"},
+                    {"id": "8D679D3711D3E4981000E787EC6DE8A4", "name": "Customer Region"}
+                  ],
+                  "metrics": [
+                    {"id": "4C051DB611D3E877C000B3B2D86C964F", "name": "Total Revenue"},
+                    {"id": "4C051DB811D3E877C000B3B2D86C964F", "name": "Profit"},
+                    {"id": "4C051DBD11D3E877C000B3B2D86C964F", "name": "Revenue Rank"}
+                  ]
+                },
+                "formatting": {"showBanding": true, "maxRows": 25},
+                "thresholds": [],
+                "position": {"x": 0, "y": 0, "width": 1000, "height": 400},
+                "actions": [],
+                "info_window": null
+              },
+              {
+                "key": "K52_viz_08",
+                "name": "Region Revenue Bar",
+                "viz_type": "vertical_bar",
+                "mstr_viz_type": "vertical_bar_chart",
+                "pbi_visual_type": "clusteredColumnChart",
+                "data": {
+                  "attributes": [{"id": "8D679D3711D3E4981000E787EC6DE8A4", "name": "Customer Region"}],
+                  "metrics": [
+                    {"id": "4C051DB611D3E877C000B3B2D86C964F", "name": "Total Revenue"},
+                    {"id": "4C051DB711D3E877C000B3B2D86C964F", "name": "Total Cost"}
+                  ]
+                },
+                "formatting": {"showDataLabels": true, "stacked": false},
+                "thresholds": [],
+                "position": {"x": 0, "y": 420, "width": 1000, "height": 280},
+                "actions": [],
+                "info_window": null
+              }
+            ],
+            "panel_stacks": [],
+            "selectors": [
+              {
+                "key": "K52_sel_01",
+                "name": "Year Selector",
+                "type": "attribute_element",
+                "attribute": {"id": "8D679D5511D3E4981000E787EC6DE8A4", "name": "Year"},
+                "multi_select": false,
+                "style": "dropdown"
+              }
+            ],
+            "layout": {"width": 1024, "height": 768}
+          }
+        ]
+      },
+      {
+        "key": "K52_ch_02",
+        "name": "Product Deep Dive",
+        "pages": [
+          {
+            "key": "K52_pg_03",
+            "name": "Product Performance",
+            "visualizations": [
+              {
+                "key": "K52_viz_09",
+                "name": "Product Revenue vs Quantity Scatter",
+                "viz_type": "scatter",
+                "mstr_viz_type": "scatter_plot",
+                "pbi_visual_type": "scatterChart",
+                "data": {
+                  "attributes": [{"id": "8D679D4511D3E4981000E787EC6DE8A4", "name": "Product"}],
+                  "metrics": [
+                    {"id": "4C051DB611D3E877C000B3B2D86C964F", "name": "Total Revenue"},
+                    {"id": "4C051DBC11D3E877C000B3B2D86C964F", "name": "Customer Count"}
+                  ]
+                },
+                "formatting": {"showTrendLine": true},
+                "thresholds": [],
+                "position": {"x": 0, "y": 0, "width": 500, "height": 400},
+                "actions": [],
+                "info_window": null
+              },
+              {
+                "key": "K52_viz_10",
+                "name": "Category Breakdown Treemap",
+                "viz_type": "treemap",
+                "mstr_viz_type": "tree_map",
+                "pbi_visual_type": "treemap",
+                "data": {
+                  "attributes": [
+                    {"id": "8D679D4611D3E4981000E787EC6DE8A4", "name": "Category"},
+                    {"id": "8D679D4511D3E4981000E787EC6DE8A4", "name": "Product"}
+                  ],
+                  "metrics": [{"id": "4C051DB611D3E877C000B3B2D86C964F", "name": "Total Revenue"}]
+                },
+                "formatting": {"showLabels": true},
+                "thresholds": [],
+                "position": {"x": 520, "y": 0, "width": 480, "height": 400},
+                "actions": [],
+                "info_window": null
+              }
+            ],
+            "panel_stacks": [],
+            "selectors": [],
+            "layout": {"width": 1024, "height": 768}
+          }
+        ]
+      }
+    ],
+    "filter_panels": [
+      {
+        "key": "K52_gfp_01",
+        "name": "Global Year Filter",
+        "attribute": {"id": "8D679D5511D3E4981000E787EC6DE8A4", "name": "Year"},
+        "default_selection": ["2025"]
+      }
+    ],
+    "themes": {
+      "color_palette": ["#1F77B4", "#FF7F0E", "#2CA02C", "#D62728", "#9467BD"],
+      "font_family": "Segoe UI"
+    },
+    "prompts": [
+      {
+        "id": "prompt_01",
+        "name": "Select Region",
+        "type": "element",
+        "required": false,
+        "attribute_name": "Customer Region"
+      }
+    ]
+  }
+]

@@ -1,0 +1,134 @@
+table FACT_SALES
+	lineageTag: BC90245311D3E4B61000E787EC6DE8A4
+
+	column CUSTOMER_ID
+		dataType: int64
+		isHidden
+		sourceColumn: CUSTOMER_ID
+		lineageTag: col-e54622c8
+
+	column PRODUCT_ID
+		dataType: int64
+		isHidden
+		sourceColumn: PRODUCT_ID
+		lineageTag: col-20b5bf3f
+
+	column DATE_ID
+		dataType: dateTime
+		isHidden
+		sourceColumn: DATE_ID
+		lineageTag: col-1a9a96f8
+
+	column REVENUE
+		dataType: double
+		isHidden
+		sourceColumn: REVENUE
+		lineageTag: col-06219fc8
+
+	column COST
+		dataType: double
+		isHidden
+		sourceColumn: COST
+		lineageTag: col-c024d3a1
+
+	column QUANTITY
+		dataType: int64
+		isHidden
+		sourceColumn: QUANTITY
+		lineageTag: col-81407e5f
+
+	column DISCOUNT
+		dataType: double
+		isHidden
+		sourceColumn: DISCOUNT
+		lineageTag: col-de208f15
+
+	column ORDER_ID
+		dataType: string
+		isHidden
+		sourceColumn: ORDER_ID
+		lineageTag: col-176a1980
+
+	column REGION_ID
+		dataType: int64
+		isHidden
+		sourceColumn: REGION_ID
+		lineageTag: col-f19996f2
+
+	measure 'Total Revenue' = SUM([Revenue])
+		formatString: $#,##0.00
+		displayFolder: Sales Metrics
+		lineageTag: 4C051DB611D3E877C000B3B2D86C964F
+
+	measure 'Total Cost' = SUM([Cost])
+		formatString: $#,##0.00
+		displayFolder: Sales Metrics
+		lineageTag: 4C051DB711D3E877C000B3B2D86C964F
+
+	measure Profit = SUM(Revenue) - SUM(Cost)
+		formatString: $#,##0.00
+		displayFolder: Sales Metrics
+		lineageTag: 4C051DB811D3E877C000B3B2D86C964F
+
+	measure 'Profit Margin' = (SUM(Revenue) - SUM(Cost)) / SUM(Revenue)
+		formatString: 0.00%
+		displayFolder: Sales Metrics
+		lineageTag: 4C051DB911D3E877C000B3B2D86C964F
+
+	measure 'Unit Price' = IF(ISBLANK(SUM(Revenue), 0, SUM(Revenue) / SUM(Quantity))
+		formatString: $#,##0.00
+		displayFolder: Sales Metrics
+		lineageTag: 4C051DBA11D3E877C000B3B2D86C964F
+
+	measure 'Avg Revenue per Customer' = SUM(Revenue) / COUNT(Distinct Customer)
+		formatString: $#,##0.00
+		displayFolder: Customer Metrics
+		lineageTag: 4C051DBB11D3E877C000B3B2D86C964F
+
+	measure 'Customer Count' = DISTINCTCOUNT([Customer])
+		formatString: #,##0
+		displayFolder: Customer Metrics
+		lineageTag: 4C051DBC11D3E877C000B3B2D86C964F
+
+	measure 'Revenue at Year Level' = SUM([Revenue])
+		formatString: $#,##0.00
+		displayFolder: Derived Metrics
+		lineageTag: 4C051DC011D3E877C000B3B2D86C964F
+
+	measure 'Safe Divide Revenue' = ```
+			/* MANUAL REVIEW: ApplySimple("CASE WHEN #1 = 0 THEN NULL ELSE #0 / #1 END") */
+			BLANK()
+			```
+		formatString: $#,##0.00
+		displayFolder: Sales Metrics
+		lineageTag: 4C051DC111D3E877C000B3B2D86C964F
+
+	measure 'Revenue Rank' = RANKX(ALL(Table), SUM(Revenue)
+		formatString: #,##0
+		displayFolder: Derived Metrics
+		lineageTag: 4C051DBD11D3E877C000B3B2D86C964F
+
+	measure 'Running Revenue' = ```
+			VAR __current = SUM(Revenue
+			RETURN
+			    __current /* RunningSum — requires WINDOW function or manual pattern */
+			```
+		formatString: $#,##0.00
+		displayFolder: Derived Metrics
+		lineageTag: 4C051DBE11D3E877C000B3B2D86C964F
+
+	measure 'Revenue YoY Change' = (SUM(Revenue) - Lag(SUM(Revenue), 1, Year)) / Lag(SUM(Revenue), 1, Year)
+		formatString: 0.00%
+		displayFolder: Derived Metrics
+		lineageTag: 4C051DBF11D3E877C000B3B2D86C964F
+
+
+	partition FACT_SALES = m
+		mode: import
+		expression:= ```
+			let
+			    Source = Sql.Database("sql-prod-01.company.com", "SalesDB"),
+			    Table = Source{[Schema="dbo", Item="FACT_SALES"]}[Data]
+			in
+			    Table
+			```

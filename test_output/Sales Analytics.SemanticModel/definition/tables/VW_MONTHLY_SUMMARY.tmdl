@@ -1,0 +1,52 @@
+table VW_MONTHLY_SUMMARY
+	lineageTag: GG12367511D3E4D81000E787EC6DE8A4
+
+	column CUSTOMER_ID
+		dataType: int64
+		sourceColumn: CUSTOMER_ID
+		lineageTag: col-cc8191c5
+
+	column CUSTOMER_NAME
+		dataType: string
+		sourceColumn: CUSTOMER_NAME
+		lineageTag: col-b2667cb5
+
+	column PRODUCT_ID
+		dataType: int64
+		sourceColumn: PRODUCT_ID
+		lineageTag: col-8301fca2
+
+	column PRODUCT_NAME
+		dataType: string
+		sourceColumn: PRODUCT_NAME
+		lineageTag: col-ca77a452
+
+	column MONTH_ID
+		dataType: int64
+		sourceColumn: MONTH_ID
+		lineageTag: col-d0c69331
+
+	column YEAR_ID
+		dataType: int64
+		sourceColumn: YEAR_ID
+		lineageTag: col-14e77586
+
+	column MONTHLY_REVENUE
+		dataType: double
+		sourceColumn: MONTHLY_REVENUE
+		lineageTag: col-f981b613
+
+	column MONTHLY_QUANTITY
+		dataType: int64
+		sourceColumn: MONTHLY_QUANTITY
+		lineageTag: col-f9e33174
+
+	partition VW_MONTHLY_SUMMARY = m
+		mode: import
+		expression:= ```
+			let
+			    Source = Odbc.DataSource("DSN=sql-prod-01.company.com"),
+			    Query = Value.NativeQuery(Source, "SELECT c.CUSTOMER_ID, c.CUSTOMER_NAME, p.PRODUCT_ID, p.PRODUCT_NAME, d.MONTH_ID, d.YEAR_ID, SUM(s.REVENUE) AS MONTHLY_REVENUE, SUM(s.QUANTITY) AS MONTHLY_QUANTITY FROM FACT_SALES s JOIN LU_CUSTOMER c ON s.CUSTOMER_ID = c.CUSTOMER_ID JOIN LU_PRODUCT p ON s.PRODUCT_ID = p.PRODUCT_ID JOIN LU_DATE d ON s.DATE_ID = d.DATE_ID GROUP BY c.CUSTOMER_ID, c.CUSTOMER_NAME, p.PRODUCT_ID, p.PRODUCT_NAME, d.MONTH_ID, d.YEAR_ID")
+			in
+			    Query
+			```

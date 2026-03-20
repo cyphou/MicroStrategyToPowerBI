@@ -1,0 +1,127 @@
+[
+  {
+    "id": "8D679D3511D3E4981000E787EC6DE8A4",
+    "name": "Customer",
+    "description": "Customer dimension attribute",
+    "forms": [
+      {"name": "ID", "category": "ID", "data_type": "integer", "column_name": "CUSTOMER_ID", "table": "LU_CUSTOMER"},
+      {"name": "DESC", "category": "DESC", "data_type": "nVarChar", "column_name": "CUSTOMER_NAME", "table": "LU_CUSTOMER"},
+      {"name": "Email", "category": "none", "data_type": "nVarChar", "column_name": "CUSTOMER_EMAIL", "table": "LU_CUSTOMER"}
+    ],
+    "data_type": "integer",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [{"id": "8D679D3611D3E4981000E787EC6DE8A4", "name": "Customer City"}],
+    "lookup_table": "LU_CUSTOMER"
+  },
+  {
+    "id": "8D679D3611D3E4981000E787EC6DE8A4",
+    "name": "Customer City",
+    "description": "City of the customer",
+    "forms": [
+      {"name": "ID", "category": "ID", "data_type": "nVarChar", "column_name": "CUSTOMER_CITY", "table": "LU_CUSTOMER"}
+    ],
+    "data_type": "nVarChar",
+    "geographic_role": "city",
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [{"id": "8D679D3711D3E4981000E787EC6DE8A4", "name": "Customer Region"}],
+    "child_attributes": [],
+    "lookup_table": "LU_CUSTOMER"
+  },
+  {
+    "id": "8D679D3711D3E4981000E787EC6DE8A4",
+    "name": "Customer Region",
+    "description": "Customer region grouping",
+    "forms": [
+      {"name": "ID", "category": "ID", "data_type": "integer", "column_name": "REGION_ID", "table": "LU_CUSTOMER"}
+    ],
+    "data_type": "integer",
+    "geographic_role": "state_province",
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [{"id": "8D679D3611D3E4981000E787EC6DE8A4", "name": "Customer City"}],
+    "lookup_table": "LU_CUSTOMER"
+  },
+  {
+    "id": "8D679D4511D3E4981000E787EC6DE8A4",
+    "name": "Product",
+    "description": "Product dimension attribute",
+    "forms": [
+      {"name": "ID", "category": "ID", "data_type": "integer", "column_name": "PRODUCT_ID", "table": "LU_PRODUCT"},
+      {"name": "DESC", "category": "DESC", "data_type": "nVarChar", "column_name": "PRODUCT_NAME", "table": "LU_PRODUCT"}
+    ],
+    "data_type": "integer",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [{"id": "8D679D4611D3E4981000E787EC6DE8A4", "name": "Category"}],
+    "child_attributes": [],
+    "lookup_table": "LU_PRODUCT"
+  },
+  {
+    "id": "8D679D4611D3E4981000E787EC6DE8A4",
+    "name": "Category",
+    "description": "Product category",
+    "forms": [
+      {"name": "ID", "category": "ID", "data_type": "integer", "column_name": "CATEGORY_ID", "table": "LU_PRODUCT"},
+      {"name": "DESC", "category": "DESC", "data_type": "nVarChar", "column_name": "CATEGORY_NAME", "table": "LU_PRODUCT"}
+    ],
+    "data_type": "integer",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [{"id": "8D679D4511D3E4981000E787EC6DE8A4", "name": "Product"}],
+    "lookup_table": "LU_PRODUCT"
+  },
+  {
+    "id": "8D679D5511D3E4981000E787EC6DE8A4",
+    "name": "Year",
+    "description": "Year",
+    "forms": [
+      {"name": "ID", "category": "ID", "data_type": "integer", "column_name": "YEAR_ID", "table": "LU_DATE"}
+    ],
+    "data_type": "integer",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [{"id": "8D679D5611D3E4981000E787EC6DE8A4", "name": "Quarter"}],
+    "lookup_table": "LU_DATE"
+  },
+  {
+    "id": "8D679D5711D3E4981000E787EC6DE8A4",
+    "name": "Month",
+    "description": "Month",
+    "forms": [
+      {"name": "ID", "category": "ID", "data_type": "integer", "column_name": "MONTH_ID", "table": "LU_DATE"},
+      {"name": "DESC", "category": "DESC", "data_type": "nVarChar", "column_name": "MONTH_NAME", "table": "LU_DATE"}
+    ],
+    "data_type": "integer",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [{"id": "8D679D5611D3E4981000E787EC6DE8A4", "name": "Quarter"}],
+    "child_attributes": [],
+    "lookup_table": "LU_DATE"
+  },
+  {
+    "id": "8D679D5811D3E4981000E787EC6DE8A4",
+    "name": "Order Date",
+    "description": "Date of the order",
+    "forms": [
+      {"name": "ID", "category": "ID", "data_type": "date", "column_name": "DATE_ID", "table": "LU_DATE"}
+    ],
+    "data_type": "date",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [{"id": "8D679D5711D3E4981000E787EC6DE8A4", "name": "Month"}],
+    "child_attributes": [],
+    "lookup_table": "LU_DATE"
+  }
+]

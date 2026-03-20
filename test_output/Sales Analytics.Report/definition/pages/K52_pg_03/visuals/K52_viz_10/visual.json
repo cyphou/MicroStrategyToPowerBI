@@ -1,0 +1,30 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.5.0/schema.json",
+  "name": "K52_viz_10",
+  "position": {
+    "x": 650,
+    "y": 0,
+    "width": 600,
+    "height": 375,
+    "z": 0,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "treemap",
+    "objects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Category Breakdown Treemap'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -457,6 +457,117 @@ def _safe_filename(name):
     return re.sub(r'[<>:"/\\|?*]', '_', name).strip()
 
 
+# ── v4.0 feature runners ────────────────────────────────────────
+
+
+def run_merge(args):
+    """Run merge of N project directories into one shared model."""
+    from powerbi_import.shared_model import generate_merged_model
+
+    merge_dir = args.merge
+    if not os.path.isdir(merge_dir):
+        print(f"✗ Merge directory not found: {merge_dir}")
+        return
+
+    # Find subdirectories (each is a project)
+    project_dirs = [
+        os.path.join(merge_dir, d)
+        for d in sorted(os.listdir(merge_dir))
+        if os.path.isdir(os.path.join(merge_dir, d))
+    ]
+    if not project_dirs:
+        print(f"✗ No project subdirectories found in {merge_dir}")
+        return
+
+    print(f"  Merging {len(project_dirs)} projects from {merge_dir}")
+    result = generate_merged_model(
+        project_dirs, args.output_dir,
+        merge_config_path=getattr(args, 'merge_config', None),
+    )
+    viability = result.get("assessment", {}).get("viability", {})
+    print(f"  ✓ Merge complete: score={viability.get('score', 0)} "
+          f"rating={viability.get('rating', 'N/A')}")
+    print(f"  ✓ Report: {result.get('report_path', '')}")
+
+
+def run_scorecards(args):
+    """Extract scorecards and generate Goals payloads."""
+    from microstrategy_export.scorecard_extractor import parse_offline_scorecards
+    from powerbi_import.goals_generator import generate_goals
+
+    # Look for scorecards.json in extraction output
+    sc_path = os.path.join('microstrategy_export', 'scorecards.json')
+    if args.from_export:
+        sc_path = os.path.join(args.from_export, 'scorecards.json')
+
+    scorecards = parse_offline_scorecards(sc_path)
+    if not scorecards:
+        print("  ⚠ No scorecards found — skipping Goals generation")
+        return
+
+    goals_dir = os.path.join(args.output_dir, "goals")
+    stats = generate_goals(scorecards, goals_dir)
+    print(f"  ✓ Generated {stats['goals']} goals from {stats['scorecards']} scorecards")
+
+
+def run_certification(args):
+    """Run post-migration certification."""
+    from powerbi_import.certification import certify_migration
+
+    # Load intermediate data
+    data = _load_intermediate_data(args)
+    result = certify_migration(
+        data, args.output_dir,
+        threshold=getattr(args, 'certify_threshold', 80),
+    )
+    verdict = result["verdict"]
+    score = result["score"]
+    symbol = "✓" if verdict == "CERTIFIED" else "✗"
+    print(f"  {symbol} Certification: {verdict} (score={score}%)")
+
+
+def run_benchmark(args):
+    """Run performance benchmark on the generation pipeline."""
+    import time
+    from powerbi_import.import_to_powerbi import PowerBIImporter
+
+    data = _load_intermediate_data(args)
+    print("  Running generation benchmark...")
+
+    start = time.perf_counter()
+    importer = PowerBIImporter(source_dir='microstrategy_export/')
+    importer.generate(output_dir=args.output_dir)
+    elapsed = time.perf_counter() - start
+
+    n_metrics = len(data.get("metrics", [])) + len(data.get("derived_metrics", []))
+    n_reports = len(data.get("reports", []))
+    n_dossiers = len(data.get("dossiers", []))
+    print(f"  ✓ Benchmark: {elapsed:.2f}s for {n_metrics} metrics, "
+          f"{n_reports} reports, {n_dossiers} dossiers")
+
+
+def _load_intermediate_data(args):
+    """Load all intermediate JSON files for v4.0 features."""
+    import json as _json
+
+    source_dir = 'microstrategy_export/'
+    if getattr(args, 'from_export', None):
+        source_dir = args.from_export
+
+    data = {}
+    for fname in [
+        "datasources", "attributes", "facts", "metrics", "derived_metrics",
+        "reports", "dossiers", "cubes", "filters", "prompts", "custom_groups",
+        "consolidations", "hierarchies", "relationships", "security_filters",
+        "freeform_sql", "thresholds", "subtotals",
+    ]:
+        path = os.path.join(source_dir, f"{fname}.json")
+        if os.path.isfile(path):
+            with open(path, "r", encoding="utf-8") as f:
+                data[fname] = _json.load(f)
+    return data
+
+
 
 def print_summary():
     """Print migration summary."""
@@ -611,7 +722,22 @@ Examples:
     parser.add_argument('--config', help='Path to configuration JSON file')
 
     # Version
-    parser.add_argument('--version', action='version', version='%(prog)s 3.0.0')
+    parser.add_argument('--version', action='version', version='%(prog)s 4.0.0')
+
+    # v4.0 features
+    v4_group = parser.add_argument_group('v4.0 Features')
+    v4_group.add_argument('--merge', metavar='DIR',
+                         help='Merge N intermediate-JSON project directories into one shared model')
+    v4_group.add_argument('--merge-config', metavar='FILE',
+                         help='Path to merge-config.json for conflict resolution rules')
+    v4_group.add_argument('--scorecards', action='store_true',
+                         help='Extract and convert MicroStrategy scorecards to PBI Goals')
+    v4_group.add_argument('--certify', action='store_true',
+                         help='Run post-migration certification (PASS/FAIL verdict)')
+    v4_group.add_argument('--certify-threshold', type=int, default=80, metavar='PCT',
+                         help='Minimum fidelity %% for certification (default: 80)')
+    v4_group.add_argument('--benchmark', action='store_true',
+                         help='Run performance benchmark on the generation pipeline')
 
     return parser
 
@@ -682,6 +808,15 @@ def main():
             sys.exit(ExitCode.ASSESSMENT_FAILED)
         sys.exit(ExitCode.SUCCESS)
 
+    # Merge mode (no extraction needed)
+    if getattr(args, 'merge', None):
+        try:
+            run_merge(args)
+        except Exception as e:
+            logger.error("Merge failed: %s", e, exc_info=True)
+            sys.exit(ExitCode.GENERAL_ERROR)
+        sys.exit(ExitCode.SUCCESS)
+
     # Step 1: Extraction
     extraction_ok = run_extraction(args)
     if not extraction_ok:
@@ -740,7 +875,26 @@ def main():
             print("  ✓ Comparison report generated")
         except Exception as e:
             logger.warning("Comparison report failed: %s", e)
+    # Step 3c: Scorecards → Goals (optional, v4.0)
+    if getattr(args, 'scorecards', False):
+        try:
+            run_scorecards(args)
+        except Exception as e:
+            logger.warning("Scorecard conversion failed: %s", e)
 
+    # Step 3d: Certification (optional, v4.0)
+    if getattr(args, 'certify', False):
+        try:
+            run_certification(args)
+        except Exception as e:
+            logger.warning("Certification failed: %s", e)
+
+    # Step 3e: Benchmark (optional, v4.0)
+    if getattr(args, 'benchmark', False):
+        try:
+            run_benchmark(args)
+        except Exception as e:
+            logger.warning("Benchmark failed: %s", e)
     # Step 4: Deploy (optional)
     if args.deploy:
         deploy_ok = run_deploy(args)

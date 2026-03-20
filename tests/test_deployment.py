@@ -361,7 +361,8 @@ class TestExpressionHardening:
     def test_moving_sum(self):
         result = convert_mstr_expression_to_dax("MovingSum(Revenue, 3)")
         assert "SUMX" in result["dax"]
-        assert "3" in result["dax"]
+        assert "WINDOW" in result["dax"]
+        assert "-2, REL" in result["dax"]
 
     def test_apply_logic(self):
         result = convert_mstr_expression_to_dax('ApplyLogic("#0 > 0 AND #1 < 100", Revenue, Cost)')
@@ -377,8 +378,8 @@ class TestExpressionHardening:
 
     def test_apply_olap_manual_review(self):
         result = convert_mstr_expression_to_dax('ApplyOLAP("ROW_NUMBER() OVER (ORDER BY #0)", Revenue)')
-        assert result["fidelity"] == "manual_review"
-        assert "MANUAL REVIEW" in result["dax"]
+        assert "RANKX" in result["dax"]
+        assert result["fidelity"] in ("full", "approximated")
 
     def test_nested_metric_resolution(self):
         lookup = {"Revenue": "SUM(Sales[Revenue])", "Cost": "SUM(Sales[Cost])"}

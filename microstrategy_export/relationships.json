@@ -1,0 +1,52 @@
+[
+  {
+    "from_table": "LU_CUSTOMER",
+    "from_column": "CUSTOMER_ID",
+    "to_table": "FACT_SALES",
+    "to_column": "CUSTOMER_ID",
+    "type": "many_to_one",
+    "active": true,
+    "cross_filter": "single",
+    "source": "attribute_fact_join"
+  },
+  {
+    "from_table": "LU_PRODUCT",
+    "from_column": "PRODUCT_ID",
+    "to_table": "FACT_SALES",
+    "to_column": "PRODUCT_ID",
+    "type": "many_to_one",
+    "active": true,
+    "cross_filter": "single",
+    "source": "attribute_fact_join"
+  },
+  {
+    "from_table": "LU_DATE",
+    "from_column": "DATE_ID",
+    "to_table": "FACT_SALES",
+    "to_column": "DATE_ID",
+    "type": "many_to_one",
+    "active": true,
+    "cross_filter": "single",
+    "source": "attribute_fact_join"
+  },
+  {
+    "from_table": "LU_PRODUCT",
+    "from_column": "PRODUCT_ID",
+    "to_table": "FACT_INVENTORY",
+    "to_column": "PRODUCT_ID",
+    "type": "many_to_one",
+    "active": true,
+    "cross_filter": "single",
+    "source": "attribute_fact_join"
+  },
+  {
+    "from_table": "LU_DATE",
+    "from_column": "DATE_ID",
+    "to_table": "FACT_INVENTORY",
+    "to_column": "DATE_ID",
+    "type": "many_to_one",
+    "active": true,
+    "cross_filter": "single",
+    "source": "attribute_fact_join"
+  }
+]

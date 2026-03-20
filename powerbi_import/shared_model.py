@@ -5,6 +5,9 @@ Generates a single project-level semantic model that contains all tables,
 columns, measures, relationships, hierarchies, and RLS roles from the
 entire MicroStrategy project.  Thin reports can then reference this shared
 model via live connection.
+
+The ``generate_merged_model`` function (v4.0) extends this to accept N
+project directories and produce a unified merged semantic model.
 """
 
 import json
@@ -117,3 +120,52 @@ def _write_json(path, data):
 def _slugify(name):
     import re
     return re.sub(r'[^a-zA-Z0-9_-]', '_', name).lower()
+
+
+def generate_merged_model(project_dirs, output_dir, *, model_name="MergedModel",
+                          merge_config_path=None):
+    """Merge N intermediate-JSON project directories into one shared model.
+
+    1. Runs merge assessment for overlap/conflicts.
+    2. Applies merge config (renames, conflict resolution).
+    3. Generates a unified shared semantic model.
+
+    Args:
+        project_dirs: list of paths to intermediate-JSON directories.
+        output_dir: Root output directory.
+        model_name: Display name for the merged model.
+        merge_config_path: Optional path to merge-config.json.
+
+    Returns:
+        dict with merge_assessment and generation stats.
+    """
+    from powerbi_import.merge_assessment import run_merge_assessment, load_project_data
+    from powerbi_import.merge_config import load_merge_config, merge_project_data
+    from powerbi_import.merge_report_html import generate_merge_report
+
+    # Step 1: Assessment
+    assessment = run_merge_assessment(project_dirs)
+
+    # Step 2: Report
+    report_path = os.path.join(output_dir, "merge_report.html")
+    generate_merge_report(assessment, report_path)
+
+    # Step 3: Merge data
+    config = load_merge_config(merge_config_path)
+    projects = []
+    for d in project_dirs:
+        name = os.path.basename(d.rstrip("/\\"))
+        data = load_project_data(d)
+        projects.append((name, data))
+
+    merged_data = merge_project_data(projects, config)
+
+    # Step 4: Generate unified model
+    gen_stats = generate_shared_model(merged_data, output_dir, model_name=model_name)
+
+    logger.info("Merged model generated from %d projects", len(project_dirs))
+    return {
+        "assessment": assessment,
+        "generation": gen_stats,
+        "report_path": report_path,
+    }

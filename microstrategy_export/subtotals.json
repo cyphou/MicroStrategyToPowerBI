@@ -1,0 +1,14 @@
+[
+  {
+    "report_id": "A1B2C3D411E6F789001122334455AAEE",
+    "type": "grand_total",
+    "position": "bottom",
+    "function": "sum"
+  },
+  {
+    "report_id": "C3D4E5F611E6F789001122334455CC00",
+    "type": "subtotal",
+    "position": "bottom",
+    "function": "sum"
+  }
+]

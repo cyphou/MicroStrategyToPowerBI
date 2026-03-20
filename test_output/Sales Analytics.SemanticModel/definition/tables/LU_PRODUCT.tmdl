@@ -1,0 +1,57 @@
+table LU_PRODUCT
+	lineageTag: 9A78023111D3E49A1000E787EC6DE8A4
+
+	column PRODUCT_ID
+		dataType: int64
+		isHidden
+		sourceColumn: PRODUCT_ID
+		lineageTag: col-db5d207f
+
+	column Product
+		dataType: string
+		sourceColumn: PRODUCT_NAME
+		lineageTag: col-789944ef
+
+	column CATEGORY_ID
+		dataType: int64
+		isHidden
+		isKey
+		sourceColumn: CATEGORY_ID
+		lineageTag: col-44d31868
+
+	column Category
+		dataType: string
+		sourceColumn: CATEGORY_NAME
+		lineageTag: col-5c70e698
+
+	column BRAND
+		dataType: string
+		sourceColumn: BRAND
+		lineageTag: col-087978f3
+
+	column UNIT_PRICE
+		dataType: double
+		sourceColumn: UNIT_PRICE
+		lineageTag: col-0a0310e2
+
+	hierarchy 'Product Hierarchy'
+		lineageTag: hier-bc4ccfb0
+
+		level Category
+			column: Category
+			lineageTag: hier-c134167b
+
+		level Product
+			column: Product
+			lineageTag: hier-253ccfd2
+
+
+	partition LU_PRODUCT = m
+		mode: import
+		expression:= ```
+			let
+			    Source = Sql.Database("sql-prod-01.company.com", "SalesDB"),
+			    Table = Source{[Schema="dbo", Item="LU_PRODUCT"]}[Data]
+			in
+			    Table
+			```

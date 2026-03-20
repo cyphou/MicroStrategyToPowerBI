@@ -124,7 +124,7 @@ _FUNCTION_MAP = {
 }
 
 # Derived metric patterns (OLAP functions)
-_RE_RANK = re.compile(r'Rank\s*\((.+?)\)\s*(\{.+?\})?', re.IGNORECASE)
+_RE_RANK = re.compile(r'Rank\s*\((.+?)(?:,\s*(ASC|DESC))?(?:,\s*(DENSE))?\)\s*(\{.+?\})?', re.IGNORECASE)
 _RE_RUNNING_SUM = re.compile(r'RunningSum\s*\((.+?)\)\s*(\{.+?\})?', re.IGNORECASE)
 _RE_RUNNING_AVG = re.compile(r'RunningAvg\s*\((.+?)\)\s*(\{.+?\})?', re.IGNORECASE)
 _RE_MOVING_AVG = re.compile(r'MovingAvg\s*\((.+?),\s*(\d+)\)\s*(\{.+?\})?', re.IGNORECASE)
@@ -132,6 +132,10 @@ _RE_MOVING_SUM = re.compile(r'MovingSum\s*\((.+?),\s*(\d+)\)\s*(\{.+?\})?', re.I
 _RE_LAG = re.compile(r'Lag\s*\((.+?),\s*(\d+)\)\s*(\{.+?\})?', re.IGNORECASE)
 _RE_LEAD = re.compile(r'Lead\s*\((.+?),\s*(\d+)\)\s*(\{.+?\})?', re.IGNORECASE)
 _RE_NTILE = re.compile(r'NTile\s*\((.+?),\s*(\d+)\)\s*(\{.+?\})?', re.IGNORECASE)
+
+# FirstInRange / LastInRange
+_RE_FIRST_IN_RANGE = re.compile(r'FirstInRange\s*\((.+?),\s*(.+?)\)\s*(\{.+?\})?', re.IGNORECASE)
+_RE_LAST_IN_RANGE = re.compile(r'LastInRange\s*\((.+?),\s*(.+?)\)\s*(\{.+?\})?', re.IGNORECASE)
 
 # Banding patterns (MicroStrategy band groups)
 _RE_BAND = re.compile(
@@ -353,96 +357,162 @@ def convert_metric_to_dax(metric_def, context=None):
 def _try_derived_metric(expr, context):
     """Try to convert derived/OLAP metric expressions."""
 
-    # Rank
+    # Rank — supports ASC/DESC and DENSE options
     m = _RE_RANK.match(expr)
     if m:
         inner = m.group(1).strip()
-        attrs = _parse_level_spec(m.group(2)) if m.group(2) else []
+        order_dir = (m.group(2) or "DESC").upper()
+        is_dense = bool(m.group(3))
+        attrs = _parse_level_spec(m.group(4)) if m.group(4) else []
         inner_dax = _convert_standard_expression(inner, context)
+        rank_type = "DENSE" if is_dense else "SKIP"
         if attrs:
             return {
-                "dax": f"RANKX(ALL({attrs[0]}), {inner_dax})",
+                "dax": f"RANKX(ALL({attrs[0]}), {inner_dax},, {order_dir}, {rank_type})",
                 "fidelity": "full",
                 "warnings": [],
             }
         return {
-            "dax": f"RANKX(ALL(Table), {inner_dax})",
+            "dax": f"RANKX(ALLSELECTED(), {inner_dax},, {order_dir}, {rank_type})",
             "fidelity": "approximated",
-            "warnings": ["Rank dimension not specified — using ALL(Table)"],
+            "warnings": ["Rank dimension not specified — using ALLSELECTED()"],
         }
 
-    # RunningSum
+    # RunningSum — DAX WINDOW pattern
     m = _RE_RUNNING_SUM.match(expr)
     if m:
         inner = m.group(1).strip()
+        attrs = _parse_level_spec(m.group(2)) if m.group(2) else []
         inner_dax = _convert_standard_expression(inner, context)
+        sort_col = attrs[0] if attrs else "SortColumn"
+        fidelity = "full" if attrs else "approximated"
+        warnings = [] if attrs else ["RunningSum — verify sort column reference"]
         return {
-            "dax": f"VAR __current = {inner_dax}\nRETURN\n    __current /* RunningSum — requires WINDOW function or manual pattern */",
-            "fidelity": "approximated",
-            "warnings": ["RunningSum converted to placeholder — refine with WINDOW or CALCULATE pattern"],
+            "dax": (
+                f"CALCULATE(\n"
+                f"    {inner_dax},\n"
+                f"    WINDOW(1, ABS, 0, REL, ALLSELECTED(), ORDERBY([{sort_col}], ASC))\n"
+                f")"
+            ),
+            "fidelity": fidelity,
+            "warnings": warnings,
         }
 
-    # RunningAvg
+    # RunningAvg — DAX WINDOW pattern
     m = _RE_RUNNING_AVG.match(expr)
     if m:
         inner = m.group(1).strip()
+        attrs = _parse_level_spec(m.group(2)) if m.group(2) else []
         inner_dax = _convert_standard_expression(inner, context)
+        sort_col = attrs[0] if attrs else "SortColumn"
+        fidelity = "full" if attrs else "approximated"
+        warnings = [] if attrs else ["RunningAvg — verify sort column reference"]
         return {
-            "dax": f"VAR __current = {inner_dax}\nRETURN\n    __current /* RunningAvg — requires WINDOW function */",
-            "fidelity": "approximated",
-            "warnings": ["RunningAvg converted to placeholder — refine with WINDOW pattern"],
+            "dax": (
+                f"VAR __rows = WINDOW(1, ABS, 0, REL, ALLSELECTED(), ORDERBY([{sort_col}], ASC))\n"
+                f"RETURN\n"
+                f"    DIVIDE(SUMX(__rows, {inner_dax}), COUNTROWS(__rows))"
+            ),
+            "fidelity": fidelity,
+            "warnings": warnings,
         }
 
-    # MovingAvg
+    # MovingAvg — DAX WINDOW sliding range
     m = _RE_MOVING_AVG.match(expr)
     if m:
         inner = m.group(1).strip()
         window_size = m.group(2)
+        attrs = _parse_level_spec(m.group(3)) if m.group(3) else []
         inner_dax = _convert_standard_expression(inner, context)
+        sort_col = attrs[0] if attrs else "SortColumn"
+        offset_back = int(window_size) - 1
+        fidelity = "full" if attrs else "approximated"
+        warnings = [] if attrs else [f"MovingAvg({window_size}) — verify sort column reference"]
         return {
-            "dax": f"AVERAGEX(TOPN({window_size}, ALL(Table), [SortColumn], ASC), {inner_dax})",
-            "fidelity": "approximated",
-            "warnings": [f"MovingAvg({window_size}) — replace ALL(Table) and [SortColumn] with actual references"],
+            "dax": (
+                f"VAR __rows = WINDOW(-{offset_back}, REL, 0, REL, ALLSELECTED(), ORDERBY([{sort_col}], ASC))\n"
+                f"RETURN\n"
+                f"    AVERAGEX(__rows, {inner_dax})"
+            ),
+            "fidelity": fidelity,
+            "warnings": warnings,
         }
 
-    # Lag
+    # Lag — DAX OFFSET
     m = _RE_LAG.match(expr)
     if m:
         inner = m.group(1).strip()
         offset = m.group(2)
+        attrs = _parse_level_spec(m.group(3)) if m.group(3) else []
         inner_dax = _convert_standard_expression(inner, context)
+        sort_col = attrs[0] if attrs else "SortColumn"
+        fidelity = "full" if attrs else "approximated"
+        warnings = [] if attrs else [f"Lag({offset}) — verify sort column reference"]
         return {
-            "dax": f"OFFSET({inner_dax}, -{offset}, Table, ORDERBY([SortColumn]))",
-            "fidelity": "approximated",
-            "warnings": [f"Lag({offset}) — replace Table and [SortColumn] with actual references"],
+            "dax": f"CALCULATE({inner_dax}, OFFSET(-{offset}, ALLSELECTED(), ORDERBY([{sort_col}], ASC)))",
+            "fidelity": fidelity,
+            "warnings": warnings,
         }
 
-    # Lead
+    # Lead — DAX OFFSET
     m = _RE_LEAD.match(expr)
     if m:
         inner = m.group(1).strip()
         offset = m.group(2)
+        attrs = _parse_level_spec(m.group(3)) if m.group(3) else []
         inner_dax = _convert_standard_expression(inner, context)
+        sort_col = attrs[0] if attrs else "SortColumn"
+        fidelity = "full" if attrs else "approximated"
+        warnings = [] if attrs else [f"Lead({offset}) — verify sort column reference"]
         return {
-            "dax": f"OFFSET({inner_dax}, {offset}, Table, ORDERBY([SortColumn]))",
-            "fidelity": "approximated",
-            "warnings": [f"Lead({offset}) — replace Table and [SortColumn] with actual references"],
+            "dax": f"CALCULATE({inner_dax}, OFFSET({offset}, ALLSELECTED(), ORDERBY([{sort_col}], ASC)))",
+            "fidelity": fidelity,
+            "warnings": warnings,
         }
 
-    # NTile
+    # NTile — proper RANKX/COUNTROWS pattern
     m = _RE_NTILE.match(expr)
     if m:
         inner = m.group(1).strip()
         tiles = m.group(2)
+        attrs = _parse_level_spec(m.group(3)) if m.group(3) else []
         inner_dax = _convert_standard_expression(inner, context)
+        table_ref = f"ALL({attrs[0]})" if attrs else "ALLSELECTED()"
+        fidelity = "full" if attrs else "approximated"
+        warnings = [] if attrs else [f"NTile({tiles}) — verify table reference"]
         return {
             "dax": (
-                f"VAR __rank = RANKX(ALL(Table), {inner_dax})\n"
-                f"VAR __count = COUNTROWS(ALL(Table))\n"
-                f"RETURN INT((__rank - 1) * {tiles} / __count) + 1"
+                f"VAR __rank = RANKX({table_ref}, {inner_dax})\n"
+                f"VAR __count = COUNTROWS({table_ref})\n"
+                f"RETURN\n"
+                f"    INT(CEILING(DIVIDE(__rank, __count) * {tiles}, 1))"
             ),
-            "fidelity": "approximated",
-            "warnings": [f"NTile({tiles}) — replace ALL(Table) with correct table reference"],
+            "fidelity": fidelity,
+            "warnings": warnings,
+        }
+
+    # FirstInRange
+    m = _RE_FIRST_IN_RANGE.match(expr)
+    if m:
+        metric = m.group(1).strip()
+        sort_col = m.group(2).strip()
+        metric_dax = _convert_standard_expression(metric, context)
+        return {
+            "dax": f"CALCULATE({metric_dax}, TOPN(1, ALLSELECTED(), [{sort_col}], ASC))",
+            "fidelity": "full",
+            "warnings": [],
+        }
+
+    # LastInRange
+    m = _RE_LAST_IN_RANGE.match(expr)
+    if m:
+        metric = m.group(1).strip()
+        sort_col = m.group(2).strip()
+        metric_dax = _convert_standard_expression(metric, context)
+        return {
+            "dax": f"CALCULATE({metric_dax}, TOPN(1, ALLSELECTED(), [{sort_col}], DESC))",
+            "fidelity": "full",
+            "warnings": [],
         }
 
     # Band
@@ -467,16 +537,25 @@ def _try_derived_metric(expr, context):
             "warnings": [f"Band({start},{stop},{step}) — verify banding ranges and labels"],
         }
 
-    # MovingSum
+    # MovingSum — DAX WINDOW sliding range
     m = _RE_MOVING_SUM.match(expr)
     if m:
         inner = m.group(1).strip()
         window_size = m.group(2)
+        attrs = _parse_level_spec(m.group(3)) if m.group(3) else []
         inner_dax = _convert_standard_expression(inner, context)
+        sort_col = attrs[0] if attrs else "SortColumn"
+        offset_back = int(window_size) - 1
+        fidelity = "full" if attrs else "approximated"
+        warnings = [] if attrs else [f"MovingSum({window_size}) — verify sort column reference"]
         return {
-            "dax": f"SUMX(TOPN({window_size}, ALL(Table), [SortColumn], ASC), {inner_dax})",
-            "fidelity": "approximated",
-            "warnings": [f"MovingSum({window_size}) — replace ALL(Table) and [SortColumn] with actual references"],
+            "dax": (
+                f"VAR __rows = WINDOW(-{offset_back}, REL, 0, REL, ALLSELECTED(), ORDERBY([{sort_col}], ASC))\n"
+                f"RETURN\n"
+                f"    SUMX(__rows, {inner_dax})"
+            ),
+            "fidelity": fidelity,
+            "warnings": warnings,
         }
 
     return None
@@ -541,9 +620,15 @@ def _try_apply_functions(expr, context):
             "warnings": [f"ApplyComparison converted: {sql[:60]}"],
         }
 
-    # ApplyOLAP
+    # ApplyOLAP — attempt conversion of common patterns
     m = _RE_APPLY_OLAP.match(expr)
     if m:
+        sql = m.group(1)
+        args_str = m.group(2) or ""
+        args = [a.strip() for a in args_str.split(',') if a.strip()] if args_str else []
+        result = _convert_apply_olap(sql, args)
+        if result:
+            return result
         return {
             "dax": f"/* MANUAL REVIEW: {expr[:80]} */\nBLANK()",
             "fidelity": "manual_review",
@@ -785,6 +870,90 @@ def _substitute_apply_args(template, args):
     for i, arg in enumerate(args):
         result = result.replace(f"#{i}", f"[{arg}]")
     return result
+
+
+def _convert_apply_olap(sql, args):
+    """Convert common ApplyOLAP SQL expressions to DAX.
+
+    Handles ROW_NUMBER, RANK, DENSE_RANK, LAG, LEAD patterns found in
+    MicroStrategy ApplyOLAP expressions.
+    """
+    sql_upper = sql.upper().strip()
+    arg_refs = [f"[{a}]" for a in args]
+
+    # ROW_NUMBER() OVER (ORDER BY #0)
+    rn = re.match(r'ROW_NUMBER\s*\(\)\s*OVER\s*\((.+?)\)', sql, re.IGNORECASE)
+    if rn:
+        over_clause = rn.group(1)
+        order_col = arg_refs[0] if arg_refs else "[SortColumn]"
+        order_dir = "DESC" if re.search(r'DESC', over_clause, re.IGNORECASE) else "ASC"
+        partition_m = re.search(r'PARTITION\s+BY\s+#(\d+)', over_clause, re.IGNORECASE)
+        if partition_m:
+            p_idx = int(partition_m.group(1))
+            part_col = arg_refs[p_idx] if p_idx < len(arg_refs) else "[Partition]"
+            return {
+                "dax": f"RANKX(FILTER(ALLSELECTED(), {part_col} = EARLIER({part_col})), {order_col},, {order_dir}, DENSE)",
+                "fidelity": "approximated",
+                "warnings": ["ROW_NUMBER partitioned — verify partition column"],
+            }
+        return {
+            "dax": f"RANKX(ALLSELECTED(), {order_col},, {order_dir}, DENSE)",
+            "fidelity": "full",
+            "warnings": [],
+        }
+
+    # RANK() OVER (ORDER BY #0)
+    rank_m = re.match(r'(?:DENSE_)?RANK\s*\(\)\s*OVER\s*\((.+?)\)', sql, re.IGNORECASE)
+    if rank_m:
+        over_clause = rank_m.group(1)
+        is_dense = sql_upper.startswith('DENSE')
+        order_col = arg_refs[0] if arg_refs else "[SortColumn]"
+        order_dir = "DESC" if re.search(r'DESC', over_clause, re.IGNORECASE) else "ASC"
+        rank_type = "DENSE" if is_dense else "SKIP"
+        return {
+            "dax": f"RANKX(ALLSELECTED(), {order_col},, {order_dir}, {rank_type})",
+            "fidelity": "full",
+            "warnings": [],
+        }
+
+    # LAG(#0, n) OVER (ORDER BY #1)
+    lag_m = re.match(r'LAG\s*\(#0\s*,\s*(\d+)\)\s*OVER\s*\((.+?)\)', sql, re.IGNORECASE)
+    if lag_m:
+        offset = lag_m.group(1)
+        over_clause = lag_m.group(2)
+        val_col = arg_refs[0] if arg_refs else "[Value]"
+        sort_col = arg_refs[1] if len(arg_refs) > 1 else "[SortColumn]"
+        return {
+            "dax": f"CALCULATE({val_col}, OFFSET(-{offset}, ALLSELECTED(), ORDERBY({sort_col}, ASC)))",
+            "fidelity": "full",
+            "warnings": [],
+        }
+
+    # LEAD(#0, n) OVER (ORDER BY #1)
+    lead_m = re.match(r'LEAD\s*\(#0\s*,\s*(\d+)\)\s*OVER\s*\((.+?)\)', sql, re.IGNORECASE)
+    if lead_m:
+        offset = lead_m.group(1)
+        val_col = arg_refs[0] if arg_refs else "[Value]"
+        sort_col = arg_refs[1] if len(arg_refs) > 1 else "[SortColumn]"
+        return {
+            "dax": f"CALCULATE({val_col}, OFFSET({offset}, ALLSELECTED(), ORDERBY({sort_col}, ASC)))",
+            "fidelity": "full",
+            "warnings": [],
+        }
+
+    # SUM(#0) OVER (ORDER BY #1 ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
+    cum_m = re.match(r'SUM\s*\(#0\)\s*OVER\s*\(.*?ORDER\s+BY\s+#(\d+).*?UNBOUNDED\s+PRECEDING', sql, re.IGNORECASE)
+    if cum_m:
+        val_col = arg_refs[0] if arg_refs else "[Value]"
+        s_idx = int(cum_m.group(1))
+        sort_col = arg_refs[s_idx] if s_idx < len(arg_refs) else "[SortColumn]"
+        return {
+            "dax": f"CALCULATE({val_col}, WINDOW(1, ABS, 0, REL, ALLSELECTED(), ORDERBY({sort_col}, ASC)))",
+            "fidelity": "full",
+            "warnings": [],
+        }
+
+    return None
 
 
 # ── Nested metric resolution ────────────────────────────────────

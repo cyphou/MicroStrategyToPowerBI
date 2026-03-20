@@ -178,6 +178,22 @@ def generate_all_tmdl(data, output_dir):
             f.write(roles_tmdl)
         stats["roles"] = len(security_filters)
 
+    # Generate field parameter tables for dossier selectors (v4.0)
+    dossiers = data.get("dossiers", [])
+    for dossier in dossiers:
+        for chapter in dossier.get("chapters", []):
+            for page in chapter.get("pages", []):
+                for sel in page.get("selectors", []):
+                    sel_type = sel.get("selector_type", "")
+                    if sel_type in ("metric_selector", "attribute_selector"):
+                        fp_tmdl = _generate_field_parameter_table(sel)
+                        if fp_tmdl:
+                            fp_name = sel.get("name", "FieldParam")
+                            fp_path = os.path.join(tables_dir, f"{fp_name}.tmdl")
+                            with open(fp_path, 'w', encoding='utf-8') as f:
+                                f.write(fp_tmdl)
+                            stats["tables"] += 1
+
     # Count stats from generated content
     for ds in datasources:
         stats["columns"] += len(ds.get("columns", []))
@@ -720,6 +736,65 @@ def _resolve_filter_column(attr, expression):
         if form.get("category") == "ID":
             return form["column_name"]
     return ""
+
+
+def _generate_field_parameter_table(selector):
+    """Generate a TMDL field parameter calculated table for a dossier selector.
+
+    Field parameters allow users to dynamically switch which column/measure
+    is displayed in a visual — equivalent to MSTR metric/attribute selectors.
+
+    Args:
+        selector: dict with name, selector_type, and items list.
+
+    Returns:
+        TMDL string for the field parameter table, or None.
+    """
+    name = selector.get("name", "FieldParameter")
+    items = selector.get("items", [])
+    if not items:
+        return None
+
+    lines = [f"table '{name}'"]
+    lines.append(f"\tlineageTag: fp-{_make_tag(name, 'param')}")
+    lines.append("")
+
+    # Value column (ordinal index)
+    lines.append(f"\tcolumn '{name}'")
+    lines.append("\t\tdataType: string")
+    lines.append(f"\t\tlineageTag: fp-{_make_tag(name, 'value')}")
+    lines.append("\t\tisNameInferred: false")
+    lines.append("\t\tisHidden: false")
+    lines.append(f"\t\tsortByColumn: '{name} Order'")
+    lines.append("")
+
+    # Fields column (hidden, contains field references)
+    lines.append(f"\tcolumn '{name} Fields'")
+    lines.append("\t\tdataType: string")
+    lines.append(f"\t\tlineageTag: fp-{_make_tag(name, 'fields')}")
+    lines.append("\t\tisHidden: true")
+    lines.append("")
+
+    # Order column (hidden, for sort)
+    lines.append(f"\tcolumn '{name} Order'")
+    lines.append("\t\tdataType: int64")
+    lines.append(f"\t\tlineageTag: fp-{_make_tag(name, 'order')}")
+    lines.append("\t\tisHidden: true")
+    lines.append("")
+
+    # Calculated table expression (DAX)
+    rows = []
+    for idx, item in enumerate(items):
+        item_name = item.get("name", f"Item{idx}")
+        rows.append(f'("{item_name}", NAMEOF([{item_name}]), {idx})')
+
+    dax_expr = "{\n" + ",\n".join(f"    {r}" for r in rows) + "\n}"
+    lines.append(f"\tpartition '{name}' = calculated")
+    lines.append("\t\tmode: import")
+    lines.append(f"\t\texpression:= {dax_expr}")
+    lines.append("")
+
+    return "\n".join(lines).rstrip() + "\n"
 
 
 def _convert_security_expression(expression, column_name):

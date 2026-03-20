@@ -1,0 +1,22 @@
+{
+  "report_name": "Sales Analytics",
+  "output_dir": "test_output_nocal",
+  "tables": 6,
+  "columns": 32,
+  "measures": 12,
+  "relationships": 5,
+  "hierarchies": 3,
+  "roles": 2,
+  "pages": 5,
+  "visuals": 9,
+  "slicers": 2,
+  "unsupported_visuals": 0,
+  "attributes": 8,
+  "facts": 5,
+  "metrics": 9,
+  "reports": 2,
+  "dossiers": 1,
+  "security_filters": 2,
+  "status": "complete",
+  "warnings": []
+}

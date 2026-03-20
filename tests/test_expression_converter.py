@@ -191,7 +191,7 @@ class TestDerivedMetrics:
         result = convert_mstr_expression_to_dax("Lag(Sum(Revenue), 1) {Year}")
         assert "OFFSET" in result["dax"]
         assert "-1" in result["dax"]
-        assert result["fidelity"] == "approximated"
+        assert result["fidelity"] == "full"
 
     def test_lead(self):
         result = convert_mstr_expression_to_dax("Lead(Sum(Revenue), 2) {Year}")
@@ -201,8 +201,8 @@ class TestDerivedMetrics:
     def test_moving_avg(self):
         result = convert_mstr_expression_to_dax("MovingAvg(Sum(Revenue), 3) {Month}")
         assert "AVERAGEX" in result["dax"]
-        assert "TOPN(3" in result["dax"]
-        assert result["fidelity"] == "approximated"
+        assert "WINDOW" in result["dax"]
+        assert result["fidelity"] == "full"
 
 
 # ── ApplySimple patterns ────────────────────────────────────────

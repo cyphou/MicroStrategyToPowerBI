@@ -1,0 +1,12 @@
+[
+  {
+    "report_id": "A1B2C3D411E6F789001122334455AAEE",
+    "name": "Profit Margin Alert",
+    "metric_name": "Profit Margin",
+    "conditions": [
+      {"operator": "less_than", "value": 0.10, "format": {"background_color": "#FF6B6B", "font_color": "#FFFFFF"}},
+      {"operator": "between", "value": [0.10, 0.25], "format": {"background_color": "#FFD93D", "font_color": "#000000"}},
+      {"operator": "greater_than", "value": 0.25, "format": {"background_color": "#6BCB77", "font_color": "#000000"}}
+    ]
+  }
+]

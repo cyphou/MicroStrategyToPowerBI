@@ -1,0 +1,69 @@
+table LU_CUSTOMER
+	lineageTag: 8D67912011D3E4981000E787EC6DE8A4
+
+	column CUSTOMER_ID
+		dataType: int64
+		isHidden
+		isKey
+		sourceColumn: CUSTOMER_ID
+		lineageTag: col-35e33ea3
+
+	column Customer
+		dataType: string
+		sourceColumn: CUSTOMER_NAME
+		lineageTag: col-4a106a13
+
+	column CUSTOMER_EMAIL
+		dataType: string
+		sourceColumn: CUSTOMER_EMAIL
+		lineageTag: col-f7834d14
+
+	column CUSTOMER_CITY
+		dataType: string
+		isHidden
+		sourceColumn: CUSTOMER_CITY
+		lineageTag: col-4a0b88f3
+		dataCategory: City
+
+	column CUSTOMER_STATE
+		dataType: string
+		sourceColumn: CUSTOMER_STATE
+		lineageTag: col-f84bc609
+
+	column CUSTOMER_COUNTRY
+		dataType: string
+		sourceColumn: CUSTOMER_COUNTRY
+		lineageTag: col-be9ddb0e
+
+	column REGION_ID
+		dataType: int64
+		isHidden
+		sourceColumn: REGION_ID
+		lineageTag: col-36f1ed8d
+		dataCategory: StateOrProvince
+
+	hierarchy Geography
+		lineageTag: hier-7bedeec3
+
+		level 'Customer Region'
+			column: REGION_ID
+			lineageTag: hier-5ab0226c
+
+		level 'Customer City'
+			column: CUSTOMER_CITY
+			lineageTag: hier-38cf12e3
+
+		level Customer
+			column: Customer
+			lineageTag: hier-2df7ffa8
+
+
+	partition LU_CUSTOMER = m
+		mode: import
+		expression:= ```
+			let
+			    Source = Sql.Database("sql-prod-01.company.com", "SalesDB"),
+			    Table = Source{[Schema="dbo", Item="LU_CUSTOMER"]}[Data]
+			in
+			    Table
+			```

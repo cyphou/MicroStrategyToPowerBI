@@ -125,6 +125,7 @@ def generate_all_visuals(data, output_dir):
 
 def _generate_dossier_pages(dossier, pages_dir, stats, page_ids):
     """Generate pages from a dossier (chapters → page groups, pages → pages)."""
+    bookmarks = []  # Collected from panel stacks
     for chapter in dossier.get("chapters", []):
         for page in chapter.get("pages", []):
             page_id = page.get("key", _make_id())
@@ -151,11 +152,25 @@ def _generate_dossier_pages(dossier, pages_dir, stats, page_ids):
                     visuals.append(slicer)
                     stats["slicers"] += 1
 
+            # Panel stacks → bookmarks (v4.0)
+            for ps in page.get("panel_stacks", []):
+                ps_bookmarks = _convert_panel_stack(ps, visuals)
+                bookmarks.extend(ps_bookmarks)
+
+            # Info windows → tooltips (v4.0)
+            for viz in page.get("visualizations", []):
+                if viz.get("info_window"):
+                    _apply_info_window_tooltip(viz, visuals)
+
             page_json = _build_page_json(page_id, page_name, visuals,
                                          chapter.get("name", ""))
             _write_page(pages_dir, page_id, page_json, visuals)
             page_ids.append(page_id)
             stats["pages"] += 1
+
+    # Store bookmarks for later export
+    if bookmarks:
+        _write_bookmarks(pages_dir, bookmarks)
 
 
 # ── Report → Page ────────────────────────────────────────────────
@@ -573,6 +588,83 @@ def _build_visual_json(vis):
         }]
 
     return visual_json
+
+
+def _convert_panel_stack(panel_stack, visuals):
+    """Convert a MicroStrategy panel stack to PBI bookmarks.
+
+    Each panel in the stack becomes a bookmark that shows/hides
+    the visuals belonging to that panel.
+
+    Args:
+        panel_stack: dict with panels list, each panel having visual keys.
+        visuals: list of already converted visual dicts on this page.
+
+    Returns:
+        list of bookmark dicts.
+    """
+    bookmarks = []
+    ps_name = panel_stack.get("name", "PanelStack")
+    all_visual_names = {v.get("name") for v in visuals}
+
+    for idx, panel in enumerate(panel_stack.get("panels", [])):
+        panel_name = panel.get("name", f"Panel {idx + 1}")
+        panel_visual_keys = set(panel.get("visual_keys", []))
+
+        visible = panel_visual_keys & all_visual_names
+        hidden = all_visual_names - visible
+
+        bookmarks.append({
+            "name": f"{ps_name}_{panel_name}",
+            "displayName": panel_name,
+            "explorationState": {
+                "activeSection": None,
+                "filters": [],
+            },
+            "options": {
+                "targetVisualNames": sorted(visible),
+                "hiddenVisualNames": sorted(hidden),
+            },
+        })
+
+    return bookmarks
+
+
+def _apply_info_window_tooltip(viz_def, visuals):
+    """Apply info window data as a tooltip page reference on the visual.
+
+    MicroStrategy info windows map to Power BI tooltip pages or
+    visual-level tooltip configuration.
+    """
+    info = viz_def.get("info_window", {})
+    if not info:
+        return
+
+    viz_key = viz_def.get("key", "")
+    tooltip_text = info.get("text", info.get("content", ""))
+
+    for v in visuals:
+        if v.get("name") == viz_key:
+            objects = v.setdefault("visual", {}).setdefault("objects", {})
+            objects["tooltips"] = [{
+                "properties": {
+                    "show": {"expr": {"Literal": {"Value": "true"}}},
+                    "type": {"expr": {"Literal": {"Value": "'Default'"}}},
+                }
+            }]
+            if tooltip_text:
+                objects["tooltips"][0]["properties"]["text"] = {
+                    "expr": {"Literal": {"Value": f"'{tooltip_text[:200]}'"}}
+                }
+            break
+
+
+def _write_bookmarks(pages_dir, bookmarks):
+    """Write bookmarks metadata alongside pages."""
+    bookmarks_path = os.path.join(os.path.dirname(pages_dir), "bookmarks.json")
+    with open(bookmarks_path, "w", encoding="utf-8") as f:
+        json.dump({"bookmarks": bookmarks}, f, indent=2, ensure_ascii=False)
+    logger.debug("Wrote %d bookmarks", len(bookmarks))
 
 
 def _write_pages_json(pages_dir, page_ids):

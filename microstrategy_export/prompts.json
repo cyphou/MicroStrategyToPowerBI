@@ -1,0 +1,46 @@
+[
+  {
+    "id": "prompt_01",
+    "name": "Select Year",
+    "type": "element",
+    "required": true,
+    "allow_multi_select": false,
+    "default_value": "2025",
+    "options": [
+      {"id": "h2023", "name": "2023"},
+      {"id": "h2024", "name": "2024"},
+      {"id": "h2025", "name": "2025"},
+      {"id": "h2026", "name": "2026"}
+    ],
+    "pbi_type": "slicer",
+    "attribute_name": "Year",
+    "min_value": null,
+    "max_value": null
+  },
+  {
+    "id": "prompt_02",
+    "name": "Revenue Threshold",
+    "type": "value",
+    "required": false,
+    "allow_multi_select": false,
+    "default_value": "100000",
+    "options": [],
+    "pbi_type": "what_if_parameter",
+    "attribute_name": "",
+    "min_value": 0,
+    "max_value": 10000000
+  },
+  {
+    "id": "prompt_03",
+    "name": "Date Range",
+    "type": "date",
+    "required": true,
+    "allow_multi_select": false,
+    "default_value": "2025-01-01",
+    "options": [],
+    "pbi_type": "date_slicer",
+    "attribute_name": "Order Date",
+    "min_value": "2020-01-01",
+    "max_value": "2026-12-31"
+  }
+]
