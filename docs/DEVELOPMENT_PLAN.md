@@ -775,7 +775,7 @@ v14    Enterprise Ecosystem        ░░░░░░░░░
 | X.5 | **CLI: `--cultures`** | `migrate.py` | Low | `--cultures en-US,fr-FR,de-DE` — specify target cultures. Default: extract from MSTR project. |
 | X.6 | **Tests** | `tests/test_i18n.py` | Medium | 30+ tests: culture extraction, multi-locale TMDL, format string mapping, RTL layout, Unicode handling. |
 
-**v8.0 totals:** 1 sprint, extensions to existing modules, ~30 new tests, 1 CLI flag
+**v8.0 totals:** 1 sprint, 1 new module (i18n.py), 84 new tests + 18 bug bash regression tests (2,175 total), 1 CLI flag (`--cultures`)
 
 ---
 

@@ -314,7 +314,8 @@ def run_batch_generation(args):
                 from powerbi_import.pbip_generator import generate_pbip
                 sub_dir = os.path.join(output_dir, _safe_filename(name))
                 generate_pbip(obj_data, sub_dir, report_name=name,
-                              no_calendar=getattr(args, 'no_calendar', False))
+                              no_calendar=getattr(args, 'no_calendar', False),
+                              cultures=batch_cultures)
                 print(f"  [{i}/{total}] ✓ {name}")
                 succeeded += 1
             except Exception as e:
@@ -638,7 +639,7 @@ def run_benchmark(args):
 
     start = time.perf_counter()
     importer = PowerBIImporter(source_dir='microstrategy_export/')
-    importer.generate(output_dir=args.output_dir)
+    importer.import_all(generate_pbip_flag=True, output_dir=args.output_dir)
     elapsed = time.perf_counter() - start
 
     n_metrics = len(data.get("metrics", [])) + len(data.get("derived_metrics", []))

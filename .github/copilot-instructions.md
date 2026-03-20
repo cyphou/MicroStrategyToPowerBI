@@ -175,3 +175,4 @@ python migrate.py --help
 - **Batch generation cultures**: `--cultures` flag propagated through single and batch generation modes
 - CLI flags: `--cultures en-US,fr-FR,de-DE`
 - **2,157 total tests**: From 2,073 pre-v8.0 → 2,157 (84 new i18n tests)
+- **2,175 total tests**: Bug bash added 18 regression tests covering fixed crash bugs and API contract validation
