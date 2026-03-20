@@ -1,9 +1,10 @@
 # Development Plan — MicroStrategy to Power BI / Fabric Migration Tool
 
-**Version:** v3.0.0 (released) → v4.0.0 (next)  
+**Version:** v3.0.0 (released) → v4.0–v14.0 (roadmap)  
 **Date:** 2026-03-20  
 **Based on:** Tableau to Power BI Migration Tool (v17.0.0 architecture)  
-**Current state:** v3.0 complete — 623 tests passing, 21 generation modules
+**Current state:** v3.0 complete — 623 tests passing, 21 generation modules  
+**Long-term target:** v14.0 — full enterprise ecosystem, 5,000+ tests, web portal
 
 ---
 
@@ -640,3 +641,313 @@ These modules from `TableauToPowerBI/powerbi_import/` can be reused directly or 
 | Scale testing infrastructure | Large fixtures slow CI pipeline | Separate benchmark CI job; scale tests only on demand (`--benchmark` marker) |
 | Snapshot maintenance burden | 20+ snapshots need updating on any generation change | Auto-update flag; snapshot diff in PR review; minimal snapshot scope |
 | MicroStrategy API version drift | MSTR 2024+ may introduce new endpoints | Version detection + graceful degradation; monitor REST API changelog |
+
+---
+---
+
+# Long-Term Roadmap — v5.0 through v14.0
+
+The following 10 phases define the path from **production maturity** (v4.0) to a **full enterprise migration ecosystem** (v14.0). Each phase is self-contained and delivers incremental value. Phases can be reordered based on customer demand.
+
+```
+v1–v3  Foundation & Assessment     ████████████████████ DONE
+v4     Production Maturity         ░░░░░░░░░░░░░░░░░░░ PLANNED
+v5     Fabric Native               ░░░░░░░░░░░░░░░░░░
+v6     Governance & Lineage        ░░░░░░░░░░░░░░░░░
+v7     AI-Assisted Migration       ░░░░░░░░░░░░░░░░
+v8     Multi-Language & i18n       ░░░░░░░░░░░░░░░
+v9     Real-Time & Streaming       ░░░░░░░░░░░░░░
+v10    Deep Testing & Quality      ░░░░░░░░░░░░░
+v11    Migration Ops (MigOps)      ░░░░░░░░░░░░
+v12    Cross-Platform Federation   ░░░░░░░░░░░
+v13    Self-Service Web Portal     ░░░░░░░░░░
+v14    Enterprise Ecosystem        ░░░░░░░░░
+```
+
+---
+
+## v5.0 — Fabric Native Integration
+
+**Theme:** First-class Microsoft Fabric support — DirectLake auto-configuration, Lakehouse schema generation, notebook generation, Git integration.  
+**Priority:** HIGH — Fabric is the strategic direction for Microsoft BI.
+
+### Sprint R — DirectLake & Lakehouse
+
+| # | Item | File(s) | Est. | Details |
+|---|------|---------|------|---------|
+| R.1 | **DirectLake auto-switch** | `powerbi_import/tmdl_generator.py` | High | When `--strategy` recommends DirectLake: auto-generate TMDL with `mode: directLake`, Delta table references instead of M partitions. Detect Fabric workspace context. |
+| R.2 | **Lakehouse schema generation** | `powerbi_import/lakehouse_generator.py` | Very High | Generate Fabric Lakehouse table definitions from MSTR schema: attribute/fact columns → Delta table DDL. Output Spark SQL `CREATE TABLE` scripts. |
+| R.3 | **Data pipeline notebooks** | `powerbi_import/notebook_generator.py` | High | Generate Fabric Spark notebooks that ETL from MSTR warehouse → Lakehouse Delta tables. M query logic → PySpark equivalent. |
+| R.4 | **Fabric Git integration** | `powerbi_import/deploy/fabric_git.py` | Medium | Push generated `.pbip` + TMDL directly to Fabric workspace Git repo. Auto-commit with migration metadata. |
+| R.5 | **Shortcut generation** | `powerbi_import/lakehouse_generator.py` | Medium | When source data is already in OneLake/ADLS: generate Lakehouse shortcuts instead of ETL. Zero-copy references. |
+| R.6 | **CLI: `--fabric-mode`** | `migrate.py` | Low | `--fabric-mode lakehouse\|warehouse\|shortcut` — controls Fabric output type. Default: auto-detect from strategy advisor. |
+| R.7 | **Tests** | `tests/test_fabric.py` | High | 40+ tests: DirectLake TMDL, Lakehouse DDL, notebook generation, Git push, shortcut creation. |
+
+### Sprint S — Fabric Deployment Pipeline
+
+| # | Item | File(s) | Est. | Details |
+|---|------|---------|------|---------|
+| S.1 | **Fabric REST API deployer** | `powerbi_import/deploy/fabric_deployer.py` | High | Deploy via Fabric REST APIs: create items (semantic model, report, notebook, pipeline), configure connections, trigger refresh. |
+| S.2 | **Data pipeline orchestration** | `powerbi_import/pipeline_generator.py` | High | Generate Fabric Data Factory pipelines: source → Lakehouse copy activity, refresh semantic model, send notification. JSON pipeline definition. |
+| S.3 | **Environment configuration** | `powerbi_import/deploy/fabric_env.py` | Medium | Generate Fabric environment definitions: Spark pool config, library requirements, connection strings. |
+| S.4 | **Capacity management** | `powerbi_import/deploy/fabric_deployer.py` | Medium | Pre-flight capacity check: verify Fabric capacity available, estimate CU consumption, warn if undersized. |
+| S.5 | **Tests** | `tests/test_fabric_deploy.py` | Medium | 30+ tests: API deployment, pipeline generation, environment config, capacity checks. |
+
+**v5.0 totals:** 2 sprints, ~4 new modules, ~70 new tests, 2 new CLI flags
+
+---
+
+## v6.0 — Governance & Lineage
+
+**Theme:** Data lineage tracking, impact analysis, governance metadata, Microsoft Purview integration.  
+**Priority:** HIGH — critical for regulated industries and enterprise compliance.
+
+### Sprint T — Lineage Graph
+
+| # | Item | File(s) | Est. | Details |
+|---|------|---------|------|---------|
+| T.1 | **Lineage model** | `powerbi_import/lineage.py` | High | Build in-memory DAG: warehouse table → MSTR attribute/fact → MSTR metric → MSTR report/dossier → PBI table → PBI measure → PBI visual. Node/edge model with metadata. |
+| T.2 | **Impact analysis** | `powerbi_import/lineage.py` | High | "What breaks if I change column X?" — traverse DAG upstream/downstream. Output: affected measures, visuals, reports. |
+| T.3 | **Lineage HTML report** | `powerbi_import/lineage_report.py` | Medium | Interactive HTML lineage visualization: D3.js force-directed graph or Sankey diagram. Filterable by layer (source → model → visual). |
+| T.4 | **Lineage JSON export** | `powerbi_import/lineage.py` | Low | Export lineage as JSON-LD / OpenLineage format for integration with external catalogs. |
+| T.5 | **Tests** | `tests/test_lineage.py` | High | 40+ tests: DAG construction, impact traversal, cycle detection, multi-hop lineage, JSON export. |
+
+### Sprint U — Purview & Governance
+
+| # | Item | File(s) | Est. | Details |
+|---|------|---------|------|---------|
+| U.1 | **Purview asset registration** | `powerbi_import/purview_integration.py` | High | Register migrated assets in Microsoft Purview: semantic model, tables, columns, measures with lineage edges. Apache Atlas API format. |
+| U.2 | **Data classification mapping** | `powerbi_import/purview_integration.py` | Medium | Map MSTR security filter attributes to Purview sensitivity labels. Propagate classifications to PBI columns. |
+| U.3 | **Governance report** | `powerbi_import/governance_report.py` | Medium | Pre-migration governance checklist: data ownership mapping, sensitivity classification coverage, RLS completeness, lineage gaps. HTML output. |
+| U.4 | **CLI: `--lineage`, `--purview`** | `migrate.py` | Low | `--lineage` generates lineage report. `--purview ACCOUNT` registers assets in Purview. |
+| U.5 | **Tests** | `tests/test_governance.py` | Medium | 30+ tests: Purview payload, classification mapping, governance report, lineage integration. |
+
+**v6.0 totals:** 2 sprints, ~4 new modules, ~70 new tests, 2 new CLI flags
+
+---
+
+## v7.0 — AI-Assisted Migration
+
+**Theme:** LLM-powered conversion for complex expressions, auto-fix for manual review items, semantic field matching.  
+**Priority:** HIGH — addresses the #1 remaining fidelity gap (complex ApplySimple SQL).
+
+### Sprint V — LLM Expression Converter
+
+| # | Item | File(s) | Est. | Details |
+|---|------|---------|------|---------|
+| V.1 | **LLM fallback converter** | `powerbi_import/ai_converter.py` | Very High | When rule-based converter returns `manual_review`: send expression to Azure OpenAI (GPT-4o) with DAX context prompt. Parse response. Validate generated DAX syntax. Confidence scoring. |
+| V.2 | **Prompt engineering** | `powerbi_import/ai_converter.py` | High | Curated few-shot prompt: 50 MSTR→DAX examples covering all ApplySimple/ApplyAgg/ApplyOLAP patterns. System prompt with DAX grammar rules. |
+| V.3 | **Human-in-the-loop review** | `powerbi_import/ai_converter.py` | Medium | LLM-generated DAX marked with `[AI-ASSISTED]` annotation in TMDL. Interactive mode: show suggestion, user accepts/edits/rejects. |
+| V.4 | **Cost control** | `powerbi_import/ai_converter.py` | Medium | Token budget per migration run. Cache LLM responses for identical patterns. Batch similar expressions. Offline mode with cached translations. |
+| V.5 | **CLI: `--ai-assist`** | `migrate.py` | Low | `--ai-assist` enables LLM fallback. `--ai-endpoint URL` for custom Azure OpenAI instance. `--ai-budget N` token limit. |
+| V.6 | **Tests** | `tests/test_ai_converter.py` | High | 30+ tests: mock LLM responses, DAX validation, confidence scoring, budget enforcement, cache behavior. |
+
+### Sprint W — Semantic Field Matching
+
+| # | Item | File(s) | Est. | Details |
+|---|------|---------|------|---------|
+| W.1 | **Column name normalizer** | `powerbi_import/semantic_matcher.py` | High | Fuzzy matching for MSTR attribute names → PBI column names across merge scenarios. Levenshtein distance + embedding similarity. Handle abbreviations (CUST→Customer, QTY→Quantity). |
+| W.2 | **Auto-fix suggestions** | `powerbi_import/semantic_matcher.py` | Medium | For each `manual_review` item: suggest top-3 fixes ranked by confidence. Show diff preview. |
+| W.3 | **Learning from corrections** | `powerbi_import/semantic_matcher.py` | Medium | Store user corrections in local DB. Over time, build project-specific mapping dictionary. Apply learned mappings automatically in future runs. |
+| W.4 | **Tests** | `tests/test_semantic_matcher.py` | Medium | 25+ tests: fuzzy matching, abbreviation handling, learned corrections, confidence ranking. |
+
+**v7.0 totals:** 2 sprints, ~2 new modules, ~55 new tests, 3 new CLI flags
+
+---
+
+## v8.0 — Multi-Language & Localization
+
+**Theme:** Internationalization support — multi-culture TMDL, translated captions, RTL layouts, locale-aware formatting.  
+**Priority:** MEDIUM — needed for global enterprise deployments.
+
+### Sprint X — i18n Infrastructure
+
+| # | Item | File(s) | Est. | Details |
+|---|------|---------|------|---------|
+| X.1 | **Culture extraction** | `microstrategy_export/extract_mstr_data.py` | Medium | Extract MSTR project language settings, translated object names, locale-specific format strings. Map to `cultures.json`. |
+| X.2 | **Multi-culture TMDL** | `powerbi_import/tmdl_generator.py` | High | Generate TMDL `culture` sections: `linguisticMetadata`, translated captions for tables/columns/measures per locale (en-US, fr-FR, de-DE, ja-JP, zh-CN, etc.). |
+| X.3 | **Locale-aware format strings** | `powerbi_import/tmdl_generator.py` | Medium | Map MSTR locale-specific number/date/currency formats → TMDL formatString per culture. Handle non-Latin separators (1.000,50 vs 1,000.50). |
+| X.4 | **RTL layout support** | `powerbi_import/visual_generator.py` | Medium | For Arabic/Hebrew locales: mirror visual positioning (right-to-left). Set `textDirection: rtl` in PBIR visuals. |
+| X.5 | **CLI: `--cultures`** | `migrate.py` | Low | `--cultures en-US,fr-FR,de-DE` — specify target cultures. Default: extract from MSTR project. |
+| X.6 | **Tests** | `tests/test_i18n.py` | Medium | 30+ tests: culture extraction, multi-locale TMDL, format string mapping, RTL layout, Unicode handling. |
+
+**v8.0 totals:** 1 sprint, extensions to existing modules, ~30 new tests, 1 CLI flag
+
+---
+
+## v9.0 — Real-Time & Streaming
+
+**Theme:** Migrate real-time MicroStrategy dashboards to Power BI push datasets, streaming dataflows, and real-time intelligence.  
+**Priority:** MEDIUM — increasing demand with IoT and operational analytics.
+
+### Sprint Y — Streaming Migration
+
+| # | Item | File(s) | Est. | Details |
+|---|------|---------|------|---------|
+| Y.1 | **Real-time source detection** | `microstrategy_export/realtime_extractor.py` | High | Detect MSTR real-time dashboards: auto-refresh intervals, cache policies, subscription-based data. Classify as batch vs. near-real-time vs. streaming. |
+| Y.2 | **Push dataset generation** | `powerbi_import/streaming_generator.py` | High | Generate Power BI push dataset definitions (REST API schema). Map MSTR auto-refresh metrics → push dataset tables. Define retention policy. |
+| Y.3 | **Eventstream integration** | `powerbi_import/streaming_generator.py` | Very High | For Fabric Real-Time Intelligence: generate Eventstream definitions mapping MSTR data sources → KQL database → semantic model. |
+| Y.4 | **Refresh schedule migration** | `powerbi_import/deploy/refresh_config.py` | Medium | Map MSTR cache/subscription schedules → PBI dataset refresh schedules. Generate refresh configuration JSON. |
+| Y.5 | **CLI: `--realtime`** | `migrate.py` | Low | `--realtime` flag to enable real-time source detection and streaming output generation. |
+| Y.6 | **Tests** | `tests/test_streaming.py` | Medium | 25+ tests: source detection, push dataset schema, Eventstream definition, refresh config. |
+
+**v9.0 totals:** 1 sprint, ~2 new modules, ~25 new tests, 1 CLI flag
+
+---
+
+## v10.0 — Deep Testing & Quality
+
+**Theme:** Reach 2,000+ tests with property-based testing, mutation testing, fuzzing, and automated visual screenshot comparison.  
+**Priority:** HIGH — bridges the gap to Tableau reference project (4,219 tests).
+
+### Sprint Z — Advanced Testing Infrastructure
+
+| # | Item | File(s) | Est. | Details |
+|---|------|---------|------|---------|
+| Z.1 | **Property-based testing** | `tests/test_properties.py` | High | Hypothesis strategies for MSTR expressions → DAX: any valid MSTR expression produces syntactically valid DAX. Any intermediate JSON → valid .pbip. |
+| Z.2 | **Mutation testing** | `mutmut.toml` | Medium | `mutmut` configuration for expression converter and TMDL generator. Target: >80% mutation kill rate. CI gate on mutation score. |
+| Z.3 | **Fuzz testing** | `tests/test_fuzz.py` | High | Fuzz expression converter with random/malformed MSTR expressions. Verify: never crashes, always returns valid output or explicit error. |
+| Z.4 | **Visual screenshot comparison** | `tests/test_visual_screenshots.py` | Very High | Headless PBI Desktop (via Playwright): open generated .pbip → screenshot each page → pixel-diff against baseline. Flag >5% pixel difference. |
+| Z.5 | **Test generation from telemetry** | `scripts/generate_tests.py` | Medium | Analyze telemetry data from real migrations: extract common expression patterns → auto-generate parametrized test cases. |
+| Z.6 | **Coverage enforcement** | `.github/workflows/ci.yml` | Low | CI gate: ≥85% line coverage overall, ≥98% for expression_converter.py. `--cov-fail-under` in pytest. |
+| Z.7 | **Tests** | Multiple files | Very High | 500+ new tests: property-based (~100), fuzz (~50), screenshot (~30), generated (~200), gap-filling (~120). **Target: 2,000+ total.** |
+
+**v10.0 totals:** 1 sprint, ~2 new scripts, ~500 new tests (→ 2,000+ total)
+
+---
+
+## v11.0 — Migration Ops (MigOps)
+
+**Theme:** Continuous migration pipeline — change detection on MSTR server, auto-reconciliation, drift monitoring, scheduled re-migration.  
+**Priority:** MEDIUM — needed for phased multi-month enterprise migrations.
+
+### Sprint AA — Change Detection
+
+| # | Item | File(s) | Est. | Details |
+|---|------|---------|------|---------|
+| AA.1 | **MSTR change feed** | `microstrategy_export/change_detector.py` | High | Poll MSTR REST API for modified objects since last migration run (compare `modifiedDate`). Output change manifest: added/modified/deleted objects. |
+| AA.2 | **Drift report** | `powerbi_import/drift_report.py` | High | Compare current PBI .pbip output against last migration: detect manual edits in PBI that would be overwritten. Generate conflict report. |
+| AA.3 | **Auto-reconciliation** | `powerbi_import/reconciler.py` | Very High | Three-way merge: MSTR source (new) × PBI target (current) × PBI target (last migration). Preserve manual PBI customizations while applying MSTR changes. |
+| AA.4 | **Scheduled migration** | `scripts/scheduled_migration.py` | Medium | Cron-compatible script: poll → detect changes → migrate → validate → deploy → notify. Configurable via `migration_schedule.json`. |
+| AA.5 | **CLI: `--watch`, `--reconcile`** | `migrate.py` | Low | `--watch` enters polling mode. `--reconcile` generates drift report without migrating. |
+| AA.6 | **Tests** | `tests/test_migops.py` | High | 40+ tests: change detection, drift calculation, three-way merge, scheduled pipeline. |
+
+**v11.0 totals:** 1 sprint, ~3 new modules + 1 script, ~40 new tests, 2 CLI flags
+
+---
+
+## v12.0 — Cross-Platform Federation
+
+**Theme:** Unified migration from multiple BI platforms (MicroStrategy + Tableau + Cognos + SSRS) into Power BI. Shared intermediate format.  
+**Priority:** LOW — strategic differentiator for large enterprises with mixed BI estates.
+
+### Sprint BB — Universal Intermediate Format
+
+| # | Item | File(s) | Est. | Details |
+|---|------|---------|------|---------|
+| BB.1 | **Universal BI schema** | `universal_bi/schema.py` | Very High | Platform-agnostic intermediate JSON schema: `datasources`, `dimensions`, `measures`, `calculations`, `visualizations`, `pages`, `security`. Superset of MSTR + Tableau + Cognos concepts. |
+| BB.2 | **MSTR → Universal adapter** | `universal_bi/adapters/mstr_adapter.py` | High | Convert existing 18 MSTR intermediate JSONs → Universal BI schema. 1:1 mapping for most objects; translate MSTR-specific concepts (level metrics, Apply functions). |
+| BB.3 | **Tableau → Universal adapter** | `universal_bi/adapters/tableau_adapter.py` | High | Convert Tableau intermediate JSONs (from TableauToPowerBI project) → Universal BI schema. Reuse existing Tableau extraction. |
+| BB.4 | **Cross-source lineage** | `universal_bi/cross_lineage.py` | High | When merging from MSTR + Tableau: detect shared data sources, overlapping dimensions, equivalent measures. Build cross-platform lineage graph. |
+| BB.5 | **Unified generation** | `powerbi_import/` | Medium | Extend generation layer to accept Universal BI schema instead of MSTR-specific JSON. Backward-compatible: auto-detect input format. |
+| BB.6 | **CLI: `--from-tableau`, `--from-cognos`** | `migrate.py` | Medium | Accept mixed inputs: `--from-export ./mstr/ --from-tableau ./tableau/ --merge` → unified PBI output. |
+| BB.7 | **Tests** | `tests/test_federation.py` | High | 50+ tests: schema translation, cross-platform merge, lineage, unified generation. |
+
+**v12.0 totals:** 1 sprint, ~4 new modules (new package), ~50 new tests, 2 CLI flags
+
+---
+
+## v13.0 — Self-Service Web Portal
+
+**Theme:** Web-based migration portal for non-technical users — upload MSTR exports, configure migration, track progress, approve results.  
+**Priority:** MEDIUM — accelerates adoption in large organizations.
+
+### Sprint CC — Web Application
+
+| # | Item | File(s) | Est. | Details |
+|---|------|---------|------|---------|
+| CC.1 | **FastAPI backend** | `web/app.py`, `web/api/` | Very High | REST API server: upload MSTR exports, trigger migration, poll status, download results. JWT authentication. SQLite job store. |
+| CC.2 | **Migration wizard UI** | `web/frontend/` | Very High | React/Vue SPA: step-by-step wizard (upload → configure → assess → migrate → validate → download). Responsive design. |
+| CC.3 | **Real-time progress** | `web/api/websocket.py` | High | WebSocket connection: stream migration progress (extraction %, generation %, validation %). Show live log tail. |
+| CC.4 | **Approval workflow** | `web/api/approval.py` | Medium | Post-migration review: side-by-side viewer (MSTR screenshot vs. PBI preview). Approve/reject per report. Comments. |
+| CC.5 | **Multi-tenant isolation** | `web/auth/` | High | Azure AD SSO. Workspace isolation per tenant. RBAC: admin, migrator, reviewer roles. Audit log. |
+| CC.6 | **Docker packaging** | `Dockerfile`, `docker-compose.yml` | Medium | Single-command deployment: `docker compose up`. Includes backend + frontend + worker. ARM template for Azure Container Apps. |
+| CC.7 | **Tests** | `tests/test_web.py` | High | 50+ tests: API endpoints, auth, file upload, job lifecycle, WebSocket, approval flow. |
+
+**v13.0 totals:** 1 sprint, ~10 new modules (new `web/` package), ~50 new tests, Docker deployment
+
+---
+
+## v14.0 — Enterprise Ecosystem Integration
+
+**Theme:** Deep integration with Microsoft ecosystem — Power Automate, Teams, Azure DevOps, Purview, Defender, Copilot.  
+**Priority:** LOW — completes the enterprise offering.
+
+### Sprint DD — Microsoft 365 Integration
+
+| # | Item | File(s) | Est. | Details |
+|---|------|---------|------|---------|
+| DD.1 | **Power Automate connector** | `integrations/power_automate/` | High | Custom connector: trigger migration from Power Automate flow. Actions: assess, migrate, validate, deploy. Return status + report URL. |
+| DD.2 | **Teams notifications** | `integrations/teams_webhook.py` | Medium | Adaptive Card notifications: migration started/completed/failed. Include fidelity score, object counts, action buttons (view report, approve). |
+| DD.3 | **Azure DevOps pipeline templates** | `integrations/azdo/` | Medium | YAML pipeline templates: CI/CD for migration — trigger on MSTR change → migrate → validate → deploy to staging → approval gate → deploy to production. |
+| DD.4 | **Purview deep integration** | `integrations/purview_scanner.py` | High | Custom Purview scanner: register MSTR server as data source in Purview. Scan MSTR objects → Purview assets with full lineage. Bi-directional: Purview → PBI lineage connected. |
+| DD.5 | **Copilot plugin** | `integrations/copilot_plugin/` | Medium | Microsoft 365 Copilot plugin: "Migrate my MicroStrategy Sales Dashboard to Power BI" → trigger migration, return progress, share result link. |
+| DD.6 | **Defender for Cloud Apps** | `integrations/defender_config.py` | Low | Generate Defender for Cloud Apps policies: monitor migrated PBI content for anomalous access, data exfiltration. |
+| DD.7 | **Tests** | `tests/test_integrations.py` | Medium | 40+ tests: connector payloads, Teams cards, DevOps YAML, Purview scanner, Copilot plugin. |
+
+**v14.0 totals:** 1 sprint, ~6 new modules (new `integrations/` package), ~40 new tests
+
+---
+---
+
+# Complete Roadmap Summary
+
+| Version | Theme | Sprints | New Modules | Cumulative Tests | Key Capability |
+|---------|-------|---------|-------------|-----------------|----------------|
+| **v1.0** ✅ | Foundation | 1–10 | 18 | 385 | Full extract → generate → deploy pipeline |
+| **v2.0** ✅ | Production Tooling | F–L | +6 | 570 | CI/CD, wizard, DAX depth, parallel, incremental |
+| **v3.0** ✅ | Enterprise Assessment | F–K | +11 | 623 | 14-category assessment, strategy, comparison, plugins |
+| **v4.0** 🔜 | Production Maturity | L–Q | +5 | ~900 | OLAP hardening, merge, scorecard, scale, certification |
+| **v5.0** | Fabric Native | R–S | +4 | ~970 | DirectLake, Lakehouse, notebooks, Fabric Git |
+| **v6.0** | Governance & Lineage | T–U | +4 | ~1,040 | Lineage graph, impact analysis, Purview integration |
+| **v7.0** | AI-Assisted Migration | V–W | +2 | ~1,095 | LLM expression conversion, semantic field matching |
+| **v8.0** | Multi-Language & i18n | X | — | ~1,125 | Multi-culture TMDL, translated captions, RTL support |
+| **v9.0** | Real-Time & Streaming | Y | +2 | ~1,150 | Push datasets, Eventstream, refresh schedules |
+| **v10.0** | Deep Testing & Quality | Z | +2 | **~2,000+** | Property-based, mutation, fuzz, screenshot tests |
+| **v11.0** | Migration Ops | AA | +3 | ~2,040 | Change detection, drift report, auto-reconciliation |
+| **v12.0** | Cross-Platform Federation | BB | +4 | ~2,090 | MSTR + Tableau + Cognos → unified PBI migration |
+| **v13.0** | Self-Service Web Portal | CC | +10 | ~2,140 | Web UI, approval workflow, Docker deployment |
+| **v14.0** | Enterprise Ecosystem | DD | +6 | ~2,180 | Power Automate, Teams, DevOps, Purview, Copilot |
+
+**Grand totals (v1.0 → v14.0):**
+- **~75 modules** across 5 packages (`microstrategy_export/`, `powerbi_import/`, `universal_bi/`, `web/`, `integrations/`)
+- **~2,200 tests** (with v10.0 push to 2,000+)
+- **~25 CLI flags**
+- **14 development phases** across **~35 sprints**
+
+---
+
+## Phase Dependency Graph
+
+```
+v4.0 Production Maturity
+ ├── v5.0 Fabric Native (depends on: strategy advisor, DirectLake detection)
+ ├── v6.0 Governance & Lineage (depends on: merge tools, assessment)
+ │    └── v14.0 Enterprise Ecosystem (depends on: Purview integration)
+ ├── v7.0 AI-Assisted Migration (depends on: expression converter, manual_review items)
+ ├── v8.0 Multi-Language (independent — can be done anytime after v4.0)
+ ├── v9.0 Real-Time & Streaming (independent — can be done anytime after v4.0)
+ ├── v10.0 Deep Testing (depends on: all generation modules stable)
+ ├── v11.0 Migration Ops (depends on: incremental mode, telemetry)
+ └── v12.0 Cross-Platform (depends on: merge tools, lineage)
+      └── v13.0 Web Portal (depends on: all migration modes stable)
+```
+
+## Priority Matrix
+
+| | High Impact | Low Impact |
+|---|---|---|
+| **Low Effort** | v8.0 i18n, v9.0 Real-Time | v14.0 Ecosystem |
+| **High Effort** | v5.0 Fabric, v7.0 AI, v10.0 Testing | v12.0 Federation, v13.0 Portal |
+
+**Recommended execution order:** v4.0 → v5.0 → v7.0 → v6.0 → v10.0 → v8.0 → v9.0 → v11.0 → v12.0 → v13.0 → v14.0
