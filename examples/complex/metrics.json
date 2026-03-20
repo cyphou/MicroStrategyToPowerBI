@@ -1,0 +1,306 @@
+[
+  {
+    "id": "MC01",
+    "name": "Total Revenue",
+    "description": "Total Revenue metric",
+    "metric_type": "simple",
+    "expression": "Sum(Revenue)",
+    "aggregation": "sum",
+    "format_string": "$#,##0.00",
+    "subtotal_type": "sum",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [],
+    "column_ref": {
+      "fact_id": "FC01",
+      "fact_name": "Revenue"
+    }
+  },
+  {
+    "id": "MC02",
+    "name": "Total Cost",
+    "description": "Total Cost metric",
+    "metric_type": "simple",
+    "expression": "Sum(Cost)",
+    "aggregation": "sum",
+    "format_string": "$#,##0.00",
+    "subtotal_type": "sum",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [],
+    "column_ref": {
+      "fact_id": "FC02",
+      "fact_name": "Cost"
+    }
+  },
+  {
+    "id": "MC03",
+    "name": "Total Quantity",
+    "description": "Total Quantity metric",
+    "metric_type": "simple",
+    "expression": "Sum(Quantity)",
+    "aggregation": "sum",
+    "format_string": "#,##0",
+    "subtotal_type": "sum",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [],
+    "column_ref": {
+      "fact_id": "FC03",
+      "fact_name": "Quantity"
+    }
+  },
+  {
+    "id": "MC04",
+    "name": "Total Discount",
+    "description": "Total Discount metric",
+    "metric_type": "simple",
+    "expression": "Sum(Discount)",
+    "aggregation": "sum",
+    "format_string": "$#,##0.00",
+    "subtotal_type": "sum",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [],
+    "column_ref": {
+      "fact_id": "FC04",
+      "fact_name": "Discount"
+    }
+  },
+  {
+    "id": "MC05",
+    "name": "Total Tax",
+    "description": "Total Tax metric",
+    "metric_type": "simple",
+    "expression": "Sum(Tax)",
+    "aggregation": "sum",
+    "format_string": "$#,##0.00",
+    "subtotal_type": "sum",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [],
+    "column_ref": {
+      "fact_id": "FC05",
+      "fact_name": "Tax"
+    }
+  },
+  {
+    "id": "MC06",
+    "name": "Return Quantity",
+    "description": "Return Quantity metric",
+    "metric_type": "simple",
+    "expression": "Sum(Return Qty)",
+    "aggregation": "sum",
+    "format_string": "#,##0",
+    "subtotal_type": "sum",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [],
+    "column_ref": {
+      "fact_id": "FC06",
+      "fact_name": "Return Qty"
+    }
+  },
+  {
+    "id": "MC07",
+    "name": "Return Amount",
+    "description": "Return Amount metric",
+    "metric_type": "simple",
+    "expression": "Sum(Return Amount)",
+    "aggregation": "sum",
+    "format_string": "$#,##0.00",
+    "subtotal_type": "sum",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [],
+    "column_ref": {
+      "fact_id": "FC07",
+      "fact_name": "Return Amount"
+    }
+  },
+  {
+    "id": "MC08",
+    "name": "Avg Unit Cost",
+    "description": "Avg Unit Cost metric",
+    "metric_type": "simple",
+    "expression": "Avg(Unit Cost)",
+    "aggregation": "avg",
+    "format_string": "$#,##0.00",
+    "subtotal_type": "avg",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [],
+    "column_ref": {
+      "fact_id": "FC08",
+      "fact_name": "Unit Cost"
+    }
+  },
+  {
+    "id": "MC09",
+    "name": "Customer Count",
+    "description": "Customer Count metric",
+    "metric_type": "simple",
+    "expression": "Count<Distinct=True>(Customer)",
+    "aggregation": "distinctcount",
+    "format_string": "#,##0",
+    "subtotal_type": "distinctcount",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [],
+    "column_ref": {
+      "fact_id": "AC01",
+      "fact_name": "Customer"
+    }
+  },
+  {
+    "id": "MC10",
+    "name": "Product Count",
+    "description": "Product Count metric",
+    "metric_type": "simple",
+    "expression": "Count<Distinct=True>(Product)",
+    "aggregation": "distinctcount",
+    "format_string": "#,##0",
+    "subtotal_type": "distinctcount",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [],
+    "column_ref": {
+      "fact_id": "AC07",
+      "fact_name": "Product"
+    }
+  },
+  {
+    "id": "MC11",
+    "name": "Profit",
+    "description": "Profit metric",
+    "metric_type": "compound",
+    "expression": "Sum(Revenue) - Sum(Cost)",
+    "aggregation": "",
+    "format_string": "$#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [
+      "MC01",
+      "MC02"
+    ],
+    "column_ref": null
+  },
+  {
+    "id": "MC12",
+    "name": "Profit Margin",
+    "description": "Profit Margin metric",
+    "metric_type": "compound",
+    "expression": "(Sum(Revenue) - Sum(Cost)) / Sum(Revenue)",
+    "aggregation": "",
+    "format_string": "0.0%",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [
+      "MC01",
+      "MC02"
+    ],
+    "column_ref": null
+  },
+  {
+    "id": "MC13",
+    "name": "Gross Revenue",
+    "description": "Gross Revenue metric",
+    "metric_type": "compound",
+    "expression": "Sum(Revenue) - Sum(Discount)",
+    "aggregation": "",
+    "format_string": "$#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [
+      "MC01",
+      "MC04"
+    ],
+    "column_ref": null
+  },
+  {
+    "id": "MC14",
+    "name": "Net Revenue",
+    "description": "Net Revenue metric",
+    "metric_type": "compound",
+    "expression": "Sum(Revenue) - Sum(Cost) - Sum(Tax)",
+    "aggregation": "",
+    "format_string": "$#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [
+      "MC01",
+      "MC02",
+      "MC05"
+    ],
+    "column_ref": null
+  },
+  {
+    "id": "MC15",
+    "name": "Return Rate",
+    "description": "Return Rate metric",
+    "metric_type": "compound",
+    "expression": "Sum(Return Qty) / Sum(Quantity)",
+    "aggregation": "",
+    "format_string": "0.0%",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [
+      "MC06",
+      "MC03"
+    ],
+    "column_ref": null
+  },
+  {
+    "id": "MC16",
+    "name": "Revenue per Customer",
+    "description": "Revenue per Customer metric",
+    "metric_type": "compound",
+    "expression": "Sum(Revenue) / Count<Distinct=True>(Customer)",
+    "aggregation": "",
+    "format_string": "$#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [
+      "MC01",
+      "MC09"
+    ],
+    "column_ref": null
+  },
+  {
+    "id": "MC17",
+    "name": "Avg Order Value",
+    "description": "Avg Order Value metric",
+    "metric_type": "compound",
+    "expression": "Sum(Revenue) / Count(SALE_ID)",
+    "aggregation": "",
+    "format_string": "$#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [],
+    "column_ref": null
+  },
+  {
+    "id": "MC18",
+    "name": "Discount Rate",
+    "description": "Discount Rate metric",
+    "metric_type": "compound",
+    "expression": "Sum(Discount) / Sum(Revenue)",
+    "aggregation": "",
+    "format_string": "0.0%",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [
+      "MC04",
+      "MC01"
+    ],
+    "column_ref": null
+  }
+]

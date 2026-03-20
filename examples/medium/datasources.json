@@ -1,0 +1,114 @@
+[
+  {
+    "id": "DS_0001",
+    "name": "LU_CUSTOMER",
+    "physical_table": "LU_CUSTOMER",
+    "db_connection": {
+      "db_type": "postgresql",
+      "server": "pg-prod.company.com",
+      "database": "SalesDB",
+      "schema": "public"
+    },
+    "columns": [
+      {
+        "name": "CUSTOMER_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "CUSTOMER_NAME",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "CITY",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "REGION",
+        "data_type": "nVarChar"
+      }
+    ],
+    "is_freeform_sql": false,
+    "sql_statement": "",
+    "type": "table"
+  },
+  {
+    "id": "DS_0002",
+    "name": "LU_PRODUCT",
+    "physical_table": "LU_PRODUCT",
+    "db_connection": {
+      "db_type": "postgresql",
+      "server": "pg-prod.company.com",
+      "database": "SalesDB",
+      "schema": "public"
+    },
+    "columns": [
+      {
+        "name": "PRODUCT_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "PRODUCT_NAME",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "CATEGORY",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "UNIT_PRICE",
+        "data_type": "real"
+      }
+    ],
+    "is_freeform_sql": false,
+    "sql_statement": "",
+    "type": "table"
+  },
+  {
+    "id": "DS_0003",
+    "name": "FACT_SALES",
+    "physical_table": "FACT_SALES",
+    "db_connection": {
+      "db_type": "postgresql",
+      "server": "pg-prod.company.com",
+      "database": "SalesDB",
+      "schema": "public"
+    },
+    "columns": [
+      {
+        "name": "SALE_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "CUSTOMER_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "PRODUCT_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "SALE_DATE",
+        "data_type": "date"
+      },
+      {
+        "name": "REVENUE",
+        "data_type": "real"
+      },
+      {
+        "name": "COST",
+        "data_type": "real"
+      },
+      {
+        "name": "QUANTITY",
+        "data_type": "integer"
+      },
+      {
+        "name": "DISCOUNT",
+        "data_type": "real"
+      }
+    ],
+    "is_freeform_sql": false,
+    "sql_statement": "",
+    "type": "table"
+  }
+]

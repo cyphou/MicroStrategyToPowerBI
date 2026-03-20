@@ -1,0 +1,204 @@
+[
+  {
+    "id": "ATTR_0001",
+    "name": "Customer",
+    "description": "Customer dimension",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "integer",
+        "column_name": "CUSTOMER_ID",
+        "table": "LU_CUSTOMER"
+      },
+      {
+        "name": "DESC",
+        "category": "DESC",
+        "data_type": "nVarChar",
+        "column_name": "CUSTOMER_NAME",
+        "table": "LU_CUSTOMER"
+      }
+    ],
+    "data_type": "integer",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [
+      {
+        "id": "ATTR_0002",
+        "name": "City"
+      }
+    ],
+    "lookup_table": "LU_CUSTOMER"
+  },
+  {
+    "id": "ATTR_0002",
+    "name": "City",
+    "description": "Customer city",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "nVarChar",
+        "column_name": "CITY",
+        "table": "LU_CUSTOMER"
+      }
+    ],
+    "data_type": "nVarChar",
+    "geographic_role": "city",
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [
+      {
+        "id": "ATTR_0003",
+        "name": "Region"
+      }
+    ],
+    "child_attributes": [],
+    "lookup_table": "LU_CUSTOMER"
+  },
+  {
+    "id": "ATTR_0003",
+    "name": "Region",
+    "description": "Geographic region",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "nVarChar",
+        "column_name": "REGION",
+        "table": "LU_CUSTOMER"
+      }
+    ],
+    "data_type": "nVarChar",
+    "geographic_role": "state_province",
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [
+      {
+        "id": "ATTR_0002",
+        "name": "City"
+      }
+    ],
+    "lookup_table": "LU_CUSTOMER"
+  },
+  {
+    "id": "ATTR_0004",
+    "name": "Product",
+    "description": "Product dimension",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "integer",
+        "column_name": "PRODUCT_ID",
+        "table": "LU_PRODUCT"
+      },
+      {
+        "name": "DESC",
+        "category": "DESC",
+        "data_type": "nVarChar",
+        "column_name": "PRODUCT_NAME",
+        "table": "LU_PRODUCT"
+      }
+    ],
+    "data_type": "integer",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "LU_PRODUCT"
+  },
+  {
+    "id": "ATTR_0005",
+    "name": "Category",
+    "description": "Product category",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "nVarChar",
+        "column_name": "CATEGORY",
+        "table": "LU_PRODUCT"
+      }
+    ],
+    "data_type": "nVarChar",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [
+      {
+        "id": "ATTR_0004",
+        "name": "Product"
+      }
+    ],
+    "lookup_table": "LU_PRODUCT"
+  },
+  {
+    "id": "ATTR_0006",
+    "name": "Sale Date",
+    "description": "Transaction date",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "date",
+        "column_name": "SALE_DATE",
+        "table": "FACT_SALES"
+      }
+    ],
+    "data_type": "date",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "yyyy-MM-dd",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "FACT_SALES"
+  },
+  {
+    "id": "ATTR_0007",
+    "name": "Year",
+    "description": "Calculated year",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "integer",
+        "column_name": "SALE_DATE",
+        "table": "FACT_SALES"
+      }
+    ],
+    "data_type": "integer",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "FACT_SALES"
+  },
+  {
+    "id": "ATTR_0008",
+    "name": "Month",
+    "description": "Calculated month",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "integer",
+        "column_name": "SALE_DATE",
+        "table": "FACT_SALES"
+      }
+    ],
+    "data_type": "integer",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "FACT_SALES"
+  }
+]

@@ -1,0 +1,53 @@
+[
+  {
+    "id": "MET_0001",
+    "name": "Total Sales",
+    "description": "Sum of Amount",
+    "metric_type": "simple",
+    "expression": "Sum(Amount)",
+    "aggregation": "sum",
+    "column_ref": {
+      "fact_id": "FACT_0001",
+      "fact_name": "Amount"
+    },
+    "format_string": "$#,##0.00",
+    "subtotal_type": "sum",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": []
+  },
+  {
+    "id": "MET_0002",
+    "name": "Total Quantity",
+    "description": "Sum of Quantity",
+    "metric_type": "simple",
+    "expression": "Sum(Quantity)",
+    "aggregation": "sum",
+    "column_ref": {
+      "fact_id": "FACT_0002",
+      "fact_name": "Quantity"
+    },
+    "format_string": "#,##0",
+    "subtotal_type": "sum",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": []
+  },
+  {
+    "id": "MET_0003",
+    "name": "Avg Price",
+    "description": "Average unit price",
+    "metric_type": "compound",
+    "expression": "Sum(Amount) / Sum(Quantity)",
+    "aggregation": "",
+    "column_ref": null,
+    "format_string": "$#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [
+      "MET_0001",
+      "MET_0002"
+    ]
+  }
+]

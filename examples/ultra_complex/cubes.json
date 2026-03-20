@@ -1,0 +1,105 @@
+[
+  {
+    "id": "CUBE_U01",
+    "name": "Sales Summary",
+    "description": "Pre-aggregated sales",
+    "attributes": [
+      {
+        "id": "AU05",
+        "name": "Region",
+        "forms": [
+          "ID"
+        ]
+      },
+      {
+        "id": "AU10",
+        "name": "Category",
+        "forms": [
+          "ID"
+        ]
+      },
+      {
+        "id": "AU16",
+        "name": "Year",
+        "forms": [
+          "ID"
+        ]
+      },
+      {
+        "id": "AU15",
+        "name": "Quarter",
+        "forms": [
+          "ID"
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "MU01",
+        "name": "Total Revenue"
+      },
+      {
+        "id": "MU02",
+        "name": "Total Cost"
+      },
+      {
+        "id": "MU21",
+        "name": "Profit"
+      }
+    ],
+    "filter": {
+      "expression": "Year >= 2024",
+      "qualifications": []
+    },
+    "refresh_policy": "scheduled"
+  },
+  {
+    "id": "CUBE_U02",
+    "name": "Marketing Cube",
+    "description": "Marketing metrics cube",
+    "attributes": [
+      {
+        "id": "AU18",
+        "name": "Channel",
+        "forms": [
+          "ID",
+          "DESC"
+        ]
+      },
+      {
+        "id": "AU16",
+        "name": "Year",
+        "forms": [
+          "ID"
+        ]
+      },
+      {
+        "id": "AU14",
+        "name": "Month",
+        "forms": [
+          "ID",
+          "DESC"
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "MU14",
+        "name": "Marketing Spend"
+      },
+      {
+        "id": "MU16",
+        "name": "Total Clicks"
+      },
+      {
+        "id": "MU17",
+        "name": "Total Conversions"
+      }
+    ],
+    "filter": {
+      "expression": "",
+      "qualifications": []
+    },
+    "refresh_policy": "on_demand"
+  }
+]

@@ -1,0 +1,56 @@
+[
+  {
+    "id": "CUBE_C01",
+    "name": "Sales Summary Cube",
+    "description": "Pre-aggregated sales data",
+    "attributes": [
+      {
+        "id": "AC05",
+        "name": "Region",
+        "forms": [
+          "ID"
+        ]
+      },
+      {
+        "id": "AC08",
+        "name": "Category",
+        "forms": [
+          "ID"
+        ]
+      },
+      {
+        "id": "AC14",
+        "name": "Year",
+        "forms": [
+          "ID"
+        ]
+      },
+      {
+        "id": "AC13",
+        "name": "Quarter",
+        "forms": [
+          "ID"
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "id": "MC01",
+        "name": "Total Revenue"
+      },
+      {
+        "id": "MC02",
+        "name": "Total Cost"
+      },
+      {
+        "id": "MC11",
+        "name": "Profit"
+      }
+    ],
+    "filter": {
+      "expression": "Year >= 2024",
+      "qualifications": []
+    },
+    "refresh_policy": "scheduled"
+  }
+]

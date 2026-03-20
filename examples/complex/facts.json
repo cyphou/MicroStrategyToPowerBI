@@ -1,0 +1,142 @@
+[
+  {
+    "id": "FC01",
+    "name": "Revenue",
+    "description": "Revenue fact",
+    "expressions": [
+      {
+        "table": "FACT_SALES",
+        "column": "REVENUE"
+      }
+    ],
+    "data_type": "real",
+    "default_aggregation": "sum",
+    "format_string": "$#,##0.00"
+  },
+  {
+    "id": "FC02",
+    "name": "Cost",
+    "description": "Cost fact",
+    "expressions": [
+      {
+        "table": "FACT_SALES",
+        "column": "COST"
+      }
+    ],
+    "data_type": "real",
+    "default_aggregation": "sum",
+    "format_string": "$#,##0.00"
+  },
+  {
+    "id": "FC03",
+    "name": "Quantity",
+    "description": "Quantity fact",
+    "expressions": [
+      {
+        "table": "FACT_SALES",
+        "column": "QUANTITY"
+      }
+    ],
+    "data_type": "integer",
+    "default_aggregation": "sum",
+    "format_string": "#,##0"
+  },
+  {
+    "id": "FC04",
+    "name": "Discount",
+    "description": "Discount fact",
+    "expressions": [
+      {
+        "table": "FACT_SALES",
+        "column": "DISCOUNT"
+      }
+    ],
+    "data_type": "real",
+    "default_aggregation": "sum",
+    "format_string": "$#,##0.00"
+  },
+  {
+    "id": "FC05",
+    "name": "Tax",
+    "description": "Tax fact",
+    "expressions": [
+      {
+        "table": "FACT_SALES",
+        "column": "TAX"
+      }
+    ],
+    "data_type": "real",
+    "default_aggregation": "sum",
+    "format_string": "$#,##0.00"
+  },
+  {
+    "id": "FC06",
+    "name": "Return Qty",
+    "description": "Return Qty fact",
+    "expressions": [
+      {
+        "table": "FACT_RETURNS",
+        "column": "RETURN_QTY"
+      }
+    ],
+    "data_type": "integer",
+    "default_aggregation": "sum",
+    "format_string": "#,##0"
+  },
+  {
+    "id": "FC07",
+    "name": "Return Amount",
+    "description": "Return Amount fact",
+    "expressions": [
+      {
+        "table": "FACT_RETURNS",
+        "column": "RETURN_AMOUNT"
+      }
+    ],
+    "data_type": "real",
+    "default_aggregation": "sum",
+    "format_string": "$#,##0.00"
+  },
+  {
+    "id": "FC08",
+    "name": "Unit Cost",
+    "description": "Unit Cost fact",
+    "expressions": [
+      {
+        "table": "DIM_PRODUCT",
+        "column": "UNIT_COST"
+      }
+    ],
+    "data_type": "real",
+    "default_aggregation": "sum",
+    "format_string": "$#,##0.00"
+  },
+  {
+    "id": "FC09",
+    "name": "Fiscal Year",
+    "description": "Fiscal Year fact",
+    "expressions": [
+      {
+        "table": "DIM_DATE",
+        "column": "FISCAL_YEAR"
+      }
+    ],
+    "data_type": "integer",
+    "default_aggregation": "sum",
+    "format_string": "#,##0"
+  },
+  {
+    "id": "FC10",
+    "name": "Month Num",
+    "description": "Month Num fact",
+    "expressions": [
+      {
+        "table": "DIM_DATE",
+        "column": "MONTH_NUM"
+      }
+    ],
+    "data_type": "integer",
+    "default_aggregation": "sum",
+    "format_string": "#,##0"
+  }
+]

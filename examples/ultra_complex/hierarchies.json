@@ -1,0 +1,100 @@
+[
+  {
+    "id": "HU01",
+    "name": "Geography",
+    "type": "user",
+    "levels": [
+      {
+        "attribute_id": "AU04",
+        "name": "Country",
+        "order": 1
+      },
+      {
+        "attribute_id": "AU05",
+        "name": "Region",
+        "order": 2
+      },
+      {
+        "attribute_id": "AU03",
+        "name": "State",
+        "order": 3
+      },
+      {
+        "attribute_id": "AU02",
+        "name": "City",
+        "order": 4
+      },
+      {
+        "attribute_id": "AU01",
+        "name": "Customer",
+        "order": 5
+      }
+    ]
+  },
+  {
+    "id": "HU02",
+    "name": "Product",
+    "type": "user",
+    "levels": [
+      {
+        "attribute_id": "AU10",
+        "name": "Category",
+        "order": 1
+      },
+      {
+        "attribute_id": "AU11",
+        "name": "Subcategory",
+        "order": 2
+      },
+      {
+        "attribute_id": "AU09",
+        "name": "Product",
+        "order": 3
+      }
+    ]
+  },
+  {
+    "id": "HU03",
+    "name": "Time",
+    "type": "system",
+    "levels": [
+      {
+        "attribute_id": "AU16",
+        "name": "Year",
+        "order": 1
+      },
+      {
+        "attribute_id": "AU15",
+        "name": "Quarter",
+        "order": 2
+      },
+      {
+        "attribute_id": "AU14",
+        "name": "Month",
+        "order": 3
+      },
+      {
+        "attribute_id": "AU13",
+        "name": "Date",
+        "order": 4
+      }
+    ]
+  },
+  {
+    "id": "HU04",
+    "name": "Organization",
+    "type": "user",
+    "levels": [
+      {
+        "attribute_id": "AU21",
+        "name": "Department",
+        "order": 1
+      },
+      {
+        "attribute_id": "AU20",
+        "name": "Employee",
+        "order": 2
+      }
+    ]
+  }
+]

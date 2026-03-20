@@ -1,0 +1,258 @@
+[
+  {
+    "id": "DS_C01",
+    "name": "DIM_CUSTOMER",
+    "physical_table": "DIM_CUSTOMER",
+    "db_connection": {
+      "db_type": "oracle",
+      "server": "db-prod.company.com",
+      "database": "SALESDB",
+      "schema": "SALES"
+    },
+    "columns": [
+      {
+        "name": "CUST_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "CUST_NAME",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "CUST_EMAIL",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "CITY",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "STATE",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "COUNTRY",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "REGION",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "SEGMENT",
+        "data_type": "nVarChar"
+      }
+    ],
+    "is_freeform_sql": false,
+    "sql_statement": "",
+    "type": "table"
+  },
+  {
+    "id": "DS_C02",
+    "name": "DIM_PRODUCT",
+    "physical_table": "DIM_PRODUCT",
+    "db_connection": {
+      "db_type": "oracle",
+      "server": "db-prod.company.com",
+      "database": "SALESDB",
+      "schema": "SALES"
+    },
+    "columns": [
+      {
+        "name": "PROD_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "PROD_NAME",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "CATEGORY",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "SUBCATEGORY",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "BRAND",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "UNIT_COST",
+        "data_type": "real"
+      }
+    ],
+    "is_freeform_sql": false,
+    "sql_statement": "",
+    "type": "table"
+  },
+  {
+    "id": "DS_C03",
+    "name": "DIM_DATE",
+    "physical_table": "DIM_DATE",
+    "db_connection": {
+      "db_type": "oracle",
+      "server": "db-prod.company.com",
+      "database": "SALESDB",
+      "schema": "SALES"
+    },
+    "columns": [
+      {
+        "name": "DATE_KEY",
+        "data_type": "date"
+      },
+      {
+        "name": "DAY_NAME",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "MONTH_NAME",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "MONTH_NUM",
+        "data_type": "integer"
+      },
+      {
+        "name": "QUARTER",
+        "data_type": "integer"
+      },
+      {
+        "name": "YEAR",
+        "data_type": "integer"
+      },
+      {
+        "name": "FISCAL_YEAR",
+        "data_type": "integer"
+      }
+    ],
+    "is_freeform_sql": false,
+    "sql_statement": "",
+    "type": "table"
+  },
+  {
+    "id": "DS_C04",
+    "name": "DIM_CHANNEL",
+    "physical_table": "DIM_CHANNEL",
+    "db_connection": {
+      "db_type": "oracle",
+      "server": "db-prod.company.com",
+      "database": "SALESDB",
+      "schema": "SALES"
+    },
+    "columns": [
+      {
+        "name": "CHANNEL_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "CHANNEL_NAME",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "CHANNEL_TYPE",
+        "data_type": "nVarChar"
+      }
+    ],
+    "is_freeform_sql": false,
+    "sql_statement": "",
+    "type": "table"
+  },
+  {
+    "id": "DS_C05",
+    "name": "FACT_SALES",
+    "physical_table": "FACT_SALES",
+    "db_connection": {
+      "db_type": "oracle",
+      "server": "db-prod.company.com",
+      "database": "SALESDB",
+      "schema": "SALES"
+    },
+    "columns": [
+      {
+        "name": "SALE_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "CUST_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "PROD_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "DATE_KEY",
+        "data_type": "date"
+      },
+      {
+        "name": "CHANNEL_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "REVENUE",
+        "data_type": "real"
+      },
+      {
+        "name": "COST",
+        "data_type": "real"
+      },
+      {
+        "name": "QUANTITY",
+        "data_type": "integer"
+      },
+      {
+        "name": "DISCOUNT",
+        "data_type": "real"
+      },
+      {
+        "name": "TAX",
+        "data_type": "real"
+      }
+    ],
+    "is_freeform_sql": false,
+    "sql_statement": "",
+    "type": "table"
+  },
+  {
+    "id": "DS_C06",
+    "name": "FACT_RETURNS",
+    "physical_table": "FACT_RETURNS",
+    "db_connection": {
+      "db_type": "oracle",
+      "server": "db-prod.company.com",
+      "database": "SALESDB",
+      "schema": "SALES"
+    },
+    "columns": [
+      {
+        "name": "RETURN_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "SALE_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "PROD_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "DATE_KEY",
+        "data_type": "date"
+      },
+      {
+        "name": "RETURN_QTY",
+        "data_type": "integer"
+      },
+      {
+        "name": "RETURN_AMOUNT",
+        "data_type": "real"
+      }
+    ],
+    "is_freeform_sql": false,
+    "sql_statement": "",
+    "type": "table"
+  }
+]

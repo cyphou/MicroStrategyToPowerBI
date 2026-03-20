@@ -1,0 +1,34 @@
+[
+  {
+    "id": "DER_0001",
+    "name": "Revenue Rank",
+    "description": "Rank by revenue",
+    "metric_type": "derived",
+    "expression": "Rank(Sum(Revenue))",
+    "aggregation": "",
+    "column_ref": null,
+    "format_string": "#,##0",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics\\Derived",
+    "is_smart_metric": true,
+    "dependencies": [
+      "MET_0001"
+    ]
+  },
+  {
+    "id": "DER_0002",
+    "name": "Running Revenue",
+    "description": "Cumulative revenue",
+    "metric_type": "derived",
+    "expression": "RunningSum(Sum(Revenue)) {~+, Month}",
+    "aggregation": "",
+    "column_ref": null,
+    "format_string": "$#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics\\Derived",
+    "is_smart_metric": true,
+    "dependencies": [
+      "MET_0001"
+    ]
+  }
+]

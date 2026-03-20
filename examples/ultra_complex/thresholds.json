@@ -1,0 +1,38 @@
+[
+  {
+    "report_id": "RPT_U01",
+    "metric_name": "Profit Margin",
+    "conditions": [
+      {
+        "operator": "less_than",
+        "value": 0.15,
+        "format": {
+          "background_color": "#FF6B6B",
+          "font_color": "#FFF"
+        }
+      },
+      {
+        "operator": "greater_than",
+        "value": 0.3,
+        "format": {
+          "background_color": "#6BCB77",
+          "font_color": "#000"
+        }
+      }
+    ]
+  },
+  {
+    "report_id": "RPT_U05",
+    "metric_name": "Return Rate",
+    "conditions": [
+      {
+        "operator": "greater_than",
+        "value": 0.1,
+        "format": {
+          "background_color": "#FF6B6B",
+          "font_color": "#FFF"
+        }
+      }
+    ]
+  }
+]

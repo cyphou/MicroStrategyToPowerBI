@@ -1,0 +1,282 @@
+[
+  {
+    "id": "FU01",
+    "name": "Revenue",
+    "description": "Revenue fact",
+    "expressions": [
+      {
+        "table": "FACT_SALES",
+        "column": "REVENUE"
+      }
+    ],
+    "data_type": "real",
+    "default_aggregation": "sum",
+    "format_string": "$#,##0.00"
+  },
+  {
+    "id": "FU02",
+    "name": "Cost",
+    "description": "Cost fact",
+    "expressions": [
+      {
+        "table": "FACT_SALES",
+        "column": "COST"
+      }
+    ],
+    "data_type": "real",
+    "default_aggregation": "sum",
+    "format_string": "$#,##0.00"
+  },
+  {
+    "id": "FU03",
+    "name": "Quantity",
+    "description": "Quantity fact",
+    "expressions": [
+      {
+        "table": "FACT_SALES",
+        "column": "QUANTITY"
+      }
+    ],
+    "data_type": "integer",
+    "default_aggregation": "sum",
+    "format_string": "#,##0"
+  },
+  {
+    "id": "FU04",
+    "name": "Discount",
+    "description": "Discount fact",
+    "expressions": [
+      {
+        "table": "FACT_SALES",
+        "column": "DISCOUNT"
+      }
+    ],
+    "data_type": "real",
+    "default_aggregation": "sum",
+    "format_string": "$#,##0.00"
+  },
+  {
+    "id": "FU05",
+    "name": "Tax",
+    "description": "Tax fact",
+    "expressions": [
+      {
+        "table": "FACT_SALES",
+        "column": "TAX"
+      }
+    ],
+    "data_type": "real",
+    "default_aggregation": "sum",
+    "format_string": "$#,##0.00"
+  },
+  {
+    "id": "FU06",
+    "name": "Shipping",
+    "description": "Shipping fact",
+    "expressions": [
+      {
+        "table": "FACT_SALES",
+        "column": "SHIPPING"
+      }
+    ],
+    "data_type": "real",
+    "default_aggregation": "sum",
+    "format_string": "$#,##0.00"
+  },
+  {
+    "id": "FU07",
+    "name": "Commission",
+    "description": "Commission fact",
+    "expressions": [
+      {
+        "table": "FACT_SALES",
+        "column": "COMMISSION"
+      }
+    ],
+    "data_type": "real",
+    "default_aggregation": "sum",
+    "format_string": "$#,##0.00"
+  },
+  {
+    "id": "FU08",
+    "name": "Return Qty",
+    "description": "Return Qty fact",
+    "expressions": [
+      {
+        "table": "FACT_RETURNS",
+        "column": "RETURN_QTY"
+      }
+    ],
+    "data_type": "integer",
+    "default_aggregation": "sum",
+    "format_string": "#,##0"
+  },
+  {
+    "id": "FU09",
+    "name": "Return Amount",
+    "description": "Return Amount fact",
+    "expressions": [
+      {
+        "table": "FACT_RETURNS",
+        "column": "RETURN_AMT"
+      }
+    ],
+    "data_type": "real",
+    "default_aggregation": "sum",
+    "format_string": "$#,##0.00"
+  },
+  {
+    "id": "FU10",
+    "name": "On Hand",
+    "description": "On Hand fact",
+    "expressions": [
+      {
+        "table": "FACT_INVENTORY",
+        "column": "ON_HAND"
+      }
+    ],
+    "data_type": "integer",
+    "default_aggregation": "sum",
+    "format_string": "#,##0"
+  },
+  {
+    "id": "FU11",
+    "name": "On Order",
+    "description": "On Order fact",
+    "expressions": [
+      {
+        "table": "FACT_INVENTORY",
+        "column": "ON_ORDER"
+      }
+    ],
+    "data_type": "integer",
+    "default_aggregation": "sum",
+    "format_string": "#,##0"
+  },
+  {
+    "id": "FU12",
+    "name": "Reorder Point",
+    "description": "Reorder Point fact",
+    "expressions": [
+      {
+        "table": "FACT_INVENTORY",
+        "column": "REORDER_POINT"
+      }
+    ],
+    "data_type": "integer",
+    "default_aggregation": "sum",
+    "format_string": "#,##0"
+  },
+  {
+    "id": "FU13",
+    "name": "Page Views",
+    "description": "Page Views fact",
+    "expressions": [
+      {
+        "table": "FACT_WEB_VISITS",
+        "column": "PAGE_VIEWS"
+      }
+    ],
+    "data_type": "integer",
+    "default_aggregation": "sum",
+    "format_string": "#,##0"
+  },
+  {
+    "id": "FU14",
+    "name": "Session Duration",
+    "description": "Session Duration fact",
+    "expressions": [
+      {
+        "table": "FACT_WEB_VISITS",
+        "column": "SESSION_DURATION_SEC"
+      }
+    ],
+    "data_type": "integer",
+    "default_aggregation": "sum",
+    "format_string": "#,##0"
+  },
+  {
+    "id": "FU15",
+    "name": "Marketing Spend",
+    "description": "Marketing Spend fact",
+    "expressions": [
+      {
+        "table": "FACT_MARKETING_SPEND",
+        "column": "SPEND_AMOUNT"
+      }
+    ],
+    "data_type": "real",
+    "default_aggregation": "sum",
+    "format_string": "$#,##0.00"
+  },
+  {
+    "id": "FU16",
+    "name": "Impressions",
+    "description": "Impressions fact",
+    "expressions": [
+      {
+        "table": "FACT_MARKETING_SPEND",
+        "column": "IMPRESSIONS"
+      }
+    ],
+    "data_type": "integer",
+    "default_aggregation": "sum",
+    "format_string": "#,##0"
+  },
+  {
+    "id": "FU17",
+    "name": "Clicks",
+    "description": "Clicks fact",
+    "expressions": [
+      {
+        "table": "FACT_MARKETING_SPEND",
+        "column": "CLICKS"
+      }
+    ],
+    "data_type": "integer",
+    "default_aggregation": "sum",
+    "format_string": "#,##0"
+  },
+  {
+    "id": "FU18",
+    "name": "Conversions",
+    "description": "Conversions fact",
+    "expressions": [
+      {
+        "table": "FACT_MARKETING_SPEND",
+        "column": "CONVERSIONS"
+      }
+    ],
+    "data_type": "integer",
+    "default_aggregation": "sum",
+    "format_string": "#,##0"
+  },
+  {
+    "id": "FU19",
+    "name": "Unit Cost",
+    "description": "Unit Cost fact",
+    "expressions": [
+      {
+        "table": "DIM_PRODUCT",
+        "column": "UNIT_COST"
+      }
+    ],
+    "data_type": "real",
+    "default_aggregation": "sum",
+    "format_string": "$#,##0.00"
+  },
+  {
+    "id": "FU20",
+    "name": "Capacity",
+    "description": "Capacity fact",
+    "expressions": [
+      {
+        "table": "DIM_WAREHOUSE",
+        "column": "CAPACITY"
+      }
+    ],
+    "data_type": "integer",
+    "default_aggregation": "sum",
+    "format_string": "#,##0"
+  }
+]

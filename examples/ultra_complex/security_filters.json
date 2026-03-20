@@ -1,0 +1,59 @@
+[
+  {
+    "id": "SFU01",
+    "name": "Region Filter - Americas",
+    "expression": "Region In (North America, South America)",
+    "target_attributes": [
+      {
+        "id": "AU05",
+        "name": "Region"
+      }
+    ],
+    "users": [],
+    "groups": [
+      {
+        "id": "g1",
+        "name": "Americas Team"
+      }
+    ],
+    "description": ""
+  },
+  {
+    "id": "SFU02",
+    "name": "Region Filter - EMEA",
+    "expression": "Region In (Europe, Middle East, Africa)",
+    "target_attributes": [
+      {
+        "id": "AU05",
+        "name": "Region"
+      }
+    ],
+    "users": [],
+    "groups": [
+      {
+        "id": "g2",
+        "name": "EMEA Team"
+      }
+    ],
+    "description": ""
+  },
+  {
+    "id": "SFU03",
+    "name": "Channel Filter - Digital",
+    "expression": "Channel Type In (Web, Mobile, Social)",
+    "target_attributes": [
+      {
+        "id": "AU19",
+        "name": "Channel Type"
+      }
+    ],
+    "users": [],
+    "groups": [
+      {
+        "id": "g3",
+        "name": "Digital Team"
+      }
+    ],
+    "description": ""
+  }
+]

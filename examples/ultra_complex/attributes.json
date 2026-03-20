@@ -1,0 +1,688 @@
+[
+  {
+    "id": "AU01",
+    "name": "Customer",
+    "description": "Customer attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "integer",
+        "column_name": "CUST_ID",
+        "table": "DIM_CUSTOMER"
+      },
+      {
+        "name": "DESC",
+        "category": "DESC",
+        "data_type": "nVarChar",
+        "column_name": "CUST_NAME",
+        "table": "DIM_CUSTOMER"
+      },
+      {
+        "name": "Email",
+        "category": "Email",
+        "data_type": "nVarChar",
+        "column_name": "CUST_EMAIL",
+        "table": "DIM_CUSTOMER"
+      }
+    ],
+    "data_type": "integer",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_CUSTOMER"
+  },
+  {
+    "id": "AU02",
+    "name": "City",
+    "description": "City attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "nVarChar",
+        "column_name": "CITY",
+        "table": "DIM_CUSTOMER"
+      }
+    ],
+    "data_type": "nVarChar",
+    "geographic_role": "city",
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_CUSTOMER"
+  },
+  {
+    "id": "AU03",
+    "name": "State",
+    "description": "State attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "nVarChar",
+        "column_name": "STATE",
+        "table": "DIM_CUSTOMER"
+      }
+    ],
+    "data_type": "nVarChar",
+    "geographic_role": "state_province",
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_CUSTOMER"
+  },
+  {
+    "id": "AU04",
+    "name": "Country",
+    "description": "Country attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "nVarChar",
+        "column_name": "COUNTRY",
+        "table": "DIM_CUSTOMER"
+      }
+    ],
+    "data_type": "nVarChar",
+    "geographic_role": "country",
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_CUSTOMER"
+  },
+  {
+    "id": "AU05",
+    "name": "Region",
+    "description": "Region attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "nVarChar",
+        "column_name": "REGION",
+        "table": "DIM_CUSTOMER"
+      }
+    ],
+    "data_type": "nVarChar",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_CUSTOMER"
+  },
+  {
+    "id": "AU06",
+    "name": "Segment",
+    "description": "Segment attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "nVarChar",
+        "column_name": "SEGMENT",
+        "table": "DIM_CUSTOMER"
+      }
+    ],
+    "data_type": "nVarChar",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_CUSTOMER"
+  },
+  {
+    "id": "AU07",
+    "name": "Customer Tier",
+    "description": "Customer Tier attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "nVarChar",
+        "column_name": "TIER",
+        "table": "DIM_CUSTOMER"
+      }
+    ],
+    "data_type": "nVarChar",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_CUSTOMER"
+  },
+  {
+    "id": "AU08",
+    "name": "Account Manager",
+    "description": "Account Manager attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "nVarChar",
+        "column_name": "ACCT_MGR",
+        "table": "DIM_CUSTOMER"
+      }
+    ],
+    "data_type": "nVarChar",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_CUSTOMER"
+  },
+  {
+    "id": "AU09",
+    "name": "Product",
+    "description": "Product attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "integer",
+        "column_name": "PROD_ID",
+        "table": "DIM_PRODUCT"
+      },
+      {
+        "name": "DESC",
+        "category": "DESC",
+        "data_type": "nVarChar",
+        "column_name": "PROD_NAME",
+        "table": "DIM_PRODUCT"
+      }
+    ],
+    "data_type": "integer",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_PRODUCT"
+  },
+  {
+    "id": "AU10",
+    "name": "Category",
+    "description": "Category attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "nVarChar",
+        "column_name": "CATEGORY",
+        "table": "DIM_PRODUCT"
+      }
+    ],
+    "data_type": "nVarChar",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_PRODUCT"
+  },
+  {
+    "id": "AU11",
+    "name": "Subcategory",
+    "description": "Subcategory attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "nVarChar",
+        "column_name": "SUBCATEGORY",
+        "table": "DIM_PRODUCT"
+      }
+    ],
+    "data_type": "nVarChar",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_PRODUCT"
+  },
+  {
+    "id": "AU12",
+    "name": "Brand",
+    "description": "Brand attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "nVarChar",
+        "column_name": "BRAND",
+        "table": "DIM_PRODUCT"
+      }
+    ],
+    "data_type": "nVarChar",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_PRODUCT"
+  },
+  {
+    "id": "AU13",
+    "name": "Date",
+    "description": "Date attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "date",
+        "column_name": "DATE_KEY",
+        "table": "DIM_DATE"
+      }
+    ],
+    "data_type": "date",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_DATE"
+  },
+  {
+    "id": "AU14",
+    "name": "Month",
+    "description": "Month attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "integer",
+        "column_name": "MONTH_NUM",
+        "table": "DIM_DATE"
+      },
+      {
+        "name": "DESC",
+        "category": "DESC",
+        "data_type": "nVarChar",
+        "column_name": "MONTH_NAME",
+        "table": "DIM_DATE"
+      }
+    ],
+    "data_type": "integer",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_DATE"
+  },
+  {
+    "id": "AU15",
+    "name": "Quarter",
+    "description": "Quarter attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "integer",
+        "column_name": "QUARTER",
+        "table": "DIM_DATE"
+      }
+    ],
+    "data_type": "integer",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_DATE"
+  },
+  {
+    "id": "AU16",
+    "name": "Year",
+    "description": "Year attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "integer",
+        "column_name": "YEAR",
+        "table": "DIM_DATE"
+      }
+    ],
+    "data_type": "integer",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_DATE"
+  },
+  {
+    "id": "AU17",
+    "name": "Fiscal Year",
+    "description": "Fiscal Year attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "integer",
+        "column_name": "FISCAL_YEAR",
+        "table": "DIM_DATE"
+      }
+    ],
+    "data_type": "integer",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_DATE"
+  },
+  {
+    "id": "AU18",
+    "name": "Channel",
+    "description": "Channel attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "integer",
+        "column_name": "CHANNEL_ID",
+        "table": "DIM_CHANNEL"
+      },
+      {
+        "name": "DESC",
+        "category": "DESC",
+        "data_type": "nVarChar",
+        "column_name": "CHANNEL_NAME",
+        "table": "DIM_CHANNEL"
+      }
+    ],
+    "data_type": "integer",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_CHANNEL"
+  },
+  {
+    "id": "AU19",
+    "name": "Channel Type",
+    "description": "Channel Type attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "nVarChar",
+        "column_name": "CHANNEL_TYPE",
+        "table": "DIM_CHANNEL"
+      }
+    ],
+    "data_type": "nVarChar",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_CHANNEL"
+  },
+  {
+    "id": "AU20",
+    "name": "Employee",
+    "description": "Employee attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "integer",
+        "column_name": "EMP_ID",
+        "table": "DIM_EMPLOYEE"
+      },
+      {
+        "name": "DESC",
+        "category": "DESC",
+        "data_type": "nVarChar",
+        "column_name": "EMP_NAME",
+        "table": "DIM_EMPLOYEE"
+      }
+    ],
+    "data_type": "integer",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_EMPLOYEE"
+  },
+  {
+    "id": "AU21",
+    "name": "Department",
+    "description": "Department attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "nVarChar",
+        "column_name": "DEPARTMENT",
+        "table": "DIM_EMPLOYEE"
+      }
+    ],
+    "data_type": "nVarChar",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_EMPLOYEE"
+  },
+  {
+    "id": "AU22",
+    "name": "Promotion",
+    "description": "Promotion attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "integer",
+        "column_name": "PROMO_ID",
+        "table": "DIM_PROMOTION"
+      },
+      {
+        "name": "DESC",
+        "category": "DESC",
+        "data_type": "nVarChar",
+        "column_name": "PROMO_NAME",
+        "table": "DIM_PROMOTION"
+      }
+    ],
+    "data_type": "integer",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_PROMOTION"
+  },
+  {
+    "id": "AU23",
+    "name": "Promo Type",
+    "description": "Promo Type attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "nVarChar",
+        "column_name": "PROMO_TYPE",
+        "table": "DIM_PROMOTION"
+      }
+    ],
+    "data_type": "nVarChar",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_PROMOTION"
+  },
+  {
+    "id": "AU24",
+    "name": "Warehouse",
+    "description": "Warehouse attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "integer",
+        "column_name": "WAREHOUSE_ID",
+        "table": "DIM_WAREHOUSE"
+      },
+      {
+        "name": "DESC",
+        "category": "DESC",
+        "data_type": "nVarChar",
+        "column_name": "WAREHOUSE_NAME",
+        "table": "DIM_WAREHOUSE"
+      }
+    ],
+    "data_type": "integer",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_WAREHOUSE"
+  },
+  {
+    "id": "AU25",
+    "name": "Device Type",
+    "description": "Device Type attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "nVarChar",
+        "column_name": "DEVICE_TYPE",
+        "table": "FACT_WEB_VISITS"
+      }
+    ],
+    "data_type": "nVarChar",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "FACT_WEB_VISITS"
+  },
+  {
+    "id": "AU26",
+    "name": "Return Reason",
+    "description": "Return Reason attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "nVarChar",
+        "column_name": "REASON_CODE",
+        "table": "FACT_RETURNS"
+      }
+    ],
+    "data_type": "nVarChar",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "FACT_RETURNS"
+  },
+  {
+    "id": "AU27",
+    "name": "Is Holiday",
+    "description": "Is Holiday attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "boolean",
+        "column_name": "IS_HOLIDAY",
+        "table": "DIM_DATE"
+      }
+    ],
+    "data_type": "boolean",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_DATE"
+  },
+  {
+    "id": "AU28",
+    "name": "Is Active Product",
+    "description": "Is Active Product attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "boolean",
+        "column_name": "IS_ACTIVE",
+        "table": "DIM_PRODUCT"
+      }
+    ],
+    "data_type": "boolean",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_PRODUCT"
+  },
+  {
+    "id": "AU29",
+    "name": "Fiscal Quarter",
+    "description": "Fiscal Quarter attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "integer",
+        "column_name": "FISCAL_QTR",
+        "table": "DIM_DATE"
+      }
+    ],
+    "data_type": "integer",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_DATE"
+  },
+  {
+    "id": "AU30",
+    "name": "Manager",
+    "description": "Manager attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "integer",
+        "column_name": "MANAGER_ID",
+        "table": "DIM_EMPLOYEE"
+      }
+    ],
+    "data_type": "integer",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_EMPLOYEE"
+  }
+]

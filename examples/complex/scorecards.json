@@ -1,0 +1,69 @@
+[
+  {
+    "id": "SC_C01",
+    "name": "Sales Performance Scorecard",
+    "description": "Quarterly sales targets",
+    "objectives": [
+      {
+        "id": "OBJ_C01",
+        "name": "Grow Revenue 20%",
+        "target_value": 12000000,
+        "current_value": 10500000,
+        "status": "at_risk",
+        "weight": 0.4,
+        "metric_id": "MC01",
+        "metric_name": "Total Revenue",
+        "thresholds": [
+          {
+            "name": "On Track",
+            "min": 11000000,
+            "max": null,
+            "color": "#6BCB77",
+            "status": "on_track"
+          },
+          {
+            "name": "At Risk",
+            "min": 9000000,
+            "max": 11000000,
+            "color": "#FFD93D",
+            "status": "at_risk"
+          },
+          {
+            "name": "Behind",
+            "min": null,
+            "max": 9000000,
+            "color": "#FF6B6B",
+            "status": "behind"
+          }
+        ],
+        "children": []
+      },
+      {
+        "id": "OBJ_C02",
+        "name": "Margin Above 25%",
+        "target_value": 0.25,
+        "current_value": 0.22,
+        "status": "at_risk",
+        "weight": 0.3,
+        "metric_id": "MC12",
+        "metric_name": "Profit Margin",
+        "thresholds": [],
+        "children": []
+      },
+      {
+        "id": "OBJ_C03",
+        "name": "Reduce Returns Below 5%",
+        "target_value": 0.05,
+        "current_value": 0.07,
+        "status": "behind",
+        "weight": 0.3,
+        "metric_id": "MC15",
+        "metric_name": "Return Rate",
+        "thresholds": [],
+        "children": []
+      }
+    ],
+    "perspectives": [],
+    "kpis": []
+  }
+]

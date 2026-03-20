@@ -1,0 +1,20 @@
+[
+  {
+    "report_id": "RPT_C01",
+    "type": "grand_total",
+    "position": "bottom",
+    "function": "sum"
+  },
+  {
+    "report_id": "RPT_C02",
+    "type": "grand_total",
+    "position": "bottom",
+    "function": "sum"
+  },
+  {
+    "report_id": "RPT_C05",
+    "type": "grand_total",
+    "position": "bottom",
+    "function": "sum"
+  }
+]

@@ -1,0 +1,146 @@
+[
+  {
+    "id": "DOSS_0001",
+    "name": "Sales Overview Dashboard",
+    "description": "Executive dashboard with KPIs, trends, and breakdowns",
+    "chapters": [
+      {
+        "key": "ch_01",
+        "name": "Overview",
+        "pages": [
+          {
+            "key": "pg_01",
+            "name": "Key Metrics",
+            "visualizations": [
+              {
+                "key": "viz_01",
+                "name": "Revenue KPI",
+                "viz_type": "kpi",
+                "data": {
+                  "attributes": [],
+                  "metrics": [
+                    {
+                      "id": "MET_0001",
+                      "name": "Total Revenue"
+                    }
+                  ]
+                },
+                "formatting": {
+                  "showTrend": true
+                },
+                "thresholds": [],
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 300,
+                  "height": 180
+                },
+                "actions": [],
+                "info_window": null
+              },
+              {
+                "key": "viz_02",
+                "name": "Profit KPI",
+                "viz_type": "kpi",
+                "data": {
+                  "attributes": [],
+                  "metrics": [
+                    {
+                      "id": "MET_0005",
+                      "name": "Profit"
+                    }
+                  ]
+                },
+                "formatting": {
+                  "showTrend": true
+                },
+                "thresholds": [],
+                "position": {
+                  "x": 320,
+                  "y": 0,
+                  "width": 300,
+                  "height": 180
+                },
+                "actions": [],
+                "info_window": null
+              },
+              {
+                "key": "viz_03",
+                "name": "Revenue by Region",
+                "viz_type": "vertical_bar",
+                "data": {
+                  "attributes": [
+                    {
+                      "id": "ATTR_0003",
+                      "name": "Region"
+                    }
+                  ],
+                  "metrics": [
+                    {
+                      "id": "MET_0001",
+                      "name": "Total Revenue"
+                    }
+                  ]
+                },
+                "formatting": {
+                  "showDataLabels": true,
+                  "showLegend": false
+                },
+                "thresholds": [],
+                "position": {
+                  "x": 0,
+                  "y": 200,
+                  "width": 620,
+                  "height": 400
+                },
+                "actions": [],
+                "info_window": null
+              },
+              {
+                "key": "viz_04",
+                "name": "Revenue Trend",
+                "viz_type": "line",
+                "data": {
+                  "attributes": [
+                    {
+                      "id": "ATTR_0008",
+                      "name": "Month"
+                    }
+                  ],
+                  "metrics": [
+                    {
+                      "id": "MET_0001",
+                      "name": "Total Revenue"
+                    },
+                    {
+                      "id": "MET_0002",
+                      "name": "Total Cost"
+                    }
+                  ]
+                },
+                "formatting": {
+                  "showDataLabels": false,
+                  "showLegend": true
+                },
+                "thresholds": [],
+                "position": {
+                  "x": 640,
+                  "y": 200,
+                  "width": 620,
+                  "height": 400
+                },
+                "actions": [],
+                "info_window": null
+              }
+            ],
+            "selectors": [],
+            "layout": {
+              "width": 1280,
+              "height": 720
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

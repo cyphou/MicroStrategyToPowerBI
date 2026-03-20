@@ -1,0 +1,54 @@
+[
+  {
+    "id": "RPT_0001",
+    "name": "Product Sales Summary",
+    "description": "Simple grid showing sales by product",
+    "report_type": "grid",
+    "grid": {
+      "rows": [
+        {
+          "id": "ATTR_0002",
+          "name": "Product Name",
+          "type": "attribute",
+          "forms": [
+            "DESC"
+          ]
+        }
+      ],
+      "columns": [],
+      "metrics_position": "columns"
+    },
+    "graph": null,
+    "metrics": [
+      {
+        "id": "MET_0001",
+        "name": "Total Sales"
+      },
+      {
+        "id": "MET_0002",
+        "name": "Total Quantity"
+      },
+      {
+        "id": "MET_0003",
+        "name": "Avg Price"
+      }
+    ],
+    "filters": [],
+    "sorts": [
+      {
+        "attribute": "Total Sales",
+        "order": "descending"
+      }
+    ],
+    "subtotals": [
+      {
+        "type": "grand_total",
+        "position": "bottom",
+        "function": "sum"
+      }
+    ],
+    "page_by": [],
+    "thresholds": [],
+    "prompts": []
+  }
+]

@@ -1,0 +1,50 @@
+[
+  {
+    "report_id": "RPT_U01",
+    "type": "grand_total",
+    "position": "bottom",
+    "function": "sum"
+  },
+  {
+    "report_id": "RPT_U02",
+    "type": "grand_total",
+    "position": "bottom",
+    "function": "sum"
+  },
+  {
+    "report_id": "RPT_U05",
+    "type": "grand_total",
+    "position": "bottom",
+    "function": "sum"
+  },
+  {
+    "report_id": "RPT_U06",
+    "type": "grand_total",
+    "position": "bottom",
+    "function": "sum"
+  },
+  {
+    "report_id": "RPT_U07",
+    "type": "grand_total",
+    "position": "bottom",
+    "function": "sum"
+  },
+  {
+    "report_id": "RPT_U10",
+    "type": "grand_total",
+    "position": "bottom",
+    "function": "sum"
+  },
+  {
+    "report_id": "RPT_U12",
+    "type": "grand_total",
+    "position": "bottom",
+    "function": "sum"
+  },
+  {
+    "report_id": "RPT_U13",
+    "type": "grand_total",
+    "position": "bottom",
+    "function": "sum"
+  }
+]

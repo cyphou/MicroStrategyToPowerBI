@@ -1,0 +1,115 @@
+[
+  {
+    "id": "DC01",
+    "name": "Revenue Rank",
+    "description": "Revenue Rank derived metric",
+    "metric_type": "derived",
+    "expression": "Rank(Sum(Revenue), DESC) {~+, Customer}",
+    "aggregation": "",
+    "column_ref": null,
+    "format_string": "#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics\\Derived",
+    "is_smart_metric": true,
+    "dependencies": [
+      "MC01"
+    ]
+  },
+  {
+    "id": "DC02",
+    "name": "Running Revenue",
+    "description": "Running Revenue derived metric",
+    "metric_type": "derived",
+    "expression": "RunningSum(Sum(Revenue)) {~+, Month}",
+    "aggregation": "",
+    "column_ref": null,
+    "format_string": "#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics\\Derived",
+    "is_smart_metric": true,
+    "dependencies": [
+      "MC01"
+    ]
+  },
+  {
+    "id": "DC03",
+    "name": "Revenue MoM Change",
+    "description": "Revenue MoM Change derived metric",
+    "metric_type": "derived",
+    "expression": "(Sum(Revenue) - Lag(Sum(Revenue), 1)) / Lag(Sum(Revenue), 1)",
+    "aggregation": "",
+    "column_ref": null,
+    "format_string": "#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics\\Derived",
+    "is_smart_metric": true,
+    "dependencies": [
+      "MC01"
+    ]
+  },
+  {
+    "id": "DC04",
+    "name": "3M Moving Avg Revenue",
+    "description": "3M Moving Avg Revenue derived metric",
+    "metric_type": "derived",
+    "expression": "MovingAvg(Sum(Revenue), 3) {~+, Month}",
+    "aggregation": "",
+    "column_ref": null,
+    "format_string": "#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics\\Derived",
+    "is_smart_metric": true,
+    "dependencies": [
+      "MC01"
+    ]
+  },
+  {
+    "id": "DC05",
+    "name": "Revenue YoY",
+    "description": "Revenue YoY derived metric",
+    "metric_type": "derived",
+    "expression": "(Sum(Revenue) - Lag(Sum(Revenue), 12, Month)) / Lag(Sum(Revenue), 12, Month)",
+    "aggregation": "",
+    "column_ref": null,
+    "format_string": "#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics\\Derived",
+    "is_smart_metric": true,
+    "dependencies": [
+      "MC01"
+    ]
+  },
+  {
+    "id": "DC06",
+    "name": "Profit NTile",
+    "description": "Profit NTile derived metric",
+    "metric_type": "derived",
+    "expression": "NTile(Sum(Revenue) - Sum(Cost), 4)",
+    "aggregation": "",
+    "column_ref": null,
+    "format_string": "#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics\\Derived",
+    "is_smart_metric": true,
+    "dependencies": [
+      "MC01",
+      "MC02"
+    ]
+  },
+  {
+    "id": "DC07",
+    "name": "Revenue Quartile",
+    "description": "Revenue Quartile derived metric",
+    "metric_type": "derived",
+    "expression": "NTile(Sum(Revenue), 4) {~+, Region}",
+    "aggregation": "",
+    "column_ref": null,
+    "format_string": "#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics\\Derived",
+    "is_smart_metric": true,
+    "dependencies": [
+      "MC01"
+    ]
+  }
+]

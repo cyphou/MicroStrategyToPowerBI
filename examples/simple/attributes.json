@@ -1,0 +1,44 @@
+[
+  {
+    "id": "ATTR_0001",
+    "name": "Order ID",
+    "description": "Unique order identifier",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "integer",
+        "column_name": "ORDER_ID",
+        "table": "ORDERS"
+      }
+    ],
+    "data_type": "integer",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "ORDERS"
+  },
+  {
+    "id": "ATTR_0002",
+    "name": "Product Name",
+    "description": "Name of the product sold",
+    "forms": [
+      {
+        "name": "DESC",
+        "category": "DESC",
+        "data_type": "nVarChar",
+        "column_name": "PRODUCT_NAME",
+        "table": "ORDERS"
+      }
+    ],
+    "data_type": "nVarChar",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "ORDERS"
+  }
+]

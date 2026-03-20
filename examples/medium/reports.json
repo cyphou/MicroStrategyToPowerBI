@@ -1,0 +1,188 @@
+[
+  {
+    "id": "RPT_0001",
+    "name": "Revenue by Region",
+    "description": "Grid: revenue breakdown by region and city",
+    "report_type": "grid",
+    "grid": {
+      "rows": [
+        {
+          "id": "ATTR_0003",
+          "name": "Region",
+          "type": "attribute",
+          "forms": [
+            "ID"
+          ]
+        },
+        {
+          "id": "ATTR_0002",
+          "name": "City",
+          "type": "attribute",
+          "forms": [
+            "ID"
+          ]
+        }
+      ],
+      "columns": [],
+      "metrics_position": "columns"
+    },
+    "graph": null,
+    "metrics": [
+      {
+        "id": "MET_0001",
+        "name": "Total Revenue"
+      },
+      {
+        "id": "MET_0005",
+        "name": "Profit"
+      },
+      {
+        "id": "MET_0006",
+        "name": "Profit Margin"
+      }
+    ],
+    "filters": [],
+    "sorts": [
+      {
+        "attribute": "Total Revenue",
+        "order": "descending"
+      }
+    ],
+    "subtotals": [
+      {
+        "type": "grand_total",
+        "position": "bottom",
+        "function": "sum"
+      }
+    ],
+    "page_by": [],
+    "thresholds": [],
+    "prompts": []
+  },
+  {
+    "id": "RPT_0002",
+    "name": "Monthly Revenue Trend",
+    "description": "Line chart of monthly revenue",
+    "report_type": "graph",
+    "grid": {
+      "rows": [
+        {
+          "id": "ATTR_0008",
+          "name": "Month",
+          "type": "attribute",
+          "forms": [
+            "ID"
+          ]
+        }
+      ],
+      "columns": [],
+      "metrics_position": "rows"
+    },
+    "graph": {
+      "type": "line",
+      "mstr_type": "line",
+      "attributes_on_axis": [
+        {
+          "id": "ATTR_0008",
+          "name": "Month"
+        }
+      ],
+      "metrics_on_axis": [
+        {
+          "id": "MET_0001",
+          "name": "Total Revenue"
+        },
+        {
+          "id": "MET_0002",
+          "name": "Total Cost"
+        }
+      ],
+      "color_by": ""
+    },
+    "metrics": [
+      {
+        "id": "MET_0001",
+        "name": "Total Revenue"
+      },
+      {
+        "id": "MET_0002",
+        "name": "Total Cost"
+      }
+    ],
+    "filters": [],
+    "sorts": [],
+    "subtotals": [],
+    "page_by": [],
+    "thresholds": [],
+    "prompts": []
+  },
+  {
+    "id": "RPT_0003",
+    "name": "Product Performance",
+    "description": "Grid + bar chart for products",
+    "report_type": "grid_graph",
+    "grid": {
+      "rows": [
+        {
+          "id": "ATTR_0004",
+          "name": "Product",
+          "type": "attribute",
+          "forms": [
+            "DESC"
+          ]
+        },
+        {
+          "id": "ATTR_0005",
+          "name": "Category",
+          "type": "attribute",
+          "forms": [
+            "ID"
+          ]
+        }
+      ],
+      "columns": [],
+      "metrics_position": "columns"
+    },
+    "graph": {
+      "type": "vertical_bar",
+      "mstr_type": "vertical_bar",
+      "attributes_on_axis": [
+        {
+          "id": "ATTR_0005",
+          "name": "Category"
+        }
+      ],
+      "metrics_on_axis": [
+        {
+          "id": "MET_0001",
+          "name": "Total Revenue"
+        },
+        {
+          "id": "MET_0003",
+          "name": "Total Quantity"
+        }
+      ],
+      "color_by": ""
+    },
+    "metrics": [
+      {
+        "id": "MET_0001",
+        "name": "Total Revenue"
+      },
+      {
+        "id": "MET_0003",
+        "name": "Total Quantity"
+      },
+      {
+        "id": "MET_0007",
+        "name": "Avg Unit Price"
+      }
+    ],
+    "filters": [],
+    "sorts": [],
+    "subtotals": [],
+    "page_by": [],
+    "thresholds": [],
+    "prompts": []
+  }
+]

@@ -1,0 +1,228 @@
+[
+  {
+    "id": "SCU01",
+    "name": "Company Performance Scorecard",
+    "description": "Overall company KPIs",
+    "objectives": [
+      {
+        "id": "OBJ_U01",
+        "name": "Revenue Growth 25%",
+        "target_value": 50000000,
+        "current_value": 42000000,
+        "status": "at_risk",
+        "weight": 0.3,
+        "metric_id": "MU01",
+        "metric_name": "Total Revenue",
+        "thresholds": [
+          {
+            "name": "Ahead",
+            "min": 48000000,
+            "max": null,
+            "color": "#6BCB77",
+            "status": "on_track"
+          },
+          {
+            "name": "On Track",
+            "min": 40000000,
+            "max": 48000000,
+            "color": "#FFD93D",
+            "status": "at_risk"
+          },
+          {
+            "name": "Behind",
+            "min": null,
+            "max": 40000000,
+            "color": "#FF6B6B",
+            "status": "behind"
+          }
+        ],
+        "children": [
+          {
+            "id": "OBJ_U01a",
+            "name": "AMER Revenue",
+            "target_value": 25000000,
+            "current_value": 22000000,
+            "status": "at_risk",
+            "metric_id": "MU01",
+            "metric_name": "Total Revenue"
+          },
+          {
+            "id": "OBJ_U01b",
+            "name": "EMEA Revenue",
+            "target_value": 15000000,
+            "current_value": 12000000,
+            "status": "behind",
+            "metric_id": "MU01",
+            "metric_name": "Total Revenue"
+          },
+          {
+            "id": "OBJ_U01c",
+            "name": "APAC Revenue",
+            "target_value": 10000000,
+            "current_value": 8000000,
+            "status": "at_risk",
+            "metric_id": "MU01",
+            "metric_name": "Total Revenue"
+          }
+        ]
+      },
+      {
+        "id": "OBJ_U02",
+        "name": "Profit Margin > 30%",
+        "target_value": 0.3,
+        "current_value": 0.27,
+        "status": "at_risk",
+        "weight": 0.25,
+        "metric_id": "MU22",
+        "metric_name": "Profit Margin",
+        "thresholds": [],
+        "children": []
+      },
+      {
+        "id": "OBJ_U03",
+        "name": "Return Rate < 3%",
+        "target_value": 0.03,
+        "current_value": 0.045,
+        "status": "behind",
+        "weight": 0.15,
+        "metric_id": "MU25",
+        "metric_name": "Return Rate",
+        "thresholds": [],
+        "children": []
+      },
+      {
+        "id": "OBJ_U04",
+        "name": "Customer Count > 50K",
+        "target_value": 50000,
+        "current_value": 47200,
+        "status": "on_track",
+        "weight": 0.15,
+        "metric_id": "MU18",
+        "metric_name": "Customer Count",
+        "thresholds": [],
+        "children": []
+      },
+      {
+        "id": "OBJ_U05",
+        "name": "ROAS > 5x",
+        "target_value": 5.0,
+        "current_value": 4.2,
+        "status": "at_risk",
+        "weight": 0.15,
+        "metric_id": "MU32",
+        "metric_name": "ROAS",
+        "thresholds": [],
+        "children": []
+      }
+    ],
+    "perspectives": [
+      {
+        "id": "PERSP01",
+        "name": "Financial",
+        "description": "Revenue, profit, cost metrics",
+        "objective_ids": [
+          "OBJ_U01",
+          "OBJ_U02"
+        ]
+      },
+      {
+        "id": "PERSP02",
+        "name": "Customer",
+        "description": "Customer growth and satisfaction",
+        "objective_ids": [
+          "OBJ_U04"
+        ]
+      },
+      {
+        "id": "PERSP03",
+        "name": "Operations",
+        "description": "Returns and fulfillment",
+        "objective_ids": [
+          "OBJ_U03"
+        ]
+      },
+      {
+        "id": "PERSP04",
+        "name": "Growth",
+        "description": "Marketing effectiveness",
+        "objective_ids": [
+          "OBJ_U05"
+        ]
+      }
+    ],
+    "kpis": [
+      {
+        "id": "KPI_U01",
+        "name": "Monthly Revenue",
+        "metric_id": "MU01",
+        "target": 4200000,
+        "unit": "$",
+        "format": "$#,##0",
+        "thresholds": []
+      },
+      {
+        "id": "KPI_U02",
+        "name": "Monthly Profit",
+        "metric_id": "MU21",
+        "target": 1200000,
+        "unit": "$",
+        "format": "$#,##0",
+        "thresholds": []
+      },
+      {
+        "id": "KPI_U03",
+        "name": "NPS Score",
+        "metric_id": "",
+        "target": 70,
+        "unit": "pts",
+        "format": "#,##0",
+        "thresholds": []
+      }
+    ]
+  },
+  {
+    "id": "SCU02",
+    "name": "Digital Marketing Scorecard",
+    "description": "Digital channel targets",
+    "objectives": [
+      {
+        "id": "OBJ_D01",
+        "name": "CTR > 3%",
+        "target_value": 0.03,
+        "current_value": 0.028,
+        "status": "at_risk",
+        "weight": 0.3,
+        "metric_id": "MU29",
+        "metric_name": "Click-Through Rate",
+        "thresholds": [],
+        "children": []
+      },
+      {
+        "id": "OBJ_D02",
+        "name": "CPC < $2",
+        "target_value": 2.0,
+        "current_value": 2.15,
+        "status": "behind",
+        "weight": 0.3,
+        "metric_id": "MU30",
+        "metric_name": "Cost per Click",
+        "thresholds": [],
+        "children": []
+      },
+      {
+        "id": "OBJ_D03",
+        "name": "Conversions > 10K/month",
+        "target_value": 10000,
+        "current_value": 8700,
+        "status": "at_risk",
+        "weight": 0.4,
+        "metric_id": "MU17",
+        "metric_name": "Total Conversions",
+        "thresholds": [],
+        "children": []
+      }
+    ],
+    "perspectives": [],
+    "kpis": []
+  }
+]

@@ -1,0 +1,33 @@
+[
+  {
+    "id": "CG_C01",
+    "name": "Customer Tier",
+    "type": "custom_group",
+    "elements": [
+      {
+        "name": "Platinum",
+        "filter": {
+          "expression": "Sum(Revenue) > 500000"
+        }
+      },
+      {
+        "name": "Gold",
+        "filter": {
+          "expression": "Sum(Revenue) Between 100000 And 500000"
+        }
+      },
+      {
+        "name": "Silver",
+        "filter": {
+          "expression": "Sum(Revenue) Between 10000 And 100000"
+        }
+      },
+      {
+        "name": "Bronze",
+        "filter": {
+          "expression": "Sum(Revenue) < 10000"
+        }
+      }
+    ]
+  }
+]

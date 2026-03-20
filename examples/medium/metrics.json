@@ -1,0 +1,172 @@
+[
+  {
+    "id": "MET_0001",
+    "name": "Total Revenue",
+    "description": "Sum of revenue",
+    "metric_type": "simple",
+    "expression": "Sum(Revenue)",
+    "aggregation": "sum",
+    "column_ref": {
+      "fact_id": "FACT_0001",
+      "fact_name": "Revenue"
+    },
+    "format_string": "$#,##0.00",
+    "subtotal_type": "sum",
+    "folder_path": "\\Metrics\\Sales",
+    "is_smart_metric": false,
+    "dependencies": []
+  },
+  {
+    "id": "MET_0002",
+    "name": "Total Cost",
+    "description": "Sum of cost",
+    "metric_type": "simple",
+    "expression": "Sum(Cost)",
+    "aggregation": "sum",
+    "column_ref": {
+      "fact_id": "FACT_0002",
+      "fact_name": "Cost"
+    },
+    "format_string": "$#,##0.00",
+    "subtotal_type": "sum",
+    "folder_path": "\\Metrics\\Sales",
+    "is_smart_metric": false,
+    "dependencies": []
+  },
+  {
+    "id": "MET_0003",
+    "name": "Total Quantity",
+    "description": "Sum of quantity",
+    "metric_type": "simple",
+    "expression": "Sum(Quantity)",
+    "aggregation": "sum",
+    "column_ref": {
+      "fact_id": "FACT_0003",
+      "fact_name": "Quantity"
+    },
+    "format_string": "#,##0",
+    "subtotal_type": "sum",
+    "folder_path": "\\Metrics\\Sales",
+    "is_smart_metric": false,
+    "dependencies": []
+  },
+  {
+    "id": "MET_0004",
+    "name": "Total Discount",
+    "description": "Sum of discount",
+    "metric_type": "simple",
+    "expression": "Sum(Discount)",
+    "aggregation": "sum",
+    "column_ref": {
+      "fact_id": "FACT_0004",
+      "fact_name": "Discount"
+    },
+    "format_string": "$#,##0.00",
+    "subtotal_type": "sum",
+    "folder_path": "\\Metrics\\Sales",
+    "is_smart_metric": false,
+    "dependencies": []
+  },
+  {
+    "id": "MET_0005",
+    "name": "Profit",
+    "description": "Revenue minus Cost",
+    "metric_type": "compound",
+    "expression": "Sum(Revenue) - Sum(Cost)",
+    "aggregation": "",
+    "column_ref": null,
+    "format_string": "$#,##0.00",
+    "subtotal_type": "sum",
+    "folder_path": "\\Metrics\\Sales",
+    "is_smart_metric": false,
+    "dependencies": [
+      "MET_0001",
+      "MET_0002"
+    ]
+  },
+  {
+    "id": "MET_0006",
+    "name": "Profit Margin",
+    "description": "Profit/Revenue ratio",
+    "metric_type": "compound",
+    "expression": "(Sum(Revenue) - Sum(Cost)) / Sum(Revenue)",
+    "aggregation": "",
+    "column_ref": null,
+    "format_string": "0.0%",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics\\Sales",
+    "is_smart_metric": false,
+    "dependencies": [
+      "MET_0001",
+      "MET_0002"
+    ]
+  },
+  {
+    "id": "MET_0007",
+    "name": "Avg Unit Price",
+    "description": "Average unit price",
+    "metric_type": "simple",
+    "expression": "Avg(Unit Price)",
+    "aggregation": "avg",
+    "column_ref": {
+      "fact_id": "FACT_0005",
+      "fact_name": "Unit Price"
+    },
+    "format_string": "$#,##0.00",
+    "subtotal_type": "avg",
+    "folder_path": "\\Metrics\\Product",
+    "is_smart_metric": false,
+    "dependencies": []
+  },
+  {
+    "id": "MET_0008",
+    "name": "Customer Count",
+    "description": "Distinct customer count",
+    "metric_type": "simple",
+    "expression": "Count<Distinct=True>(Customer)",
+    "aggregation": "distinctcount",
+    "column_ref": {
+      "fact_id": "ATTR_0001",
+      "fact_name": "Customer"
+    },
+    "format_string": "#,##0",
+    "subtotal_type": "count",
+    "folder_path": "\\Metrics\\Sales",
+    "is_smart_metric": false,
+    "dependencies": []
+  },
+  {
+    "id": "MET_0009",
+    "name": "Revenue per Customer",
+    "description": "Revenue / Customer Count",
+    "metric_type": "compound",
+    "expression": "Sum(Revenue) / Count<Distinct=True>(Customer)",
+    "aggregation": "",
+    "column_ref": null,
+    "format_string": "$#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics\\Sales",
+    "is_smart_metric": false,
+    "dependencies": [
+      "MET_0001",
+      "MET_0008"
+    ]
+  },
+  {
+    "id": "MET_0010",
+    "name": "Discount Rate",
+    "description": "Discount/Revenue ratio",
+    "metric_type": "compound",
+    "expression": "Sum(Discount) / Sum(Revenue)",
+    "aggregation": "",
+    "column_ref": null,
+    "format_string": "0.0%",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics\\Sales",
+    "is_smart_metric": false,
+    "dependencies": [
+      "MET_0004",
+      "MET_0001"
+    ]
+  }
+]

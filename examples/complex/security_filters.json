@@ -1,0 +1,45 @@
+[
+  {
+    "id": "SF_C01",
+    "name": "Region Filter - East",
+    "description": "East region sales only",
+    "expression": "Region In (East, Northeast)",
+    "target_attributes": [
+      {
+        "id": "AC05",
+        "name": "Region"
+      }
+    ],
+    "users": [
+      {
+        "id": "u01",
+        "name": "EastManager"
+      }
+    ],
+    "groups": [
+      {
+        "id": "g01",
+        "name": "East Team"
+      }
+    ]
+  },
+  {
+    "id": "SF_C02",
+    "name": "Channel Filter - Online",
+    "description": "Online channel only",
+    "expression": "Channel In (Web, Mobile)",
+    "target_attributes": [
+      {
+        "id": "AC15",
+        "name": "Channel"
+      }
+    ],
+    "users": [],
+    "groups": [
+      {
+        "id": "g02",
+        "name": "Digital Team"
+      }
+    ]
+  }
+]

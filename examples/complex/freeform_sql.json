@@ -1,0 +1,39 @@
+[
+  {
+    "id": "FFS_C01",
+    "name": "VW_MONTHLY_REVENUE",
+    "sql_statement": "SELECT d.YEAR, d.MONTH_NUM, d.MONTH_NAME, SUM(s.REVENUE) AS MONTHLY_REV, SUM(s.COST) AS MONTHLY_COST, COUNT(DISTINCT s.CUST_ID) AS CUST_CNT FROM FACT_SALES s JOIN DIM_DATE d ON s.DATE_KEY = d.DATE_KEY GROUP BY d.YEAR, d.MONTH_NUM, d.MONTH_NAME",
+    "db_connection": {
+      "db_type": "oracle",
+      "server": "ora-prod.company.com",
+      "database": "SALESDB",
+      "schema": "SALES"
+    },
+    "columns": [
+      {
+        "name": "YEAR",
+        "data_type": "integer"
+      },
+      {
+        "name": "MONTH_NUM",
+        "data_type": "integer"
+      },
+      {
+        "name": "MONTH_NAME",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "MONTHLY_REV",
+        "data_type": "real"
+      },
+      {
+        "name": "MONTHLY_COST",
+        "data_type": "real"
+      },
+      {
+        "name": "CUST_CNT",
+        "data_type": "integer"
+      }
+    ]
+  }
+]

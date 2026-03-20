@@ -1,0 +1,30 @@
+[
+  {
+    "id": "FACT_0001",
+    "name": "Amount",
+    "description": "Sales amount",
+    "expressions": [
+      {
+        "table": "ORDERS",
+        "column": "AMOUNT"
+      }
+    ],
+    "data_type": "real",
+    "default_aggregation": "sum",
+    "format_string": "$#,##0.00"
+  },
+  {
+    "id": "FACT_0002",
+    "name": "Quantity",
+    "description": "Units sold",
+    "expressions": [
+      {
+        "table": "ORDERS",
+        "column": "QUANTITY"
+      }
+    ],
+    "data_type": "integer",
+    "default_aggregation": "sum",
+    "format_string": "#,##0"
+  }
+]

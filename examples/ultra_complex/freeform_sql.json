@@ -1,0 +1,96 @@
+[
+  {
+    "id": "FFU01",
+    "name": "VW_CUSTOMER_LIFETIME",
+    "sql_statement": "SELECT c.CUST_ID, c.CUST_NAME, c.REGION, c.SEGMENT, MIN(s.DATE_KEY) AS FIRST_PURCHASE, MAX(s.DATE_KEY) AS LAST_PURCHASE, COUNT(DISTINCT s.SALE_ID) AS ORDER_COUNT, SUM(s.REVENUE) AS TOTAL_REVENUE, SUM(s.REVENUE-s.COST) AS TOTAL_PROFIT FROM FACT_SALES s JOIN DIM_CUSTOMER c ON s.CUST_ID=c.CUST_ID GROUP BY c.CUST_ID,c.CUST_NAME,c.REGION,c.SEGMENT",
+    "db_connection": {
+      "db_type": "oracle",
+      "server": "ora-prod",
+      "database": "SALESDB",
+      "schema": "SALES"
+    },
+    "columns": [
+      {
+        "name": "CUST_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "CUST_NAME",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "REGION",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "SEGMENT",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "FIRST_PURCHASE",
+        "data_type": "date"
+      },
+      {
+        "name": "LAST_PURCHASE",
+        "data_type": "date"
+      },
+      {
+        "name": "ORDER_COUNT",
+        "data_type": "integer"
+      },
+      {
+        "name": "TOTAL_REVENUE",
+        "data_type": "real"
+      },
+      {
+        "name": "TOTAL_PROFIT",
+        "data_type": "real"
+      }
+    ]
+  },
+  {
+    "id": "FFU02",
+    "name": "VW_MARKETING_FUNNEL",
+    "sql_statement": "SELECT c.CHANNEL_NAME, d.YEAR, d.MONTH_NUM, SUM(m.IMPRESSIONS) AS IMPRESSIONS, SUM(m.CLICKS) AS CLICKS, SUM(m.CONVERSIONS) AS CONVERSIONS, SUM(m.SPEND_AMOUNT) AS SPEND, SUM(s.REVENUE) AS ATTRIBUTED_REVENUE FROM FACT_MARKETING_SPEND m JOIN DIM_CHANNEL c ON m.CHANNEL_ID=c.CHANNEL_ID JOIN DIM_DATE d ON m.DATE_KEY=d.DATE_KEY LEFT JOIN FACT_SALES s ON s.CHANNEL_ID=m.CHANNEL_ID AND s.DATE_KEY=m.DATE_KEY GROUP BY c.CHANNEL_NAME,d.YEAR,d.MONTH_NUM",
+    "db_connection": {
+      "db_type": "snowflake",
+      "server": "acme.snowflakecomputing.com",
+      "database": "ANALYTICS_DB",
+      "schema": "PUBLIC"
+    },
+    "columns": [
+      {
+        "name": "CHANNEL_NAME",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "YEAR",
+        "data_type": "integer"
+      },
+      {
+        "name": "MONTH_NUM",
+        "data_type": "integer"
+      },
+      {
+        "name": "IMPRESSIONS",
+        "data_type": "integer"
+      },
+      {
+        "name": "CLICKS",
+        "data_type": "integer"
+      },
+      {
+        "name": "CONVERSIONS",
+        "data_type": "integer"
+      },
+      {
+        "name": "SPEND",
+        "data_type": "real"
+      },
+      {
+        "name": "ATTRIBUTED_REVENUE",
+        "data_type": "real"
+      }
+    ]
+  }
+]

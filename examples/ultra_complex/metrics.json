@@ -1,0 +1,678 @@
+[
+  {
+    "id": "MU01",
+    "name": "Total Revenue",
+    "description": "Total Revenue metric",
+    "metric_type": "simple",
+    "expression": "Sum(Revenue)",
+    "aggregation": "sum",
+    "format_string": "$#,##0.00",
+    "subtotal_type": "sum",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [],
+    "column_ref": {
+      "fact_id": "FU01",
+      "fact_name": "Revenue"
+    }
+  },
+  {
+    "id": "MU02",
+    "name": "Total Cost",
+    "description": "Total Cost metric",
+    "metric_type": "simple",
+    "expression": "Sum(Cost)",
+    "aggregation": "sum",
+    "format_string": "$#,##0.00",
+    "subtotal_type": "sum",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [],
+    "column_ref": {
+      "fact_id": "FU02",
+      "fact_name": "Cost"
+    }
+  },
+  {
+    "id": "MU03",
+    "name": "Total Quantity",
+    "description": "Total Quantity metric",
+    "metric_type": "simple",
+    "expression": "Sum(Quantity)",
+    "aggregation": "sum",
+    "format_string": "#,##0",
+    "subtotal_type": "sum",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [],
+    "column_ref": {
+      "fact_id": "FU03",
+      "fact_name": "Quantity"
+    }
+  },
+  {
+    "id": "MU04",
+    "name": "Total Discount",
+    "description": "Total Discount metric",
+    "metric_type": "simple",
+    "expression": "Sum(Discount)",
+    "aggregation": "sum",
+    "format_string": "$#,##0.00",
+    "subtotal_type": "sum",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [],
+    "column_ref": {
+      "fact_id": "FU04",
+      "fact_name": "Discount"
+    }
+  },
+  {
+    "id": "MU05",
+    "name": "Total Tax",
+    "description": "Total Tax metric",
+    "metric_type": "simple",
+    "expression": "Sum(Tax)",
+    "aggregation": "sum",
+    "format_string": "$#,##0.00",
+    "subtotal_type": "sum",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [],
+    "column_ref": {
+      "fact_id": "FU05",
+      "fact_name": "Tax"
+    }
+  },
+  {
+    "id": "MU06",
+    "name": "Total Shipping",
+    "description": "Total Shipping metric",
+    "metric_type": "simple",
+    "expression": "Sum(Shipping)",
+    "aggregation": "sum",
+    "format_string": "$#,##0.00",
+    "subtotal_type": "sum",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [],
+    "column_ref": {
+      "fact_id": "FU06",
+      "fact_name": "Shipping"
+    }
+  },
+  {
+    "id": "MU07",
+    "name": "Total Commission",
+    "description": "Total Commission metric",
+    "metric_type": "simple",
+    "expression": "Sum(Commission)",
+    "aggregation": "sum",
+    "format_string": "$#,##0.00",
+    "subtotal_type": "sum",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [],
+    "column_ref": {
+      "fact_id": "FU07",
+      "fact_name": "Commission"
+    }
+  },
+  {
+    "id": "MU08",
+    "name": "Return Quantity",
+    "description": "Return Quantity metric",
+    "metric_type": "simple",
+    "expression": "Sum(Return Qty)",
+    "aggregation": "sum",
+    "format_string": "#,##0",
+    "subtotal_type": "sum",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [],
+    "column_ref": {
+      "fact_id": "FU08",
+      "fact_name": "Return Qty"
+    }
+  },
+  {
+    "id": "MU09",
+    "name": "Return Amount",
+    "description": "Return Amount metric",
+    "metric_type": "simple",
+    "expression": "Sum(Return Amount)",
+    "aggregation": "sum",
+    "format_string": "$#,##0.00",
+    "subtotal_type": "sum",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [],
+    "column_ref": {
+      "fact_id": "FU09",
+      "fact_name": "Return Amount"
+    }
+  },
+  {
+    "id": "MU10",
+    "name": "Inventory On Hand",
+    "description": "Inventory On Hand metric",
+    "metric_type": "simple",
+    "expression": "Sum(On Hand)",
+    "aggregation": "sum",
+    "format_string": "#,##0",
+    "subtotal_type": "sum",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [],
+    "column_ref": {
+      "fact_id": "FU10",
+      "fact_name": "On Hand"
+    }
+  },
+  {
+    "id": "MU11",
+    "name": "Inventory On Order",
+    "description": "Inventory On Order metric",
+    "metric_type": "simple",
+    "expression": "Sum(On Order)",
+    "aggregation": "sum",
+    "format_string": "#,##0",
+    "subtotal_type": "sum",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [],
+    "column_ref": {
+      "fact_id": "FU11",
+      "fact_name": "On Order"
+    }
+  },
+  {
+    "id": "MU12",
+    "name": "Total Page Views",
+    "description": "Total Page Views metric",
+    "metric_type": "simple",
+    "expression": "Sum(Page Views)",
+    "aggregation": "sum",
+    "format_string": "#,##0",
+    "subtotal_type": "sum",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [],
+    "column_ref": {
+      "fact_id": "FU13",
+      "fact_name": "Page Views"
+    }
+  },
+  {
+    "id": "MU13",
+    "name": "Total Sessions",
+    "description": "Total Sessions metric",
+    "metric_type": "simple",
+    "expression": "Count(Session Duration)",
+    "aggregation": "count",
+    "format_string": "#,##0",
+    "subtotal_type": "count",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [],
+    "column_ref": {
+      "fact_id": "FU14",
+      "fact_name": "Session Duration"
+    }
+  },
+  {
+    "id": "MU14",
+    "name": "Marketing Spend",
+    "description": "Marketing Spend metric",
+    "metric_type": "simple",
+    "expression": "Sum(Marketing Spend)",
+    "aggregation": "sum",
+    "format_string": "$#,##0.00",
+    "subtotal_type": "sum",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [],
+    "column_ref": {
+      "fact_id": "FU15",
+      "fact_name": "Marketing Spend"
+    }
+  },
+  {
+    "id": "MU15",
+    "name": "Total Impressions",
+    "description": "Total Impressions metric",
+    "metric_type": "simple",
+    "expression": "Sum(Impressions)",
+    "aggregation": "sum",
+    "format_string": "#,##0",
+    "subtotal_type": "sum",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [],
+    "column_ref": {
+      "fact_id": "FU16",
+      "fact_name": "Impressions"
+    }
+  },
+  {
+    "id": "MU16",
+    "name": "Total Clicks",
+    "description": "Total Clicks metric",
+    "metric_type": "simple",
+    "expression": "Sum(Clicks)",
+    "aggregation": "sum",
+    "format_string": "#,##0",
+    "subtotal_type": "sum",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [],
+    "column_ref": {
+      "fact_id": "FU17",
+      "fact_name": "Clicks"
+    }
+  },
+  {
+    "id": "MU17",
+    "name": "Total Conversions",
+    "description": "Total Conversions metric",
+    "metric_type": "simple",
+    "expression": "Sum(Conversions)",
+    "aggregation": "sum",
+    "format_string": "#,##0",
+    "subtotal_type": "sum",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [],
+    "column_ref": {
+      "fact_id": "FU18",
+      "fact_name": "Conversions"
+    }
+  },
+  {
+    "id": "MU18",
+    "name": "Customer Count",
+    "description": "Customer Count metric",
+    "metric_type": "simple",
+    "expression": "Count<Distinct=True>(Customer)",
+    "aggregation": "distinctcount",
+    "format_string": "#,##0",
+    "subtotal_type": "distinctcount",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [],
+    "column_ref": {
+      "fact_id": "AU01",
+      "fact_name": "Customer"
+    }
+  },
+  {
+    "id": "MU19",
+    "name": "Product Count",
+    "description": "Product Count metric",
+    "metric_type": "simple",
+    "expression": "Count<Distinct=True>(Product)",
+    "aggregation": "distinctcount",
+    "format_string": "#,##0",
+    "subtotal_type": "distinctcount",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [],
+    "column_ref": {
+      "fact_id": "AU09",
+      "fact_name": "Product"
+    }
+  },
+  {
+    "id": "MU20",
+    "name": "Avg Unit Cost",
+    "description": "Avg Unit Cost metric",
+    "metric_type": "simple",
+    "expression": "Avg(Unit Cost)",
+    "aggregation": "avg",
+    "format_string": "$#,##0.00",
+    "subtotal_type": "avg",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [],
+    "column_ref": {
+      "fact_id": "FU19",
+      "fact_name": "Unit Cost"
+    }
+  },
+  {
+    "id": "MU21",
+    "name": "Profit",
+    "description": "Profit metric",
+    "metric_type": "compound",
+    "expression": "Sum(Revenue) - Sum(Cost)",
+    "aggregation": "",
+    "format_string": "$#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [
+      "MU01",
+      "MU02"
+    ],
+    "column_ref": null
+  },
+  {
+    "id": "MU22",
+    "name": "Profit Margin",
+    "description": "Profit Margin metric",
+    "metric_type": "compound",
+    "expression": "(Sum(Revenue) - Sum(Cost)) / Sum(Revenue)",
+    "aggregation": "",
+    "format_string": "0.0%",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [
+      "MU01",
+      "MU02"
+    ],
+    "column_ref": null
+  },
+  {
+    "id": "MU23",
+    "name": "Gross Revenue",
+    "description": "Gross Revenue metric",
+    "metric_type": "compound",
+    "expression": "Sum(Revenue) - Sum(Discount)",
+    "aggregation": "",
+    "format_string": "$#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [
+      "MU01",
+      "MU04"
+    ],
+    "column_ref": null
+  },
+  {
+    "id": "MU24",
+    "name": "Net Revenue",
+    "description": "Net Revenue metric",
+    "metric_type": "compound",
+    "expression": "Sum(Revenue) - Sum(Cost) - Sum(Tax) - Sum(Shipping)",
+    "aggregation": "",
+    "format_string": "$#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [
+      "MU01",
+      "MU02",
+      "MU05",
+      "MU06"
+    ],
+    "column_ref": null
+  },
+  {
+    "id": "MU25",
+    "name": "Return Rate",
+    "description": "Return Rate metric",
+    "metric_type": "compound",
+    "expression": "Sum(Return Qty) / Sum(Quantity)",
+    "aggregation": "",
+    "format_string": "0.0%",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [
+      "MU08",
+      "MU03"
+    ],
+    "column_ref": null
+  },
+  {
+    "id": "MU26",
+    "name": "Revenue per Customer",
+    "description": "Revenue per Customer metric",
+    "metric_type": "compound",
+    "expression": "Sum(Revenue) / Count<Distinct=True>(Customer)",
+    "aggregation": "",
+    "format_string": "$#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [
+      "MU01",
+      "MU18"
+    ],
+    "column_ref": null
+  },
+  {
+    "id": "MU27",
+    "name": "Avg Order Value",
+    "description": "Avg Order Value metric",
+    "metric_type": "compound",
+    "expression": "Sum(Revenue) / Count(SALE_ID)",
+    "aggregation": "",
+    "format_string": "$#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [],
+    "column_ref": null
+  },
+  {
+    "id": "MU28",
+    "name": "Discount Rate",
+    "description": "Discount Rate metric",
+    "metric_type": "compound",
+    "expression": "Sum(Discount) / Sum(Revenue)",
+    "aggregation": "",
+    "format_string": "0.0%",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [
+      "MU04",
+      "MU01"
+    ],
+    "column_ref": null
+  },
+  {
+    "id": "MU29",
+    "name": "Click-Through Rate",
+    "description": "Click-Through Rate metric",
+    "metric_type": "compound",
+    "expression": "Sum(Clicks) / Sum(Impressions)",
+    "aggregation": "",
+    "format_string": "0.00%",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [
+      "MU16",
+      "MU15"
+    ],
+    "column_ref": null
+  },
+  {
+    "id": "MU30",
+    "name": "Cost per Click",
+    "description": "Cost per Click metric",
+    "metric_type": "compound",
+    "expression": "Sum(Marketing Spend) / Sum(Clicks)",
+    "aggregation": "",
+    "format_string": "$#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [
+      "MU14",
+      "MU16"
+    ],
+    "column_ref": null
+  },
+  {
+    "id": "MU31",
+    "name": "Cost per Conversion",
+    "description": "Cost per Conversion metric",
+    "metric_type": "compound",
+    "expression": "Sum(Marketing Spend) / Sum(Conversions)",
+    "aggregation": "",
+    "format_string": "$#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [
+      "MU14",
+      "MU17"
+    ],
+    "column_ref": null
+  },
+  {
+    "id": "MU32",
+    "name": "ROAS",
+    "description": "ROAS metric",
+    "metric_type": "compound",
+    "expression": "Sum(Revenue) / Sum(Marketing Spend)",
+    "aggregation": "",
+    "format_string": "#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [
+      "MU01",
+      "MU14"
+    ],
+    "column_ref": null
+  },
+  {
+    "id": "MU33",
+    "name": "Avg Session Duration",
+    "description": "Avg Session Duration metric",
+    "metric_type": "simple",
+    "expression": "Avg(Session Duration)",
+    "aggregation": "avg",
+    "format_string": "#,##0",
+    "subtotal_type": "avg",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [],
+    "column_ref": {
+      "fact_id": "FU14",
+      "fact_name": "Session Duration"
+    }
+  },
+  {
+    "id": "MU34",
+    "name": "Bounce Rate",
+    "description": "Bounce Rate metric",
+    "metric_type": "compound",
+    "expression": "Count(Bounce=True) / Count(Session Duration)",
+    "aggregation": "",
+    "format_string": "0.0%",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [],
+    "column_ref": null
+  },
+  {
+    "id": "MU35",
+    "name": "Inventory Weeks of Supply",
+    "description": "Inventory Weeks of Supply metric",
+    "metric_type": "compound",
+    "expression": "Sum(On Hand) / (Sum(Quantity) / 52)",
+    "aggregation": "",
+    "format_string": "#,##0.0",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [
+      "MU10",
+      "MU03"
+    ],
+    "column_ref": null
+  },
+  {
+    "id": "MU36",
+    "name": "Fill Rate",
+    "description": "Fill Rate metric",
+    "metric_type": "compound",
+    "expression": "1 - (Sum(Return Qty) / Sum(Quantity))",
+    "aggregation": "",
+    "format_string": "0.0%",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [
+      "MU08",
+      "MU03"
+    ],
+    "column_ref": null
+  },
+  {
+    "id": "MU37",
+    "name": "Commission Rate",
+    "description": "Commission Rate metric",
+    "metric_type": "compound",
+    "expression": "Sum(Commission) / Sum(Revenue)",
+    "aggregation": "",
+    "format_string": "0.0%",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [
+      "MU07",
+      "MU01"
+    ],
+    "column_ref": null
+  },
+  {
+    "id": "MU38",
+    "name": "Effective Tax Rate",
+    "description": "Effective Tax Rate metric",
+    "metric_type": "compound",
+    "expression": "Sum(Tax) / Sum(Revenue)",
+    "aggregation": "",
+    "format_string": "0.0%",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [
+      "MU05",
+      "MU01"
+    ],
+    "column_ref": null
+  },
+  {
+    "id": "MU39",
+    "name": "Revenue per Page View",
+    "description": "Revenue per Page View metric",
+    "metric_type": "compound",
+    "expression": "Sum(Revenue) / Sum(Page Views)",
+    "aggregation": "",
+    "format_string": "$#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [
+      "MU01",
+      "MU12"
+    ],
+    "column_ref": null
+  },
+  {
+    "id": "MU40",
+    "name": "Customer Lifetime Value",
+    "description": "Customer Lifetime Value metric",
+    "metric_type": "compound",
+    "expression": "Sum(Revenue) / Count<Distinct=True>(Customer) * 3",
+    "aggregation": "",
+    "format_string": "$#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics",
+    "is_smart_metric": false,
+    "dependencies": [
+      "MU01",
+      "MU18"
+    ],
+    "column_ref": null
+  }
+]

@@ -1,0 +1,861 @@
+[
+  {
+    "id": "RPT_U01",
+    "name": "Executive Revenue Summary",
+    "description": "Top-line revenue by region",
+    "report_type": "grid",
+    "grid": {
+      "rows": [
+        {
+          "id": "AU05",
+          "name": "Region",
+          "type": "attribute",
+          "forms": [
+            "ID",
+            "DESC"
+          ]
+        }
+      ],
+      "columns": [],
+      "metrics_position": "columns"
+    },
+    "graph": null,
+    "metrics": [
+      {
+        "id": "MU01",
+        "name": "Total Revenue"
+      },
+      {
+        "id": "MU21",
+        "name": "Profit"
+      },
+      {
+        "id": "MU22",
+        "name": "Profit Margin"
+      }
+    ],
+    "filters": [],
+    "sorts": [],
+    "subtotals": [],
+    "page_by": [],
+    "thresholds": [],
+    "prompts": []
+  },
+  {
+    "id": "RPT_U02",
+    "name": "Product Performance Matrix",
+    "description": "Products × Quarters",
+    "report_type": "grid",
+    "grid": {
+      "rows": [
+        {
+          "id": "AU10",
+          "name": "Category",
+          "type": "attribute",
+          "forms": [
+            "ID",
+            "DESC"
+          ]
+        },
+        {
+          "id": "AU09",
+          "name": "Product",
+          "type": "attribute",
+          "forms": [
+            "ID",
+            "DESC"
+          ]
+        }
+      ],
+      "columns": [
+        {
+          "id": "AU15",
+          "name": "Quarter",
+          "type": "attribute",
+          "forms": [
+            "ID"
+          ]
+        }
+      ],
+      "metrics_position": "columns"
+    },
+    "graph": null,
+    "metrics": [
+      {
+        "id": "MU01",
+        "name": "Total Revenue"
+      },
+      {
+        "id": "MU03",
+        "name": "Total Quantity"
+      }
+    ],
+    "filters": [],
+    "sorts": [],
+    "subtotals": [],
+    "page_by": [],
+    "thresholds": [],
+    "prompts": []
+  },
+  {
+    "id": "RPT_U03",
+    "name": "Monthly Trend",
+    "description": "Revenue trend by month",
+    "report_type": "graph",
+    "grid": {
+      "rows": [
+        {
+          "id": "AU14",
+          "name": "Month",
+          "type": "attribute",
+          "forms": [
+            "ID",
+            "DESC"
+          ]
+        }
+      ],
+      "columns": [],
+      "metrics_position": "columns"
+    },
+    "graph": {
+      "type": "line",
+      "mstr_type": "line",
+      "attributes_on_axis": [
+        {
+          "id": "AU14",
+          "name": "Month"
+        }
+      ],
+      "metrics_on_axis": [
+        {
+          "id": "MU01",
+          "name": "Total Revenue"
+        },
+        {
+          "id": "MU02",
+          "name": "Total Cost"
+        },
+        {
+          "id": "MU21",
+          "name": "Profit"
+        }
+      ],
+      "color_by": ""
+    },
+    "metrics": [
+      {
+        "id": "MU01",
+        "name": "Total Revenue"
+      },
+      {
+        "id": "MU02",
+        "name": "Total Cost"
+      },
+      {
+        "id": "MU21",
+        "name": "Profit"
+      }
+    ],
+    "filters": [],
+    "sorts": [],
+    "subtotals": [],
+    "page_by": [],
+    "thresholds": [],
+    "prompts": []
+  },
+  {
+    "id": "RPT_U04",
+    "name": "Customer Profitability",
+    "description": "Customer scatter",
+    "report_type": "grid_graph",
+    "grid": {
+      "rows": [
+        {
+          "id": "AU01",
+          "name": "Customer",
+          "type": "attribute",
+          "forms": [
+            "ID",
+            "DESC"
+          ]
+        }
+      ],
+      "columns": [],
+      "metrics_position": "columns"
+    },
+    "graph": {
+      "type": "scatter",
+      "mstr_type": "scatter",
+      "attributes_on_axis": [
+        {
+          "id": "AU01",
+          "name": "Customer"
+        }
+      ],
+      "metrics_on_axis": [
+        {
+          "id": "MU01",
+          "name": "Total Revenue"
+        },
+        {
+          "id": "MU21",
+          "name": "Profit"
+        },
+        {
+          "id": "MU22",
+          "name": "Profit Margin"
+        }
+      ],
+      "color_by": ""
+    },
+    "metrics": [
+      {
+        "id": "MU01",
+        "name": "Total Revenue"
+      },
+      {
+        "id": "MU21",
+        "name": "Profit"
+      },
+      {
+        "id": "MU22",
+        "name": "Profit Margin"
+      }
+    ],
+    "filters": [],
+    "sorts": [],
+    "subtotals": [],
+    "page_by": [],
+    "thresholds": [],
+    "prompts": []
+  },
+  {
+    "id": "RPT_U05",
+    "name": "Returns Drill-Down",
+    "description": "Returns by product and reason",
+    "report_type": "grid",
+    "grid": {
+      "rows": [
+        {
+          "id": "AU10",
+          "name": "Category",
+          "type": "attribute",
+          "forms": [
+            "ID",
+            "DESC"
+          ]
+        },
+        {
+          "id": "AU09",
+          "name": "Product",
+          "type": "attribute",
+          "forms": [
+            "ID",
+            "DESC"
+          ]
+        },
+        {
+          "id": "AU26",
+          "name": "Return Reason",
+          "type": "attribute",
+          "forms": [
+            "ID",
+            "DESC"
+          ]
+        }
+      ],
+      "columns": [],
+      "metrics_position": "columns"
+    },
+    "graph": null,
+    "metrics": [
+      {
+        "id": "MU03",
+        "name": "Total Quantity"
+      },
+      {
+        "id": "MU08",
+        "name": "Return Quantity"
+      },
+      {
+        "id": "MU25",
+        "name": "Return Rate"
+      }
+    ],
+    "filters": [],
+    "sorts": [],
+    "subtotals": [],
+    "page_by": [],
+    "thresholds": [],
+    "prompts": []
+  },
+  {
+    "id": "RPT_U06",
+    "name": "Channel Mix",
+    "description": "Revenue by channel type",
+    "report_type": "grid",
+    "grid": {
+      "rows": [
+        {
+          "id": "AU19",
+          "name": "Channel Type",
+          "type": "attribute",
+          "forms": [
+            "ID",
+            "DESC"
+          ]
+        },
+        {
+          "id": "AU18",
+          "name": "Channel",
+          "type": "attribute",
+          "forms": [
+            "ID",
+            "DESC"
+          ]
+        }
+      ],
+      "columns": [],
+      "metrics_position": "columns"
+    },
+    "graph": null,
+    "metrics": [
+      {
+        "id": "MU01",
+        "name": "Total Revenue"
+      },
+      {
+        "id": "MU07",
+        "name": "Total Commission"
+      },
+      {
+        "id": "MU37",
+        "name": "Commission Rate"
+      }
+    ],
+    "filters": [],
+    "sorts": [],
+    "subtotals": [],
+    "page_by": [],
+    "thresholds": [],
+    "prompts": []
+  },
+  {
+    "id": "RPT_U07",
+    "name": "Inventory Status",
+    "description": "Warehouse inventory",
+    "report_type": "grid",
+    "grid": {
+      "rows": [
+        {
+          "id": "AU24",
+          "name": "Warehouse",
+          "type": "attribute",
+          "forms": [
+            "ID",
+            "DESC"
+          ]
+        },
+        {
+          "id": "AU09",
+          "name": "Product",
+          "type": "attribute",
+          "forms": [
+            "ID",
+            "DESC"
+          ]
+        }
+      ],
+      "columns": [],
+      "metrics_position": "columns"
+    },
+    "graph": null,
+    "metrics": [
+      {
+        "id": "MU10",
+        "name": "Inventory On Hand"
+      },
+      {
+        "id": "MU11",
+        "name": "Inventory On Order"
+      },
+      {
+        "id": "MU35",
+        "name": "Inventory Weeks of Supply"
+      }
+    ],
+    "filters": [],
+    "sorts": [],
+    "subtotals": [],
+    "page_by": [],
+    "thresholds": [],
+    "prompts": []
+  },
+  {
+    "id": "RPT_U08",
+    "name": "Marketing ROI",
+    "description": "Campaign performance",
+    "report_type": "grid_graph",
+    "grid": {
+      "rows": [
+        {
+          "id": "AU18",
+          "name": "Channel",
+          "type": "attribute",
+          "forms": [
+            "ID",
+            "DESC"
+          ]
+        }
+      ],
+      "columns": [],
+      "metrics_position": "columns"
+    },
+    "graph": {
+      "type": "combo",
+      "mstr_type": "combo",
+      "attributes_on_axis": [
+        {
+          "id": "AU18",
+          "name": "Channel"
+        }
+      ],
+      "metrics_on_axis": [
+        {
+          "id": "MU14",
+          "name": "Marketing Spend"
+        },
+        {
+          "id": "MU16",
+          "name": "Total Clicks"
+        },
+        {
+          "id": "MU17",
+          "name": "Total Conversions"
+        }
+      ],
+      "color_by": ""
+    },
+    "metrics": [
+      {
+        "id": "MU14",
+        "name": "Marketing Spend"
+      },
+      {
+        "id": "MU16",
+        "name": "Total Clicks"
+      },
+      {
+        "id": "MU17",
+        "name": "Total Conversions"
+      },
+      {
+        "id": "MU32",
+        "name": "ROAS"
+      }
+    ],
+    "filters": [],
+    "sorts": [],
+    "subtotals": [],
+    "page_by": [],
+    "thresholds": [],
+    "prompts": []
+  },
+  {
+    "id": "RPT_U09",
+    "name": "Web Analytics",
+    "description": "Site traffic",
+    "report_type": "grid",
+    "grid": {
+      "rows": [
+        {
+          "id": "AU25",
+          "name": "Device Type",
+          "type": "attribute",
+          "forms": [
+            "ID",
+            "DESC"
+          ]
+        },
+        {
+          "id": "AU14",
+          "name": "Month",
+          "type": "attribute",
+          "forms": [
+            "ID",
+            "DESC"
+          ]
+        }
+      ],
+      "columns": [],
+      "metrics_position": "columns"
+    },
+    "graph": null,
+    "metrics": [
+      {
+        "id": "MU12",
+        "name": "Total Page Views"
+      },
+      {
+        "id": "MU13",
+        "name": "Total Sessions"
+      },
+      {
+        "id": "MU34",
+        "name": "Bounce Rate"
+      }
+    ],
+    "filters": [],
+    "sorts": [],
+    "subtotals": [],
+    "page_by": [],
+    "thresholds": [],
+    "prompts": []
+  },
+  {
+    "id": "RPT_U10",
+    "name": "Employee Revenue",
+    "description": "Revenue by employee",
+    "report_type": "grid",
+    "grid": {
+      "rows": [
+        {
+          "id": "AU21",
+          "name": "Department",
+          "type": "attribute",
+          "forms": [
+            "ID",
+            "DESC"
+          ]
+        },
+        {
+          "id": "AU20",
+          "name": "Employee",
+          "type": "attribute",
+          "forms": [
+            "ID",
+            "DESC"
+          ]
+        }
+      ],
+      "columns": [],
+      "metrics_position": "columns"
+    },
+    "graph": null,
+    "metrics": [
+      {
+        "id": "MU01",
+        "name": "Total Revenue"
+      },
+      {
+        "id": "MU03",
+        "name": "Total Quantity"
+      },
+      {
+        "id": "MU27",
+        "name": "Avg Order Value"
+      }
+    ],
+    "filters": [],
+    "sorts": [],
+    "subtotals": [],
+    "page_by": [],
+    "thresholds": [],
+    "prompts": []
+  },
+  {
+    "id": "RPT_U11",
+    "name": "Promotion Impact",
+    "description": "Promo effectiveness",
+    "report_type": "grid_graph",
+    "grid": {
+      "rows": [
+        {
+          "id": "AU22",
+          "name": "Promotion",
+          "type": "attribute",
+          "forms": [
+            "ID",
+            "DESC"
+          ]
+        },
+        {
+          "id": "AU23",
+          "name": "Promo Type",
+          "type": "attribute",
+          "forms": [
+            "ID",
+            "DESC"
+          ]
+        }
+      ],
+      "columns": [],
+      "metrics_position": "columns"
+    },
+    "graph": {
+      "type": "vertical_bar",
+      "mstr_type": "vertical_bar",
+      "attributes_on_axis": [
+        {
+          "id": "AU22",
+          "name": "Promotion"
+        }
+      ],
+      "metrics_on_axis": [
+        {
+          "id": "MU01",
+          "name": "Total Revenue"
+        },
+        {
+          "id": "MU04",
+          "name": "Total Discount"
+        },
+        {
+          "id": "MU28",
+          "name": "Discount Rate"
+        }
+      ],
+      "color_by": ""
+    },
+    "metrics": [
+      {
+        "id": "MU01",
+        "name": "Total Revenue"
+      },
+      {
+        "id": "MU04",
+        "name": "Total Discount"
+      },
+      {
+        "id": "MU28",
+        "name": "Discount Rate"
+      }
+    ],
+    "filters": [],
+    "sorts": [],
+    "subtotals": [],
+    "page_by": [],
+    "thresholds": [],
+    "prompts": []
+  },
+  {
+    "id": "RPT_U12",
+    "name": "Fiscal Year Comparison",
+    "description": "FY revenue",
+    "report_type": "grid",
+    "grid": {
+      "rows": [
+        {
+          "id": "AU17",
+          "name": "Fiscal Year",
+          "type": "attribute",
+          "forms": [
+            "ID",
+            "DESC"
+          ]
+        },
+        {
+          "id": "AU29",
+          "name": "Fiscal Quarter",
+          "type": "attribute",
+          "forms": [
+            "ID",
+            "DESC"
+          ]
+        }
+      ],
+      "columns": [],
+      "metrics_position": "columns"
+    },
+    "graph": null,
+    "metrics": [
+      {
+        "id": "MU01",
+        "name": "Total Revenue"
+      },
+      {
+        "id": "MU21",
+        "name": "Profit"
+      },
+      {
+        "id": "MU24",
+        "name": "Net Revenue"
+      }
+    ],
+    "filters": [],
+    "sorts": [],
+    "subtotals": [],
+    "page_by": [],
+    "thresholds": [],
+    "prompts": []
+  },
+  {
+    "id": "RPT_U13",
+    "name": "Customer Segmentation",
+    "description": "Segment analysis",
+    "report_type": "grid",
+    "grid": {
+      "rows": [
+        {
+          "id": "AU06",
+          "name": "Segment",
+          "type": "attribute",
+          "forms": [
+            "ID",
+            "DESC"
+          ]
+        },
+        {
+          "id": "AU07",
+          "name": "Customer Tier",
+          "type": "attribute",
+          "forms": [
+            "ID",
+            "DESC"
+          ]
+        }
+      ],
+      "columns": [],
+      "metrics_position": "columns"
+    },
+    "graph": null,
+    "metrics": [
+      {
+        "id": "MU01",
+        "name": "Total Revenue"
+      },
+      {
+        "id": "MU18",
+        "name": "Customer Count"
+      },
+      {
+        "id": "MU26",
+        "name": "Revenue per Customer"
+      },
+      {
+        "id": "MU40",
+        "name": "Customer Lifetime Value"
+      }
+    ],
+    "filters": [],
+    "sorts": [],
+    "subtotals": [],
+    "page_by": [],
+    "thresholds": [],
+    "prompts": []
+  },
+  {
+    "id": "RPT_U14",
+    "name": "Geographic Breakdown",
+    "description": "Revenue by geography",
+    "report_type": "grid_graph",
+    "grid": {
+      "rows": [
+        {
+          "id": "AU04",
+          "name": "Country",
+          "type": "attribute",
+          "forms": [
+            "ID",
+            "DESC"
+          ]
+        },
+        {
+          "id": "AU05",
+          "name": "Region",
+          "type": "attribute",
+          "forms": [
+            "ID",
+            "DESC"
+          ]
+        },
+        {
+          "id": "AU03",
+          "name": "State",
+          "type": "attribute",
+          "forms": [
+            "ID",
+            "DESC"
+          ]
+        }
+      ],
+      "columns": [],
+      "metrics_position": "columns"
+    },
+    "graph": {
+      "type": "filled_map",
+      "mstr_type": "filled_map",
+      "attributes_on_axis": [
+        {
+          "id": "AU04",
+          "name": "Country"
+        }
+      ],
+      "metrics_on_axis": [
+        {
+          "id": "MU01",
+          "name": "Total Revenue"
+        },
+        {
+          "id": "MU21",
+          "name": "Profit"
+        }
+      ],
+      "color_by": ""
+    },
+    "metrics": [
+      {
+        "id": "MU01",
+        "name": "Total Revenue"
+      },
+      {
+        "id": "MU21",
+        "name": "Profit"
+      }
+    ],
+    "filters": [],
+    "sorts": [],
+    "subtotals": [],
+    "page_by": [],
+    "thresholds": [],
+    "prompts": []
+  },
+  {
+    "id": "RPT_U15",
+    "name": "Revenue Ranking",
+    "description": "Top customers",
+    "report_type": "grid",
+    "grid": {
+      "rows": [
+        {
+          "id": "AU01",
+          "name": "Customer",
+          "type": "attribute",
+          "forms": [
+            "ID",
+            "DESC"
+          ]
+        }
+      ],
+      "columns": [],
+      "metrics_position": "columns"
+    },
+    "graph": null,
+    "metrics": [
+      {
+        "id": "MU01",
+        "name": "Total Revenue"
+      },
+      {
+        "id": "MU21",
+        "name": "Profit"
+      }
+    ],
+    "filters": [],
+    "sorts": [],
+    "subtotals": [],
+    "page_by": [],
+    "thresholds": [],
+    "prompts": []
+  }
+]

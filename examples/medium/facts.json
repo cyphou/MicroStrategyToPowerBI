@@ -1,0 +1,72 @@
+[
+  {
+    "id": "FACT_0001",
+    "name": "Revenue",
+    "description": "Sales revenue",
+    "expressions": [
+      {
+        "table": "FACT_SALES",
+        "column": "REVENUE"
+      }
+    ],
+    "data_type": "real",
+    "default_aggregation": "sum",
+    "format_string": "$#,##0.00"
+  },
+  {
+    "id": "FACT_0002",
+    "name": "Cost",
+    "description": "Cost of goods sold",
+    "expressions": [
+      {
+        "table": "FACT_SALES",
+        "column": "COST"
+      }
+    ],
+    "data_type": "real",
+    "default_aggregation": "sum",
+    "format_string": "$#,##0.00"
+  },
+  {
+    "id": "FACT_0003",
+    "name": "Quantity",
+    "description": "Units sold",
+    "expressions": [
+      {
+        "table": "FACT_SALES",
+        "column": "QUANTITY"
+      }
+    ],
+    "data_type": "integer",
+    "default_aggregation": "sum",
+    "format_string": "#,##0"
+  },
+  {
+    "id": "FACT_0004",
+    "name": "Discount",
+    "description": "Discount given",
+    "expressions": [
+      {
+        "table": "FACT_SALES",
+        "column": "DISCOUNT"
+      }
+    ],
+    "data_type": "real",
+    "default_aggregation": "sum",
+    "format_string": "$#,##0.00"
+  },
+  {
+    "id": "FACT_0005",
+    "name": "Unit Price",
+    "description": "Product unit price",
+    "expressions": [
+      {
+        "table": "LU_PRODUCT",
+        "column": "UNIT_PRICE"
+      }
+    ],
+    "data_type": "real",
+    "default_aggregation": "avg",
+    "format_string": "$#,##0.00"
+  }
+]

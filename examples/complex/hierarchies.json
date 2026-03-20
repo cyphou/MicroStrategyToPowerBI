@@ -1,0 +1,83 @@
+[
+  {
+    "id": "HC01",
+    "name": "Geography",
+    "type": "user",
+    "levels": [
+      {
+        "attribute_id": "AC04",
+        "name": "Country",
+        "order": 1
+      },
+      {
+        "attribute_id": "AC05",
+        "name": "Region",
+        "order": 2
+      },
+      {
+        "attribute_id": "AC03",
+        "name": "State",
+        "order": 3
+      },
+      {
+        "attribute_id": "AC02",
+        "name": "City",
+        "order": 4
+      },
+      {
+        "attribute_id": "AC01",
+        "name": "Customer",
+        "order": 5
+      }
+    ]
+  },
+  {
+    "id": "HC02",
+    "name": "Product",
+    "type": "user",
+    "levels": [
+      {
+        "attribute_id": "AC08",
+        "name": "Category",
+        "order": 1
+      },
+      {
+        "attribute_id": "AC09",
+        "name": "Subcategory",
+        "order": 2
+      },
+      {
+        "attribute_id": "AC07",
+        "name": "Product",
+        "order": 3
+      }
+    ]
+  },
+  {
+    "id": "HC03",
+    "name": "Time",
+    "type": "system",
+    "levels": [
+      {
+        "attribute_id": "AC14",
+        "name": "Year",
+        "order": 1
+      },
+      {
+        "attribute_id": "AC13",
+        "name": "Quarter",
+        "order": 2
+      },
+      {
+        "attribute_id": "AC12",
+        "name": "Month",
+        "order": 3
+      },
+      {
+        "attribute_id": "AC11",
+        "name": "Date",
+        "order": 4
+      }
+    ]
+  }
+]

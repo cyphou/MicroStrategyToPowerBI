@@ -1,0 +1,162 @@
+[
+  {
+    "from_table": "DIM_CUSTOMER",
+    "from_column": "CUST_ID",
+    "to_table": "FACT_SALES",
+    "to_column": "CUST_ID",
+    "type": "many_to_one",
+    "active": true,
+    "cross_filter": "single",
+    "source": "attribute_fact_join"
+  },
+  {
+    "from_table": "DIM_PRODUCT",
+    "from_column": "PROD_ID",
+    "to_table": "FACT_SALES",
+    "to_column": "PROD_ID",
+    "type": "many_to_one",
+    "active": true,
+    "cross_filter": "single",
+    "source": "attribute_fact_join"
+  },
+  {
+    "from_table": "DIM_DATE",
+    "from_column": "DATE_KEY",
+    "to_table": "FACT_SALES",
+    "to_column": "DATE_KEY",
+    "type": "many_to_one",
+    "active": true,
+    "cross_filter": "single",
+    "source": "attribute_fact_join"
+  },
+  {
+    "from_table": "DIM_CHANNEL",
+    "from_column": "CHANNEL_ID",
+    "to_table": "FACT_SALES",
+    "to_column": "CHANNEL_ID",
+    "type": "many_to_one",
+    "active": true,
+    "cross_filter": "single",
+    "source": "attribute_fact_join"
+  },
+  {
+    "from_table": "DIM_EMPLOYEE",
+    "from_column": "EMP_ID",
+    "to_table": "FACT_SALES",
+    "to_column": "EMP_ID",
+    "type": "many_to_one",
+    "active": true,
+    "cross_filter": "single",
+    "source": "attribute_fact_join"
+  },
+  {
+    "from_table": "DIM_PROMOTION",
+    "from_column": "PROMO_ID",
+    "to_table": "FACT_SALES",
+    "to_column": "PROMO_ID",
+    "type": "many_to_one",
+    "active": true,
+    "cross_filter": "single",
+    "source": "attribute_fact_join"
+  },
+  {
+    "from_table": "DIM_PRODUCT",
+    "from_column": "PROD_ID",
+    "to_table": "FACT_RETURNS",
+    "to_column": "PROD_ID",
+    "type": "many_to_one",
+    "active": true,
+    "cross_filter": "single",
+    "source": "attribute_fact_join"
+  },
+  {
+    "from_table": "DIM_DATE",
+    "from_column": "DATE_KEY",
+    "to_table": "FACT_RETURNS",
+    "to_column": "DATE_KEY",
+    "type": "many_to_one",
+    "active": true,
+    "cross_filter": "single",
+    "source": "attribute_fact_join"
+  },
+  {
+    "from_table": "FACT_SALES",
+    "from_column": "SALE_ID",
+    "to_table": "FACT_RETURNS",
+    "to_column": "SALE_ID",
+    "type": "one_to_many",
+    "active": true,
+    "cross_filter": "single",
+    "source": "attribute_fact_join"
+  },
+  {
+    "from_table": "DIM_PRODUCT",
+    "from_column": "PROD_ID",
+    "to_table": "FACT_INVENTORY",
+    "to_column": "PROD_ID",
+    "type": "many_to_one",
+    "active": true,
+    "cross_filter": "single",
+    "source": "attribute_fact_join"
+  },
+  {
+    "from_table": "DIM_DATE",
+    "from_column": "DATE_KEY",
+    "to_table": "FACT_INVENTORY",
+    "to_column": "DATE_KEY",
+    "type": "many_to_one",
+    "active": true,
+    "cross_filter": "single",
+    "source": "attribute_fact_join"
+  },
+  {
+    "from_table": "DIM_WAREHOUSE",
+    "from_column": "WAREHOUSE_ID",
+    "to_table": "FACT_INVENTORY",
+    "to_column": "WAREHOUSE_ID",
+    "type": "many_to_one",
+    "active": true,
+    "cross_filter": "single",
+    "source": "attribute_fact_join"
+  },
+  {
+    "from_table": "DIM_CUSTOMER",
+    "from_column": "CUST_ID",
+    "to_table": "FACT_WEB_VISITS",
+    "to_column": "CUST_ID",
+    "type": "many_to_one",
+    "active": true,
+    "cross_filter": "single",
+    "source": "attribute_fact_join"
+  },
+  {
+    "from_table": "DIM_DATE",
+    "from_column": "DATE_KEY",
+    "to_table": "FACT_WEB_VISITS",
+    "to_column": "DATE_KEY",
+    "type": "many_to_one",
+    "active": true,
+    "cross_filter": "single",
+    "source": "attribute_fact_join"
+  },
+  {
+    "from_table": "DIM_CHANNEL",
+    "from_column": "CHANNEL_ID",
+    "to_table": "FACT_MARKETING_SPEND",
+    "to_column": "CHANNEL_ID",
+    "type": "many_to_one",
+    "active": true,
+    "cross_filter": "single",
+    "source": "attribute_fact_join"
+  },
+  {
+    "from_table": "DIM_DATE",
+    "from_column": "DATE_KEY",
+    "to_table": "FACT_MARKETING_SPEND",
+    "to_column": "DATE_KEY",
+    "type": "many_to_one",
+    "active": true,
+    "cross_filter": "single",
+    "source": "attribute_fact_join"
+  }
+]

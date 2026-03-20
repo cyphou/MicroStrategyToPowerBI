@@ -1,0 +1,373 @@
+[
+  {
+    "id": "RPT_C01",
+    "name": "Executive Revenue Summary",
+    "description": "Top-level grid by region and channel",
+    "report_type": "grid",
+    "grid": {
+      "rows": [
+        {
+          "id": "AC05",
+          "name": "Region",
+          "type": "attribute",
+          "forms": [
+            "ID"
+          ]
+        },
+        {
+          "id": "AC15",
+          "name": "Channel",
+          "type": "attribute",
+          "forms": [
+            "DESC"
+          ]
+        }
+      ],
+      "columns": [],
+      "metrics_position": "columns"
+    },
+    "graph": null,
+    "metrics": [
+      {
+        "id": "MC01",
+        "name": "Total Revenue"
+      },
+      {
+        "id": "MC11",
+        "name": "Profit"
+      },
+      {
+        "id": "MC12",
+        "name": "Profit Margin"
+      },
+      {
+        "id": "MC09",
+        "name": "Customer Count"
+      }
+    ],
+    "filters": [],
+    "sorts": [
+      {
+        "attribute": "Total Revenue",
+        "order": "descending"
+      }
+    ],
+    "subtotals": [
+      {
+        "type": "grand_total",
+        "position": "bottom",
+        "function": "sum"
+      }
+    ],
+    "page_by": [],
+    "prompts": [],
+    "thresholds": [
+      {
+        "name": "Margin Alert",
+        "metric_name": "Profit Margin",
+        "conditions": [
+          {
+            "operator": "less_than",
+            "value": 0.15,
+            "format": {
+              "background_color": "#FF6B6B",
+              "font_color": "#FFFFFF"
+            }
+          },
+          {
+            "operator": "greater_than",
+            "value": 0.3,
+            "format": {
+              "background_color": "#6BCB77",
+              "font_color": "#000000"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "RPT_C02",
+    "name": "Product Performance Matrix",
+    "description": "Crosstab: product × quarter",
+    "report_type": "grid",
+    "grid": {
+      "rows": [
+        {
+          "id": "AC08",
+          "name": "Category",
+          "type": "attribute",
+          "forms": [
+            "ID"
+          ]
+        },
+        {
+          "id": "AC07",
+          "name": "Product",
+          "type": "attribute",
+          "forms": [
+            "DESC"
+          ]
+        }
+      ],
+      "columns": [
+        {
+          "id": "AC13",
+          "name": "Quarter",
+          "type": "attribute",
+          "forms": [
+            "ID"
+          ]
+        }
+      ],
+      "metrics_position": "columns"
+    },
+    "graph": null,
+    "metrics": [
+      {
+        "id": "MC01",
+        "name": "Total Revenue"
+      },
+      {
+        "id": "MC03",
+        "name": "Total Quantity"
+      }
+    ],
+    "filters": [
+      {
+        "type": "attribute_element_list",
+        "attribute": "Year",
+        "operator": "In",
+        "values": [
+          "2025",
+          "2026"
+        ],
+        "is_view_filter": false
+      }
+    ],
+    "sorts": [],
+    "subtotals": [
+      {
+        "type": "grand_total",
+        "position": "bottom",
+        "function": "sum"
+      }
+    ],
+    "page_by": [
+      {
+        "id": "AC14",
+        "name": "Year"
+      }
+    ],
+    "thresholds": [],
+    "prompts": []
+  },
+  {
+    "id": "RPT_C03",
+    "name": "Monthly Trend Analysis",
+    "description": "Line chart with revenue and cost trends",
+    "report_type": "graph",
+    "grid": {
+      "rows": [
+        {
+          "id": "AC12",
+          "name": "Month",
+          "type": "attribute",
+          "forms": [
+            "ID",
+            "DESC"
+          ]
+        }
+      ],
+      "columns": [],
+      "metrics_position": "rows"
+    },
+    "graph": {
+      "type": "line",
+      "mstr_type": "line",
+      "attributes_on_axis": [
+        {
+          "id": "AC12",
+          "name": "Month"
+        }
+      ],
+      "metrics_on_axis": [
+        {
+          "id": "MC01",
+          "name": "Total Revenue"
+        },
+        {
+          "id": "MC02",
+          "name": "Total Cost"
+        },
+        {
+          "id": "MC11",
+          "name": "Profit"
+        }
+      ],
+      "color_by": ""
+    },
+    "metrics": [
+      {
+        "id": "MC01",
+        "name": "Total Revenue"
+      },
+      {
+        "id": "MC02",
+        "name": "Total Cost"
+      },
+      {
+        "id": "MC11",
+        "name": "Profit"
+      }
+    ],
+    "filters": [],
+    "sorts": [],
+    "subtotals": [],
+    "page_by": [],
+    "thresholds": [],
+    "prompts": []
+  },
+  {
+    "id": "RPT_C04",
+    "name": "Customer Profitability",
+    "description": "Grid+graph: customer × profit",
+    "report_type": "grid_graph",
+    "grid": {
+      "rows": [
+        {
+          "id": "AC01",
+          "name": "Customer",
+          "type": "attribute",
+          "forms": [
+            "ID",
+            "DESC"
+          ]
+        }
+      ],
+      "columns": [],
+      "metrics_position": "columns"
+    },
+    "graph": {
+      "type": "scatter",
+      "mstr_type": "scatter",
+      "attributes_on_axis": [
+        {
+          "id": "AC01",
+          "name": "Customer"
+        }
+      ],
+      "metrics_on_axis": [
+        {
+          "id": "MC01",
+          "name": "Total Revenue"
+        },
+        {
+          "id": "MC11",
+          "name": "Profit"
+        }
+      ],
+      "color_by": ""
+    },
+    "metrics": [
+      {
+        "id": "MC01",
+        "name": "Total Revenue"
+      },
+      {
+        "id": "MC11",
+        "name": "Profit"
+      },
+      {
+        "id": "MC12",
+        "name": "Profit Margin"
+      }
+    ],
+    "filters": [],
+    "sorts": [
+      {
+        "attribute": "Total Revenue",
+        "order": "descending"
+      }
+    ],
+    "subtotals": [],
+    "page_by": [],
+    "thresholds": [],
+    "prompts": []
+  },
+  {
+    "id": "RPT_C05",
+    "name": "Returns Analysis",
+    "description": "Return rates by product",
+    "report_type": "grid",
+    "grid": {
+      "rows": [
+        {
+          "id": "AC08",
+          "name": "Category",
+          "type": "attribute",
+          "forms": [
+            "ID"
+          ]
+        },
+        {
+          "id": "AC07",
+          "name": "Product",
+          "type": "attribute",
+          "forms": [
+            "DESC"
+          ]
+        }
+      ],
+      "columns": [],
+      "metrics_position": "columns"
+    },
+    "graph": null,
+    "metrics": [
+      {
+        "id": "MC03",
+        "name": "Total Quantity"
+      },
+      {
+        "id": "MC06",
+        "name": "Return Quantity"
+      },
+      {
+        "id": "MC15",
+        "name": "Return Rate"
+      }
+    ],
+    "filters": [],
+    "sorts": [
+      {
+        "attribute": "Return Rate",
+        "order": "descending"
+      }
+    ],
+    "subtotals": [
+      {
+        "type": "grand_total",
+        "position": "bottom",
+        "function": "sum"
+      }
+    ],
+    "page_by": [],
+    "thresholds": [
+      {
+        "name": "High Returns",
+        "metric_name": "Return Rate",
+        "conditions": [
+          {
+            "operator": "greater_than",
+            "value": 0.1,
+            "format": {
+              "background_color": "#FF6B6B",
+              "font_color": "#FFF"
+            }
+          }
+        ]
+      }
+    ],
+    "prompts": []
+  }
+]

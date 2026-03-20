@@ -1,0 +1,487 @@
+[
+  {
+    "id": "DOSS_C01",
+    "name": "Executive Dashboard",
+    "description": "Executive Dashboard dossier",
+    "chapters": [
+      {
+        "key": "DOSS_C01_ch01",
+        "name": "Main",
+        "pages": [
+          {
+            "key": "exec_kpi",
+            "name": "KPI Overview",
+            "visualizations": [
+              {
+                "key": "ek1",
+                "name": "Revenue KPI",
+                "viz_type": "kpi",
+                "data": {
+                  "attributes": [],
+                  "metrics": [
+                    {
+                      "id": "MC01",
+                      "name": "MC01"
+                    }
+                  ]
+                },
+                "formatting": {},
+                "thresholds": [],
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
+                "actions": [],
+                "info_window": null
+              },
+              {
+                "key": "ek2",
+                "name": "Profit KPI",
+                "viz_type": "kpi",
+                "data": {
+                  "attributes": [],
+                  "metrics": [
+                    {
+                      "id": "MC11",
+                      "name": "MC11"
+                    }
+                  ]
+                },
+                "formatting": {},
+                "thresholds": [],
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
+                "actions": [],
+                "info_window": null
+              },
+              {
+                "key": "ek3",
+                "name": "Customer Count KPI",
+                "viz_type": "kpi",
+                "data": {
+                  "attributes": [],
+                  "metrics": [
+                    {
+                      "id": "MC09",
+                      "name": "MC09"
+                    }
+                  ]
+                },
+                "formatting": {},
+                "thresholds": [],
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
+                "actions": [],
+                "info_window": null
+              },
+              {
+                "key": "ek4",
+                "name": "Revenue by Region",
+                "viz_type": "vertical_bar",
+                "data": {
+                  "attributes": [
+                    {
+                      "id": "AC05",
+                      "name": "AC05"
+                    }
+                  ],
+                  "metrics": [
+                    {
+                      "id": "MC01",
+                      "name": "MC01"
+                    }
+                  ]
+                },
+                "formatting": {},
+                "thresholds": [],
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
+                "actions": [],
+                "info_window": null
+              },
+              {
+                "key": "ek5",
+                "name": "Revenue Trend",
+                "viz_type": "line",
+                "data": {
+                  "attributes": [
+                    {
+                      "id": "AC12",
+                      "name": "AC12"
+                    }
+                  ],
+                  "metrics": [
+                    {
+                      "id": "MC01",
+                      "name": "MC01"
+                    },
+                    {
+                      "id": "MC02",
+                      "name": "MC02"
+                    }
+                  ]
+                },
+                "formatting": {},
+                "thresholds": [],
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
+                "actions": [],
+                "info_window": null
+              }
+            ],
+            "selectors": [],
+            "layout": {
+              "width": 1920,
+              "height": 1080
+            }
+          },
+          {
+            "key": "exec_detail",
+            "name": "Regional Detail",
+            "visualizations": [
+              {
+                "key": "ed1",
+                "name": "Region × Category",
+                "viz_type": "crosstab",
+                "data": {
+                  "attributes": [
+                    {
+                      "id": "AC05",
+                      "name": "AC05"
+                    },
+                    {
+                      "id": "AC08",
+                      "name": "AC08"
+                    }
+                  ],
+                  "metrics": [
+                    {
+                      "id": "MC01",
+                      "name": "MC01"
+                    },
+                    {
+                      "id": "MC11",
+                      "name": "MC11"
+                    }
+                  ]
+                },
+                "formatting": {},
+                "thresholds": [],
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
+                "actions": [],
+                "info_window": null
+              },
+              {
+                "key": "ed2",
+                "name": "Profit Margin Map",
+                "viz_type": "filled_map",
+                "data": {
+                  "attributes": [
+                    {
+                      "id": "AC03",
+                      "name": "AC03"
+                    }
+                  ],
+                  "metrics": [
+                    {
+                      "id": "MC12",
+                      "name": "MC12"
+                    }
+                  ]
+                },
+                "formatting": {},
+                "thresholds": [],
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
+                "actions": [],
+                "info_window": null
+              }
+            ],
+            "selectors": [],
+            "layout": {
+              "width": 1920,
+              "height": 1080
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "DOSS_C02",
+    "name": "Product Analytics",
+    "description": "Product Analytics dossier",
+    "chapters": [
+      {
+        "key": "DOSS_C02_ch01",
+        "name": "Main",
+        "pages": [
+          {
+            "key": "prod_overview",
+            "name": "Products",
+            "visualizations": [
+              {
+                "key": "po1",
+                "name": "Category Breakdown",
+                "viz_type": "pie",
+                "data": {
+                  "attributes": [
+                    {
+                      "id": "AC08",
+                      "name": "AC08"
+                    }
+                  ],
+                  "metrics": [
+                    {
+                      "id": "MC01",
+                      "name": "MC01"
+                    }
+                  ]
+                },
+                "formatting": {},
+                "thresholds": [],
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
+                "actions": [],
+                "info_window": null
+              },
+              {
+                "key": "po2",
+                "name": "Product Table",
+                "viz_type": "grid",
+                "data": {
+                  "attributes": [
+                    {
+                      "id": "AC07",
+                      "name": "AC07"
+                    },
+                    {
+                      "id": "AC08",
+                      "name": "AC08"
+                    }
+                  ],
+                  "metrics": [
+                    {
+                      "id": "MC01",
+                      "name": "MC01"
+                    },
+                    {
+                      "id": "MC03",
+                      "name": "MC03"
+                    },
+                    {
+                      "id": "MC15",
+                      "name": "MC15"
+                    }
+                  ]
+                },
+                "formatting": {},
+                "thresholds": [],
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
+                "actions": [],
+                "info_window": null
+              },
+              {
+                "key": "po3",
+                "name": "Brand Comparison",
+                "viz_type": "horizontal_bar",
+                "data": {
+                  "attributes": [
+                    {
+                      "id": "AC10",
+                      "name": "AC10"
+                    }
+                  ],
+                  "metrics": [
+                    {
+                      "id": "MC01",
+                      "name": "MC01"
+                    }
+                  ]
+                },
+                "formatting": {},
+                "thresholds": [],
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
+                "actions": [],
+                "info_window": null
+              }
+            ],
+            "selectors": [],
+            "layout": {
+              "width": 1920,
+              "height": 1080
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "DOSS_C03",
+    "name": "Customer Insights",
+    "description": "Customer Insights dossier",
+    "chapters": [
+      {
+        "key": "DOSS_C03_ch01",
+        "name": "Main",
+        "pages": [
+          {
+            "key": "cust_seg",
+            "name": "Segmentation",
+            "visualizations": [
+              {
+                "key": "cs1",
+                "name": "Segment Revenue",
+                "viz_type": "stacked_vertical_bar",
+                "data": {
+                  "attributes": [
+                    {
+                      "id": "AC06",
+                      "name": "AC06"
+                    }
+                  ],
+                  "metrics": [
+                    {
+                      "id": "MC01",
+                      "name": "MC01"
+                    },
+                    {
+                      "id": "MC02",
+                      "name": "MC02"
+                    }
+                  ]
+                },
+                "formatting": {},
+                "thresholds": [],
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
+                "actions": [],
+                "info_window": null
+              },
+              {
+                "key": "cs2",
+                "name": "Top Customers",
+                "viz_type": "grid",
+                "data": {
+                  "attributes": [
+                    {
+                      "id": "AC01",
+                      "name": "AC01"
+                    }
+                  ],
+                  "metrics": [
+                    {
+                      "id": "MC01",
+                      "name": "MC01"
+                    },
+                    {
+                      "id": "MC11",
+                      "name": "MC11"
+                    },
+                    {
+                      "id": "MC16",
+                      "name": "MC16"
+                    }
+                  ]
+                },
+                "formatting": {},
+                "thresholds": [],
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
+                "actions": [],
+                "info_window": null
+              },
+              {
+                "key": "cs3",
+                "name": "Customer Scatter",
+                "viz_type": "scatter",
+                "data": {
+                  "attributes": [
+                    {
+                      "id": "AC01",
+                      "name": "AC01"
+                    }
+                  ],
+                  "metrics": [
+                    {
+                      "id": "MC01",
+                      "name": "MC01"
+                    },
+                    {
+                      "id": "MC11",
+                      "name": "MC11"
+                    }
+                  ]
+                },
+                "formatting": {},
+                "thresholds": [],
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 600,
+                  "height": 350
+                },
+                "actions": [],
+                "info_window": null
+              }
+            ],
+            "selectors": [],
+            "layout": {
+              "width": 1920,
+              "height": 1080
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

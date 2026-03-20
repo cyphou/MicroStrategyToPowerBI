@@ -1,0 +1,345 @@
+[
+  {
+    "id": "AC01",
+    "name": "Customer",
+    "description": "Customer attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "integer",
+        "column_name": "CUST_ID",
+        "table": "DIM_CUSTOMER"
+      },
+      {
+        "name": "DESC",
+        "category": "DESC",
+        "data_type": "nVarChar",
+        "column_name": "CUST_NAME",
+        "table": "DIM_CUSTOMER"
+      }
+    ],
+    "data_type": "integer",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_CUSTOMER"
+  },
+  {
+    "id": "AC02",
+    "name": "City",
+    "description": "City attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "nVarChar",
+        "column_name": "CITY",
+        "table": "DIM_CUSTOMER"
+      }
+    ],
+    "data_type": "nVarChar",
+    "geographic_role": "city",
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_CUSTOMER"
+  },
+  {
+    "id": "AC03",
+    "name": "State",
+    "description": "State attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "nVarChar",
+        "column_name": "STATE",
+        "table": "DIM_CUSTOMER"
+      }
+    ],
+    "data_type": "nVarChar",
+    "geographic_role": "state_province",
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_CUSTOMER"
+  },
+  {
+    "id": "AC04",
+    "name": "Country",
+    "description": "Country attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "nVarChar",
+        "column_name": "COUNTRY",
+        "table": "DIM_CUSTOMER"
+      }
+    ],
+    "data_type": "nVarChar",
+    "geographic_role": "country",
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_CUSTOMER"
+  },
+  {
+    "id": "AC05",
+    "name": "Region",
+    "description": "Region attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "nVarChar",
+        "column_name": "REGION",
+        "table": "DIM_CUSTOMER"
+      }
+    ],
+    "data_type": "nVarChar",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_CUSTOMER"
+  },
+  {
+    "id": "AC06",
+    "name": "Segment",
+    "description": "Segment attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "nVarChar",
+        "column_name": "SEGMENT",
+        "table": "DIM_CUSTOMER"
+      }
+    ],
+    "data_type": "nVarChar",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_CUSTOMER"
+  },
+  {
+    "id": "AC07",
+    "name": "Product",
+    "description": "Product attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "integer",
+        "column_name": "PROD_ID",
+        "table": "DIM_PRODUCT"
+      },
+      {
+        "name": "DESC",
+        "category": "DESC",
+        "data_type": "nVarChar",
+        "column_name": "PROD_NAME",
+        "table": "DIM_PRODUCT"
+      }
+    ],
+    "data_type": "integer",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_PRODUCT"
+  },
+  {
+    "id": "AC08",
+    "name": "Category",
+    "description": "Category attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "nVarChar",
+        "column_name": "CATEGORY",
+        "table": "DIM_PRODUCT"
+      }
+    ],
+    "data_type": "nVarChar",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_PRODUCT"
+  },
+  {
+    "id": "AC09",
+    "name": "Subcategory",
+    "description": "Subcategory attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "nVarChar",
+        "column_name": "SUBCATEGORY",
+        "table": "DIM_PRODUCT"
+      }
+    ],
+    "data_type": "nVarChar",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_PRODUCT"
+  },
+  {
+    "id": "AC10",
+    "name": "Brand",
+    "description": "Brand attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "nVarChar",
+        "column_name": "BRAND",
+        "table": "DIM_PRODUCT"
+      }
+    ],
+    "data_type": "nVarChar",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_PRODUCT"
+  },
+  {
+    "id": "AC11",
+    "name": "Date",
+    "description": "Date attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "date",
+        "column_name": "DATE_KEY",
+        "table": "DIM_DATE"
+      }
+    ],
+    "data_type": "date",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_DATE"
+  },
+  {
+    "id": "AC12",
+    "name": "Month",
+    "description": "Month attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "integer",
+        "column_name": "MONTH_NUM",
+        "table": "DIM_DATE"
+      },
+      {
+        "name": "DESC",
+        "category": "DESC",
+        "data_type": "nVarChar",
+        "column_name": "MONTH_NAME",
+        "table": "DIM_DATE"
+      }
+    ],
+    "data_type": "integer",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_DATE"
+  },
+  {
+    "id": "AC13",
+    "name": "Quarter",
+    "description": "Quarter attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "integer",
+        "column_name": "QUARTER",
+        "table": "DIM_DATE"
+      }
+    ],
+    "data_type": "integer",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_DATE"
+  },
+  {
+    "id": "AC14",
+    "name": "Year",
+    "description": "Year attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "integer",
+        "column_name": "YEAR",
+        "table": "DIM_DATE"
+      }
+    ],
+    "data_type": "integer",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_DATE"
+  },
+  {
+    "id": "AC15",
+    "name": "Channel",
+    "description": "Channel attribute",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "integer",
+        "column_name": "CHANNEL_ID",
+        "table": "DIM_CHANNEL"
+      },
+      {
+        "name": "DESC",
+        "category": "DESC",
+        "data_type": "nVarChar",
+        "column_name": "CHANNEL_NAME",
+        "table": "DIM_CHANNEL"
+      }
+    ],
+    "data_type": "integer",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_CHANNEL"
+  }
+]

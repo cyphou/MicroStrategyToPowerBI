@@ -1,0 +1,41 @@
+[
+  {
+    "id": "HIER_0001",
+    "name": "Geography",
+    "type": "user",
+    "levels": [
+      {
+        "attribute_id": "ATTR_0003",
+        "name": "Region",
+        "order": 1
+      },
+      {
+        "attribute_id": "ATTR_0002",
+        "name": "City",
+        "order": 2
+      },
+      {
+        "attribute_id": "ATTR_0001",
+        "name": "Customer",
+        "order": 3
+      }
+    ]
+  },
+  {
+    "id": "HIER_0002",
+    "name": "Product",
+    "type": "user",
+    "levels": [
+      {
+        "attribute_id": "ATTR_0005",
+        "name": "Category",
+        "order": 1
+      },
+      {
+        "attribute_id": "ATTR_0004",
+        "name": "Product",
+        "order": 2
+      }
+    ]
+  }
+]
