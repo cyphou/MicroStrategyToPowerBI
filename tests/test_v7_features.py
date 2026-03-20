@@ -580,7 +580,7 @@ class TestCLIv7Args:
         parser = build_parser()
         for action in parser._actions:
             if hasattr(action, 'version') and action.version:
-                assert "7.0.0" in action.version
+                assert "8.0.0" in action.version
                 return
         pytest.fail("No version action found")
 

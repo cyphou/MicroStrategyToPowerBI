@@ -485,6 +485,68 @@ def _setup_ai_converter(args):
         print(f"  ⚠ AI converter not available: {e}")
 
 
+# ── v6.0 feature runners ────────────────────────────────────────
+
+
+def _run_lineage_governance(args):
+    """Run lineage graph, governance report, and Purview registration (v6.0)."""
+    from powerbi_import.import_to_powerbi import PowerBIImporter
+
+    importer = PowerBIImporter(source_dir='microstrategy_export/')
+    converted = importer._load_converted_objects()
+    output_dir = getattr(args, 'output_dir', 'artifacts/') or 'artifacts/'
+
+    lineage_graph = None
+
+    # Lineage graph
+    if getattr(args, 'lineage', False) or getattr(args, 'purview', None) or getattr(args, 'governance', False):
+        from powerbi_import.lineage import build_lineage_graph
+        lineage_graph = build_lineage_graph(converted)
+        print(f"  ✓ Lineage graph: {lineage_graph.node_count} nodes, {lineage_graph.edge_count} edges")
+
+        if getattr(args, 'lineage', False):
+            from powerbi_import.lineage_report import generate_lineage_html
+            html_path = os.path.join(output_dir, 'lineage_report.html')
+            generate_lineage_html(lineage_graph, html_path)
+            print(f"  ✓ Lineage HTML report: {html_path}")
+
+            # Also export JSON
+            json_path = os.path.join(output_dir, 'lineage.json')
+            lineage_graph.save(json_path)
+
+    # Governance report
+    if getattr(args, 'governance', False):
+        from powerbi_import.governance_report import generate_governance_report, compute_governance_score
+        gov_path = os.path.join(output_dir, 'governance_report.html')
+        results = generate_governance_report(converted, gov_path, lineage_graph=lineage_graph)
+        score = compute_governance_score(results)
+        print(f"  ✓ Governance report: {gov_path} (score: {score}%)")
+
+    # Purview registration
+    purview_account = getattr(args, 'purview', None)
+    if purview_account:
+        from powerbi_import.purview_integration import build_purview_entities, export_purview_payload
+        payload = build_purview_entities(converted)
+        # Always export payload to JSON for review
+        purview_json_path = os.path.join(output_dir, 'purview_payload.json')
+        export_purview_payload(payload, purview_json_path)
+        print(f"  ✓ Purview payload exported: {purview_json_path} ({len(payload.get('entities', []))} entities)")
+
+        # Optionally register via API if account is not just a flag
+        if purview_account and purview_account != 'export':
+            try:
+                from powerbi_import.purview_integration import PurviewClient
+                client = PurviewClient(purview_account)
+                result = client.register_entities(payload)
+                if 'error' not in result:
+                    print(f"  ✓ Assets registered in Purview account: {purview_account}")
+                else:
+                    print(f"  ⚠ Purview registration returned: {result.get('message', '')[:100]}")
+            except Exception as e:
+                logger.warning("Purview API call failed: %s", e)
+                print(f"  ⚠ Purview API call failed (payload exported to {purview_json_path})")
+
+
 # ── v4.0 feature runners ────────────────────────────────────────
 
 
@@ -843,7 +905,16 @@ Examples:
     parser.add_argument('--config', help='Path to configuration JSON file')
 
     # Version
-    parser.add_argument('--version', action='version', version='%(prog)s 7.0.0')
+    parser.add_argument('--version', action='version', version='%(prog)s 8.0.0')
+
+    # v6.0 features — Governance & Lineage
+    v6_group = parser.add_argument_group('v6.0 Governance & Lineage')
+    v6_group.add_argument('--lineage', action='store_true',
+                         help='Generate data lineage graph and HTML report')
+    v6_group.add_argument('--purview', metavar='ACCOUNT',
+                         help='Register migrated assets in Microsoft Purview (account name)')
+    v6_group.add_argument('--governance', action='store_true',
+                         help='Generate governance checklist report')
 
     # v7.0 features — AI-Assisted Migration
     v7_group = parser.add_argument_group('v7.0 AI-Assisted Migration')
@@ -1061,7 +1132,14 @@ def main():
         except Exception as e:
             logger.warning("Benchmark failed: %s", e)
 
-    # Step 3f: Fabric Git push (optional, v5.0)
+    # Step 3f: Lineage (optional, v6.0)
+    if getattr(args, 'lineage', False) or getattr(args, 'purview', None) or getattr(args, 'governance', False):
+        try:
+            _run_lineage_governance(args)
+        except Exception as e:
+            logger.warning("Lineage/governance step failed: %s", e)
+
+    # Step 3g: Fabric Git push (optional, v5.0)
     if getattr(args, 'fabric_git', False):
         run_fabric_git_push(args)
 

@@ -56,6 +56,10 @@ powerbi_import/         # Step 2: Generation layer (JSON → .pbip)
   plugins.py            #   Plugin extension system
   ai_converter.py     #   Azure OpenAI LLM fallback for DAX conversion
   semantic_matcher.py  #   Fuzzy column matching + correction learning
+  lineage.py          #   Data lineage DAG + impact analysis
+  lineage_report.py   #   Interactive HTML lineage visualization
+  purview_integration.py # Microsoft Purview asset registration
+  governance_report.py #  Pre-migration governance checklist HTML
   deploy/
     fabric_deployer.py  #   Fabric REST API deployment (SM, report, notebooks, pipelines)
     fabric_git.py       #   Push .pbip to Fabric workspace Git repos
@@ -140,3 +144,14 @@ python migrate.py --help
 - **Correction learning**: Persistent correction store that improves matching over time
 - **Expression converter integration**: Module-level AI fallback via `set_ai_converter()`
 - CLI flags: `--ai-assist`, `--ai-endpoint`, `--ai-key`, `--ai-deployment`, `--ai-budget`
+
+## v6.0 Features
+
+- **Data lineage graph**: In-memory DAG from warehouse tables → MSTR attributes/facts/metrics/reports → PBI tables/columns/measures/visuals
+- **Impact analysis**: "What breaks if column X changes?" — transitive upstream/downstream traversal
+- **Lineage HTML report**: Interactive D3.js force-directed graph, filterable by layer
+- **Lineage JSON export**: Full graph + OpenLineage-compatible format
+- **Microsoft Purview integration**: Register semantic models, tables, columns, measures with Apache Atlas REST API
+- **Sensitivity classification**: Security-filter attributes → Purview sensitivity labels + pattern-based classification
+- **Governance report**: 6-category pre-migration checklist (ownership, classification, RLS, lineage, documentation, readiness) with scoring
+- CLI flags: `--lineage`, `--purview ACCOUNT`, `--governance`

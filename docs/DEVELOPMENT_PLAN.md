@@ -698,10 +698,11 @@ v14    Enterprise Ecosystem        ░░░░░░░░░
 
 ---
 
-## v6.0 — Governance & Lineage
+## v6.0 — Governance & Lineage ✅ COMPLETE
 
 **Theme:** Data lineage tracking, impact analysis, governance metadata, Microsoft Purview integration.  
-**Priority:** HIGH — critical for regulated industries and enterprise compliance.
+**Priority:** HIGH — critical for regulated industries and enterprise compliance.  
+**Status:** COMPLETE — 4 new modules, 68 new tests, 3 CLI flags.
 
 ### Sprint T — Lineage Graph
 
