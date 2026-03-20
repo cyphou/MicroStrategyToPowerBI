@@ -578,13 +578,13 @@ class TestCLIv5Args:
         args = self._parse("--from-export", "test/")
         assert args.env_name == "MstrSparkEnv"
 
-    def test_version_is_5(self):
+    def test_version_is_7(self):
         from migrate import build_parser
         parser = build_parser()
         # Check version action directly
         for action in parser._actions:
             if hasattr(action, 'version') and action.version:
-                assert "5.0.0" in action.version
+                assert "7.0.0" in action.version
                 return
         pytest.fail("No version action found")
 

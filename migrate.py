@@ -462,6 +462,29 @@ def _safe_filename(name):
     return re.sub(r'[<>:"/\\|?*]', '_', name).strip()
 
 
+# ── v7.0 AI-assisted migration ──────────────────────────────────
+
+
+def _setup_ai_converter(args):
+    """Initialize the AI converter and register it with expression_converter."""
+    try:
+        from powerbi_import.ai_converter import AIConverter
+        from microstrategy_export.expression_converter import set_ai_converter
+
+        converter = AIConverter(
+            endpoint=getattr(args, 'ai_endpoint', None),
+            api_key=getattr(args, 'ai_key', None),
+            deployment=getattr(args, 'ai_deployment', None),
+            token_budget=getattr(args, 'ai_budget', 500_000),
+            cache_dir=args.output_dir or 'artifacts/',
+        )
+        set_ai_converter(converter)
+        print("  ✓ AI-assisted conversion enabled")
+    except Exception as e:
+        logger.warning("AI converter setup failed: %s", e)
+        print(f"  ⚠ AI converter not available: {e}")
+
+
 # ── v4.0 feature runners ────────────────────────────────────────
 
 
@@ -820,7 +843,20 @@ Examples:
     parser.add_argument('--config', help='Path to configuration JSON file')
 
     # Version
-    parser.add_argument('--version', action='version', version='%(prog)s 5.0.0')
+    parser.add_argument('--version', action='version', version='%(prog)s 7.0.0')
+
+    # v7.0 features — AI-Assisted Migration
+    v7_group = parser.add_argument_group('v7.0 AI-Assisted Migration')
+    v7_group.add_argument('--ai-assist', action='store_true',
+                         help='Enable LLM fallback for unconvertible expressions')
+    v7_group.add_argument('--ai-endpoint',
+                         help='Azure OpenAI endpoint URL (or set AZURE_OPENAI_ENDPOINT env var)')
+    v7_group.add_argument('--ai-key',
+                         help='Azure OpenAI API key (or set AZURE_OPENAI_API_KEY env var)')
+    v7_group.add_argument('--ai-deployment',
+                         help='Azure OpenAI deployment name (or set AZURE_OPENAI_DEPLOYMENT env var)')
+    v7_group.add_argument('--ai-budget', type=int, default=500000, metavar='TOKENS',
+                         help='Maximum total tokens for AI conversion (default: 500000)')
 
     # v5.0 features — Fabric Native Integration
     v5_group = parser.add_argument_group('v5.0 Fabric Native Integration')
@@ -913,6 +949,10 @@ def main():
 
     print_header("MicroStrategy → Power BI / Fabric Migration")
     start_time = datetime.now()
+
+    # v7.0: Initialize AI converter if requested
+    if getattr(args, 'ai_assist', False):
+        _setup_ai_converter(args)
 
     # Global assessment mode (no extraction needed)
     if getattr(args, 'global_assess', None):

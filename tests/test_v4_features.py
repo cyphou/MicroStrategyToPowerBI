@@ -729,7 +729,7 @@ class TestCLIFlags:
         except SystemExit:
             pass
         output = f.getvalue()
-        assert "5.0.0" in output
+        assert "7.0.0" in output
 
 
 # ═══════════════════════════════════════════════════════════════════

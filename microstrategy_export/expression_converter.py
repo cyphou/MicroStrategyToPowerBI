@@ -3,12 +3,27 @@ MicroStrategy expression to DAX converter.
 
 Converts MicroStrategy metric expressions, conditional logic, level metrics,
 and Apply functions to DAX equivalents.
+
+v7.0: Optional AI-assisted fallback for expressions that return manual_review.
 """
 
 import re
 import logging
 
 logger = logging.getLogger(__name__)
+
+# Module-level AI converter (set via set_ai_converter())
+_ai_converter = None
+
+
+def set_ai_converter(converter):
+    """Register an AIConverter instance for fallback on manual_review results.
+
+    Args:
+        converter: An ``AIConverter`` instance or None to disable.
+    """
+    global _ai_converter
+    _ai_converter = converter
 
 
 # ── Function mapping: MicroStrategy → DAX ────────────────────────
@@ -301,6 +316,12 @@ def convert_mstr_expression_to_dax(expression, context=None):
     # Try Apply functions
     result = _try_apply_functions(expr, context)
     if result:
+        # v7.0: AI fallback for manual_review results
+        if result.get("fidelity") == "manual_review" and _ai_converter is not None:
+            ai_result = _ai_converter.convert(expr, context)
+            if ai_result.get("fidelity") != "manual_review":
+                logger.info("AI converter resolved: %s", expr[:60])
+                return ai_result
         return result
 
     # Try level metric conversion

@@ -54,6 +54,8 @@ powerbi_import/         # Step 2: Generation layer (JSON → .pbip)
   telemetry_dashboard.py #  Historical run dashboard
   progress.py           #   Progress bar wrapper
   plugins.py            #   Plugin extension system
+  ai_converter.py     #   Azure OpenAI LLM fallback for DAX conversion
+  semantic_matcher.py  #   Fuzzy column matching + correction learning
   deploy/
     fabric_deployer.py  #   Fabric REST API deployment (SM, report, notebooks, pipelines)
     fabric_git.py       #   Push .pbip to Fabric workspace Git repos
@@ -125,3 +127,16 @@ python migrate.py --help
 - **Fabric environment config**: Spark pool, JDBC libraries, capacity estimation (F2–F64)
 - **Enhanced strategy advisor**: Always recommends DirectLake when Fabric is available
 - CLI flags: `--fabric-mode`, `--lakehouse-name`, `--fabric-git`, `--fabric-git-branch`, `--adls-account`, `--adls-container`, `--env-name`
+
+## v7.0 Features
+
+- **AI-assisted expression converter**: Azure OpenAI fallback for unconvertible ApplySimple/ApplyAgg/ApplyOLAP expressions
+- **Prompt engineering**: 10 curated few-shot MSTR→DAX examples, DAX grammar rules, confidence scoring
+- **DAX syntax validation**: Lightweight validator (balanced parens, no SQL keywords, known function checks)
+- **Response caching**: Persistent JSON cache to avoid redundant LLM calls
+- **Token budget control**: Configurable per-run token limit with automatic cutoff
+- **Semantic field matcher**: Fuzzy column matching with abbreviation expansion (90+ abbreviations), Levenshtein distance, token-overlap scoring
+- **Auto-fix suggestions**: Top-N candidate matches for manual-review column references
+- **Correction learning**: Persistent correction store that improves matching over time
+- **Expression converter integration**: Module-level AI fallback via `set_ai_converter()`
+- CLI flags: `--ai-assist`, `--ai-endpoint`, `--ai-key`, `--ai-deployment`, `--ai-budget`
