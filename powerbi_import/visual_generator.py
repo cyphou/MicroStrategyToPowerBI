@@ -83,12 +83,13 @@ _DATA_ROLE_MAP = {
 
 # ── Public API ───────────────────────────────────────────────────
 
-def generate_all_visuals(data, output_dir):
+def generate_all_visuals(data, output_dir, cultures=None):
     """Generate PBIR v4.0 visual JSON for all dossiers and reports.
 
     Args:
         data: dict with 'dossiers', 'reports', and optionally 'prompts' keys
         output_dir: path to the Report/definition/ folder
+        cultures: list of culture codes for RTL layout support
 
     Returns:
         dict with generation stats
@@ -96,16 +97,22 @@ def generate_all_visuals(data, output_dir):
     pages_dir = os.path.join(output_dir, "pages")
     os.makedirs(pages_dir, exist_ok=True)
 
+    # Determine if RTL layout is needed based on primary culture
+    rtl = False
+    if cultures:
+        from powerbi_import.i18n import is_rtl_culture, get_primary_culture
+        rtl = is_rtl_culture(get_primary_culture(cultures))
+
     stats = {"pages": 0, "visuals": 0, "slicers": 0, "unsupported": 0}
     page_ids = []
 
     # Dossiers → pages with visuals
     for dossier in data.get("dossiers", []):
-        _generate_dossier_pages(dossier, pages_dir, stats, page_ids)
+        _generate_dossier_pages(dossier, pages_dir, stats, page_ids, rtl=rtl)
 
     # Standalone reports → one page per report
     for report in data.get("reports", []):
-        _generate_report_page(report, pages_dir, stats, page_ids)
+        _generate_report_page(report, pages_dir, stats, page_ids, rtl=rtl)
 
     # Write pages.json (page ordering metadata)
     if page_ids:
@@ -123,7 +130,7 @@ def generate_all_visuals(data, output_dir):
 
 # ── Dossier → Pages ──────────────────────────────────────────────
 
-def _generate_dossier_pages(dossier, pages_dir, stats, page_ids):
+def _generate_dossier_pages(dossier, pages_dir, stats, page_ids, rtl=False):
     """Generate pages from a dossier (chapters → page groups, pages → pages)."""
     bookmarks = []  # Collected from panel stacks
     for chapter in dossier.get("chapters", []):
@@ -137,7 +144,7 @@ def _generate_dossier_pages(dossier, pages_dir, stats, page_ids):
             src_h = layout.get("height", 768) or 768
 
             for viz in page.get("visualizations", []):
-                visual = _convert_visualization(viz, src_w, src_h)
+                visual = _convert_visualization(viz, src_w, src_h, rtl=rtl)
                 if visual:
                     visuals.append(visual)
                     if visual.get("visual", {}).get("visualType") == "slicer":
@@ -147,7 +154,7 @@ def _generate_dossier_pages(dossier, pages_dir, stats, page_ids):
 
             # Selectors → slicer visuals
             for sel in page.get("selectors", []):
-                slicer = _convert_selector(sel, src_w, src_h)
+                slicer = _convert_selector(sel, src_w, src_h, rtl=rtl)
                 if slicer:
                     visuals.append(slicer)
                     stats["slicers"] += 1
@@ -163,7 +170,7 @@ def _generate_dossier_pages(dossier, pages_dir, stats, page_ids):
                     _apply_info_window_tooltip(viz, visuals)
 
             page_json = _build_page_json(page_id, page_name, visuals,
-                                         chapter.get("name", ""))
+                                         chapter.get("name", ""), rtl=rtl)
             _write_page(pages_dir, page_id, page_json, visuals)
             page_ids.append(page_id)
             stats["pages"] += 1
@@ -175,7 +182,7 @@ def _generate_dossier_pages(dossier, pages_dir, stats, page_ids):
 
 # ── Report → Page ────────────────────────────────────────────────
 
-def _generate_report_page(report, pages_dir, stats, page_ids):
+def _generate_report_page(report, pages_dir, stats, page_ids, rtl=False):
     """Generate a single page from a standalone report."""
     report_id = report.get("id", _make_id())
     report_name = report.get("name", "Report")
@@ -203,7 +210,7 @@ def _generate_report_page(report, pages_dir, stats, page_ids):
             stats["slicers"] += 1
 
     if visuals:
-        page_json = _build_page_json(report_id, report_name, visuals)
+        page_json = _build_page_json(report_id, report_name, visuals, rtl=rtl)
         _write_page(pages_dir, report_id, page_json, visuals)
         page_ids.append(report_id)
         stats["pages"] += 1
@@ -211,20 +218,20 @@ def _generate_report_page(report, pages_dir, stats, page_ids):
 
 # ── Visualization converters ─────────────────────────────────────
 
-def _convert_visualization(viz, src_w, src_h):
+def _convert_visualization(viz, src_w, src_h, rtl=False):
     """Convert a single intermediate visualization to PBIR visual JSON."""
     viz_type = viz.get("viz_type", "") or viz.get("pbi_visual_type", "grid")
     pbi_type = _VIZ_TYPE_MAP.get(viz_type, viz.get("pbi_visual_type", "tableEx"))
 
     if pbi_type in ("textbox", "image"):
-        return _build_static_visual(viz, pbi_type, src_w, src_h)
+        return _build_static_visual(viz, pbi_type, src_w, src_h, rtl=rtl)
 
     data = viz.get("data", {})
     attrs = data.get("attributes", [])
     metrics = data.get("metrics", [])
 
     data_bindings = _build_data_bindings(pbi_type, attrs, metrics, viz)
-    position = _scale_position(viz.get("position", {}), src_w, src_h)
+    position = _scale_position(viz.get("position", {}), src_w, src_h, rtl=rtl)
     formatting = _build_formatting(pbi_type, viz.get("formatting", {}))
     thresholds = _build_conditional_formatting(viz.get("thresholds", []), pbi_type)
 
@@ -249,7 +256,7 @@ def _convert_visualization(viz, src_w, src_h):
     return visual_json
 
 
-def _convert_selector(sel, src_w, src_h):
+def _convert_selector(sel, src_w, src_h, rtl=False):
     """Convert a dossier selector to a slicer visual."""
     attr_name = sel.get("attribute", {}).get("name", sel.get("name", ""))
     slicer_id = sel.get("key", _make_id())
@@ -421,20 +428,27 @@ def _make_binding(role, field_name, field_type="column"):
 
 # ── Positioning ──────────────────────────────────────────────────
 
-def _scale_position(pos, src_w, src_h):
-    """Scale from source dossier layout to PBI 1280×720 canvas."""
+def _scale_position(pos, src_w, src_h, rtl=False):
+    """Scale from source dossier layout to PBI 1280×720 canvas.
+
+    If rtl is True, mirror x-coordinates for right-to-left layout.
+    """
     if not pos:
         return {"x": 0, "y": 0, "width": _PBI_PAGE_WIDTH, "height": _PBI_PAGE_HEIGHT}
 
     sx = _PBI_PAGE_WIDTH / max(src_w, 1)
     sy = _PBI_PAGE_HEIGHT / max(src_h, 1)
 
-    return {
-        "x": round(pos.get("x", 0) * sx),
-        "y": round(pos.get("y", 0) * sy),
-        "width": round(pos.get("width", src_w) * sx),
-        "height": round(pos.get("height", src_h) * sy),
-    }
+    x = round(pos.get("x", 0) * sx)
+    y = round(pos.get("y", 0) * sy)
+    w = round(pos.get("width", src_w) * sx)
+    h = round(pos.get("height", src_h) * sy)
+
+    if rtl:
+        # Mirror horizontally: new_x = canvas_width - (x + width)
+        x = _PBI_PAGE_WIDTH - (x + w)
+
+    return {"x": x, "y": y, "width": w, "height": h}
 
 
 # ── Formatting ───────────────────────────────────────────────────
@@ -487,9 +501,9 @@ def _build_conditional_formatting(thresholds, pbi_type):
 
 # ── Static visuals ───────────────────────────────────────────────
 
-def _build_static_visual(viz, pbi_type, src_w, src_h):
+def _build_static_visual(viz, pbi_type, src_w, src_h, rtl=False):
     """Build a textbox or image visual."""
-    position = _scale_position(viz.get("position", {}), src_w, src_h)
+    position = _scale_position(viz.get("position", {}), src_w, src_h, rtl=rtl)
     return {
         "visual": {
             "visualType": pbi_type,
@@ -520,7 +534,7 @@ def _build_slicer_visual(attr_name, slicer_id):
 
 # ── Page assembly ────────────────────────────────────────────────
 
-def _build_page_json(page_id, page_name, visuals, section_name=""):
+def _build_page_json(page_id, page_name, visuals, section_name="", rtl=False):
     """Build a PBIR page JSON structure (v2.0.0 — no inline visuals)."""
     page = {
         "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.0.0/schema.json",
@@ -530,6 +544,8 @@ def _build_page_json(page_id, page_name, visuals, section_name=""):
         "height": _PBI_PAGE_HEIGHT,
         "width": _PBI_PAGE_WIDTH,
     }
+    if rtl:
+        page["textDirection"] = "RTL"
     return page
 
 

@@ -58,7 +58,7 @@ class PowerBIImporter:
     def import_all(self, generate_pbip_flag=True, report_name=None,
                    output_dir=None, calendar_start=None, calendar_end=None,
                    culture=None, no_calendar=False, direct_lake=False,
-                   lakehouse_name=None):
+                   lakehouse_name=None, cultures=None):
         """Import all extracted objects and generate Power BI project.
 
         Args:
@@ -67,9 +67,11 @@ class PowerBIImporter:
             output_dir: Output directory
             calendar_start: Start year for Calendar table
             calendar_end: End year for Calendar table
-            culture: Culture/locale override
+            culture: Single culture/locale override
+            no_calendar: If True, suppress auto Calendar table
             direct_lake: If True, generate DirectLake partitions
             lakehouse_name: Fabric lakehouse name for DirectLake
+            cultures: List of culture codes (overrides `culture` if provided)
 
         Returns:
             dict with generation statistics, or False on error
@@ -96,9 +98,10 @@ class PowerBIImporter:
         print()
 
         # Delegate to the pbip_generator which wires TMDL + visuals + scaffold
+        culture_list = cultures or ([culture] if culture else None)
         stats = generate_pbip(converted, output_dir, report_name=report_name,
                               no_calendar=no_calendar, direct_lake=direct_lake,
-                              lakehouse_name=lakehouse_name)
+                              lakehouse_name=lakehouse_name, cultures=culture_list)
 
         # Print summary
         print()

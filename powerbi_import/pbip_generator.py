@@ -48,7 +48,7 @@ _PBIP_SCHEMA = (
 # ── Public API ───────────────────────────────────────────────────
 
 def generate_pbip(data, output_dir, report_name="MicroStrategy Report", no_calendar=False,
-                  direct_lake=False, lakehouse_name=None):
+                  direct_lake=False, lakehouse_name=None, cultures=None):
     """Assemble a complete .pbip project from intermediate JSON data.
 
     Args:
@@ -58,6 +58,7 @@ def generate_pbip(data, output_dir, report_name="MicroStrategy Report", no_calen
         no_calendar: if True, never generate auto Calendar table
         direct_lake: if True, generate DirectLake partitions instead of Import/M
         lakehouse_name: Fabric lakehouse name for DirectLake entity references
+        cultures: list of culture codes (e.g. ["en-US", "fr-FR"]). Default: ["en-US"].
 
     Returns:
         dict with combined generation statistics
@@ -87,7 +88,8 @@ def generate_pbip(data, output_dir, report_name="MicroStrategy Report", no_calen
     sm_def = os.path.join(sm_root, "definition")
 
     tmdl_stats = generate_all_tmdl(data, sm_def, direct_lake=direct_lake,
-                                    lakehouse_name=lakehouse_name)
+                                    lakehouse_name=lakehouse_name,
+                                    cultures=cultures)
     _merge_stats(stats, tmdl_stats)
 
     # Calendar table — only if not suppressed and no dedicated date dimension table exists
@@ -101,7 +103,8 @@ def generate_pbip(data, output_dir, report_name="MicroStrategy Report", no_calen
         stats["tables"] += 1
 
     # model.tmdl header
-    _write_model_tmdl(sm_def, report_name, data=data, no_calendar=no_calendar)
+    _write_model_tmdl(sm_def, report_name, data=data, no_calendar=no_calendar,
+                      cultures=cultures)
 
     # Manifests
     _write_platform(sm_root, "SemanticModel", sm_logical_id, display_name=report_name)
@@ -114,7 +117,7 @@ def generate_pbip(data, output_dir, report_name="MicroStrategy Report", no_calen
     rpt_root = os.path.join(output_dir, f"{report_name}.Report")
     rpt_def = os.path.join(rpt_root, "definition")
 
-    visual_stats = generate_all_visuals(data, rpt_def)
+    visual_stats = generate_all_visuals(data, rpt_def, cultures=cultures)
     stats["pages"] = visual_stats.get("pages", 0)
     stats["visuals"] = visual_stats.get("visuals", 0)
     stats["slicers"] = visual_stats.get("slicers", 0)
@@ -176,13 +179,17 @@ def _write_pbism(sm_root):
         json.dump(manifest, f, indent=2)
 
 
-def _write_model_tmdl(definition_dir, report_name, data=None, no_calendar=False):
+def _write_model_tmdl(definition_dir, report_name, data=None, no_calendar=False,
+                      cultures=None):
     """Write model.tmdl header file with ref declarations."""
+    from powerbi_import.i18n import get_primary_culture, generate_culture_tmdl, generate_translations_tmdl
+
+    primary = get_primary_culture(cultures)
     lines = [
         "model Model",
-        "\tculture: en-US",
+        f"\tculture: {primary}",
         "\tdefaultPowerBIDataSourceVersion: powerBI_V3",
-        "\tsourceQueryCulture: en-US",
+        f"\tsourceQueryCulture: {primary}",
         "\tdataAccessOptions",
         "\t\tlegacyRedirects",
         "\t\treturnErrorValuesAsNull",
@@ -230,6 +237,24 @@ def _write_model_tmdl(definition_dir, report_name, data=None, no_calendar=False)
     path = os.path.join(definition_dir, "model.tmdl")
     with open(path, "w", encoding="utf-8") as f:
         f.write(content)
+
+    # Write culture/translation TMDL files for additional cultures
+    if cultures and len(cultures) > 1:
+        culture_tmdl = generate_culture_tmdl(cultures)
+        if culture_tmdl:
+            culture_path = os.path.join(definition_dir, "cultures.tmdl")
+            with open(culture_path, "w", encoding="utf-8") as f:
+                f.write(culture_tmdl)
+
+        translations_tmdl = generate_translations_tmdl(
+            cultures,
+            data.get("datasources", []) if data else [],
+            data.get("metrics", []) + data.get("derived_metrics", []) if data else [],
+        )
+        if translations_tmdl:
+            translations_path = os.path.join(definition_dir, "translations.tmdl")
+            with open(translations_path, "w", encoding="utf-8") as f:
+                f.write(translations_tmdl)
 
 
 def _write_pbip_file(output_dir, report_name):

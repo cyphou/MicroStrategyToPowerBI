@@ -79,10 +79,17 @@ _FORMAT_MAP = {
 }
 
 
-def _convert_format_string(mstr_format):
-    """Convert MSTR format string to TMDL formatString."""
+def _convert_format_string(mstr_format, culture=None):
+    """Convert MSTR format string to TMDL formatString.
+
+    When a culture is provided, locale-aware formatting is applied
+    (e.g. currency symbols, date patterns).
+    """
     if not mstr_format:
         return ""
+    if culture:
+        from powerbi_import.i18n import convert_format_string_for_culture
+        return convert_format_string_for_culture(mstr_format, culture)
     low = mstr_format.lower().strip()
     if low in _FORMAT_MAP:
         return _FORMAT_MAP[low]
@@ -92,7 +99,8 @@ def _convert_format_string(mstr_format):
     return mstr_format
 
 
-def generate_all_tmdl(data, output_dir, *, direct_lake=False, lakehouse_name=None):
+def generate_all_tmdl(data, output_dir, *, direct_lake=False, lakehouse_name=None,
+                      cultures=None):
     """Generate all TMDL files from intermediate JSON data.
 
     Args:
@@ -102,6 +110,7 @@ def generate_all_tmdl(data, output_dir, *, direct_lake=False, lakehouse_name=Non
         output_dir: Directory to write .tmdl files
         direct_lake: If True, generate DirectLake partitions instead of Import/M.
         lakehouse_name: Fabric lakehouse name for DirectLake entity references.
+        cultures: list of culture codes for locale-aware formatting.
 
     Returns:
         dict with generation statistics

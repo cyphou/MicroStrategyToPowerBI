@@ -163,3 +163,15 @@ python migrate.py --help
 - **Test generation from mappings**: Auto-generated parametrized tests from `_FUNCTION_MAP`, `_VIZ_TYPE_MAP`, `_DATA_TYPE_MAP`, `_GEO_ROLE_MAP` (181 test cases)
 - **Gap-filling tests**: Comprehensive tests for 20+ under-tested modules (semantic matcher, notebook generator, pipeline generator, dashboard, shared model, etc.)
 - **2,073 total tests**: From 885 pre-v10.0 → 2,073 (140% increase)
+
+## v8.0 Features
+
+- **i18n module**: Core internationalization support with 30+ supported cultures
+- **Multi-culture TMDL**: `cultures.tmdl` + `translations.tmdl` with linguisticMetadata and translatedCaption entries for additional locales
+- **Locale-aware format strings**: Culture-specific currency symbols, date patterns, number formats (30+ locales)
+- **RTL layout support**: Automatic x-coordinate mirroring and `textDirection: RTL` for Arabic/Hebrew/Farsi/Urdu cultures
+- **Culture extraction from data**: Auto-detect locale hints from datasource connections, dossier/report language settings
+- **Culture TMDL wiring**: Primary culture in model.tmdl `culture:` / `sourceQueryCulture:` lines; additional cultures in separate TMDL files
+- **Batch generation cultures**: `--cultures` flag propagated through single and batch generation modes
+- CLI flags: `--cultures en-US,fr-FR,de-DE`
+- **2,157 total tests**: From 2,073 pre-v8.0 → 2,157 (84 new i18n tests)

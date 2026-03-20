@@ -219,7 +219,8 @@ def run_extraction(args):
 
 
 def run_generation(output_dir=None, report_name=None, culture=None, shared_model=False,
-                   no_calendar=False, direct_lake=False, lakehouse_name=None):
+                   no_calendar=False, direct_lake=False, lakehouse_name=None,
+                   cultures=None):
     """Run Power BI project generation."""
     global _stats
     print_step(2, 2, "POWER BI PROJECT GENERATION")
@@ -239,6 +240,7 @@ def run_generation(output_dir=None, report_name=None, culture=None, shared_model
                 no_calendar=no_calendar,
                 direct_lake=direct_lake,
                 lakehouse_name=lakehouse_name,
+                cultures=cultures,
             )
             # Also generate a shared model if requested
             try:
@@ -258,6 +260,7 @@ def run_generation(output_dir=None, report_name=None, culture=None, shared_model
                 no_calendar=no_calendar,
                 direct_lake=direct_lake,
                 lakehouse_name=lakehouse_name,
+                cultures=cultures,
             )
 
         if result:
@@ -286,6 +289,14 @@ def run_batch_generation(args):
         converted = importer._load_converted_objects()
         output_dir = args.output_dir or 'artifacts/'
         os.makedirs(output_dir, exist_ok=True)
+
+        # Parse cultures for batch mode
+        batch_cultures = None
+        if getattr(args, 'cultures', None):
+            from powerbi_import.i18n import parse_cultures as _parse_cultures
+            batch_cultures = _parse_cultures(args.cultures)
+        elif getattr(args, 'culture', None):
+            batch_cultures = [args.culture]
 
         reports = converted.get('reports', [])
         dossiers = converted.get('dossiers', [])
@@ -321,7 +332,8 @@ def run_batch_generation(args):
                 from powerbi_import.pbip_generator import generate_pbip
                 sub_dir = os.path.join(output_dir, _safe_filename(name))
                 generate_pbip(obj_data, sub_dir, report_name=name,
-                              no_calendar=getattr(args, 'no_calendar', False))
+                              no_calendar=getattr(args, 'no_calendar', False),
+                              cultures=batch_cultures)
                 print(f"  [{j}/{total}] ✓ {name}")
                 succeeded += 1
             except Exception as e:
@@ -848,6 +860,7 @@ Examples:
                           help='Output directory for .pbip projects (default: artifacts/)')
     out_group.add_argument('--report-name', help='Override Power BI report name')
     out_group.add_argument('--culture', help='Override culture/locale (e.g., en-US, fr-FR)')
+    out_group.add_argument('--cultures', help='Comma-separated culture list for multi-language output (e.g., en-US,fr-FR,de-DE)')
     out_group.add_argument('--no-calendar', action='store_true',
                           help='Do not generate an auto Calendar table (auto-skipped if a date dimension table exists)')
 
@@ -1076,6 +1089,12 @@ def main():
     use_direct_lake = getattr(args, 'direct_lake', False) or bool(fabric_mode)
     lh_name = getattr(args, 'lakehouse_name', None) or 'MstrLakehouse'
 
+    # Parse --cultures into a list if provided
+    cultures_list = None
+    if getattr(args, 'cultures', None):
+        from powerbi_import.i18n import parse_cultures
+        cultures_list = parse_cultures(args.cultures)
+
     if getattr(args, 'batch', False):
         generation_ok = run_batch_generation(args)
     else:
@@ -1087,6 +1106,7 @@ def main():
             no_calendar=getattr(args, 'no_calendar', False),
             direct_lake=use_direct_lake,
             lakehouse_name=lh_name if use_direct_lake else None,
+            cultures=cultures_list,
         )
     if not generation_ok:
         print_summary()
