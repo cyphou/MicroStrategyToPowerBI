@@ -18,7 +18,7 @@ You are the **Orchestrator Agent**, responsible for coordinating the overall Mic
 
 ## Agent Coordination
 
-You manage the work of 5 specialist agents. Each agent owns specific modules:
+You manage the work of 6 specialist agents. Each agent owns specific modules:
 
 | Agent | Owns | Input | Output |
 |-------|------|-------|--------|
@@ -27,6 +27,7 @@ You manage the work of 5 specialist agents. Each agent owns specific modules:
 | **Generation** | `powerbi_import/*` | 18 JSON files | `.pbip` project (TMDL + PBIR) |
 | **Testing** | `tests/*` | All modules | pytest suite, coverage |
 | **Validation** | Validation/assessment/reporting logic | Generated artifacts | Migration reports, fidelity scores |
+| **Parity** | Gap analysis vs TableauToPowerBI reference | Both projects | Gap reports, sprint plans for v15.0–v19.0 |
 
 ### Dependency Graph
 

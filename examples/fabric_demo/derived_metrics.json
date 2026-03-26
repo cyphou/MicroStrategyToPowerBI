@@ -1,0 +1,50 @@
+[
+  {
+    "id": "DER_0001",
+    "name": "Revenue Rank",
+    "metric_type": "derived",
+    "expression": "Rank(Sum(Revenue))",
+    "aggregation": "",
+    "column_ref": null,
+    "format_string": "#,##0",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics\\Derived",
+    "is_smart_metric": true,
+    "dependencies": [
+      "MET_0001"
+    ],
+    "description": "Store revenue rank"
+  },
+  {
+    "id": "DER_0002",
+    "name": "YTD Revenue",
+    "metric_type": "derived",
+    "expression": "RunningSum(Sum(Revenue)) {~+, Date}",
+    "aggregation": "",
+    "column_ref": null,
+    "format_string": "$#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics\\Derived",
+    "is_smart_metric": true,
+    "dependencies": [
+      "MET_0001"
+    ],
+    "description": "Year-to-date revenue"
+  },
+  {
+    "id": "DER_0003",
+    "name": "Revenue MoM",
+    "metric_type": "derived",
+    "expression": "Lag(Sum(Revenue), 1) {Date}",
+    "aggregation": "",
+    "column_ref": null,
+    "format_string": "$#,##0.00",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics\\Derived",
+    "is_smart_metric": true,
+    "dependencies": [
+      "MET_0001"
+    ],
+    "description": "Previous month revenue"
+  }
+]

@@ -1,6 +1,6 @@
 {
   "report_name": "MicroStrategy Report",
-  "output_dir": "output/complex_pbip/",
+  "output_dir": "output\\complex_pbip\\",
   "tables": 7,
   "columns": 40,
   "measures": 25,

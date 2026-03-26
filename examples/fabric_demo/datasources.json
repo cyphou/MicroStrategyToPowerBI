@@ -1,0 +1,207 @@
+[
+  {
+    "id": "DS_0001",
+    "name": "DIM_STORE",
+    "physical_table": "DIM_STORE",
+    "db_connection": {
+      "db_type": "snowflake",
+      "server": "acme.snowflakecomputing.com",
+      "database": "RETAIL_DW",
+      "schema": "PUBLIC",
+      "warehouse": "COMPUTE_WH"
+    },
+    "columns": [
+      {
+        "name": "STORE_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "STORE_NAME",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "CITY",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "COUNTRY",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "STORE_TYPE",
+        "data_type": "nVarChar"
+      }
+    ],
+    "is_freeform_sql": false,
+    "sql_statement": "",
+    "type": "table"
+  },
+  {
+    "id": "DS_0002",
+    "name": "DIM_PRODUCT",
+    "physical_table": "DIM_PRODUCT",
+    "db_connection": {
+      "db_type": "snowflake",
+      "server": "acme.snowflakecomputing.com",
+      "database": "RETAIL_DW",
+      "schema": "PUBLIC",
+      "warehouse": "COMPUTE_WH"
+    },
+    "columns": [
+      {
+        "name": "PRODUCT_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "PRODUCT_NAME",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "BRAND",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "DEPARTMENT",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "UNIT_COST",
+        "data_type": "real"
+      }
+    ],
+    "is_freeform_sql": false,
+    "sql_statement": "",
+    "type": "table"
+  },
+  {
+    "id": "DS_0003",
+    "name": "DIM_DATE",
+    "physical_table": "DIM_DATE",
+    "db_connection": {
+      "db_type": "snowflake",
+      "server": "acme.snowflakecomputing.com",
+      "database": "RETAIL_DW",
+      "schema": "PUBLIC",
+      "warehouse": "COMPUTE_WH"
+    },
+    "columns": [
+      {
+        "name": "DATE_KEY",
+        "data_type": "date"
+      },
+      {
+        "name": "YEAR",
+        "data_type": "integer"
+      },
+      {
+        "name": "QUARTER",
+        "data_type": "integer"
+      },
+      {
+        "name": "MONTH",
+        "data_type": "integer"
+      },
+      {
+        "name": "MONTH_NAME",
+        "data_type": "nVarChar"
+      },
+      {
+        "name": "DAY_OF_WEEK",
+        "data_type": "nVarChar"
+      }
+    ],
+    "is_freeform_sql": false,
+    "sql_statement": "",
+    "type": "table"
+  },
+  {
+    "id": "DS_0004",
+    "name": "FACT_SALES",
+    "physical_table": "FACT_SALES",
+    "db_connection": {
+      "db_type": "snowflake",
+      "server": "acme.snowflakecomputing.com",
+      "database": "RETAIL_DW",
+      "schema": "PUBLIC",
+      "warehouse": "COMPUTE_WH"
+    },
+    "columns": [
+      {
+        "name": "SALE_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "STORE_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "PRODUCT_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "DATE_KEY",
+        "data_type": "date"
+      },
+      {
+        "name": "REVENUE",
+        "data_type": "real"
+      },
+      {
+        "name": "QUANTITY",
+        "data_type": "integer"
+      },
+      {
+        "name": "COST",
+        "data_type": "real"
+      },
+      {
+        "name": "DISCOUNT_PCT",
+        "data_type": "real"
+      }
+    ],
+    "is_freeform_sql": false,
+    "sql_statement": "",
+    "type": "table"
+  },
+  {
+    "id": "DS_0005",
+    "name": "FACT_INVENTORY",
+    "physical_table": "FACT_INVENTORY",
+    "db_connection": {
+      "db_type": "snowflake",
+      "server": "acme.snowflakecomputing.com",
+      "database": "RETAIL_DW",
+      "schema": "PUBLIC",
+      "warehouse": "COMPUTE_WH"
+    },
+    "columns": [
+      {
+        "name": "PRODUCT_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "STORE_ID",
+        "data_type": "integer"
+      },
+      {
+        "name": "DATE_KEY",
+        "data_type": "date"
+      },
+      {
+        "name": "ON_HAND",
+        "data_type": "integer"
+      },
+      {
+        "name": "ON_ORDER",
+        "data_type": "integer"
+      },
+      {
+        "name": "REORDER_POINT",
+        "data_type": "integer"
+      }
+    ],
+    "is_freeform_sql": false,
+    "sql_statement": "",
+    "type": "table"
+  }
+]

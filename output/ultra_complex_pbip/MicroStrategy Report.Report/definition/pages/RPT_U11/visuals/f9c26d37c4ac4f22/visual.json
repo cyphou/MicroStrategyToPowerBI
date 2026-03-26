@@ -1,0 +1,30 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.5.0/schema.json",
+  "name": "f9c26d37c4ac4f22",
+  "position": {
+    "x": 0,
+    "y": 520,
+    "width": 1280,
+    "height": 500,
+    "z": 0,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "clusteredColumnChart",
+    "objects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Promotion Impact'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

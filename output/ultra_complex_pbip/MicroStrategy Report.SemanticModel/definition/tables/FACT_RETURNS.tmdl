@@ -43,12 +43,12 @@ table FACT_RETURNS
 		sourceColumn: REASON_CODE
 		lineageTag: col-c580432b
 
-	measure 'Return Quantity' = SUM([Return Qty])
+	measure 'Return Quantity' = SUM('FACT_RETURNS'[Return Qty])
 		formatString: #,##0
 		displayFolder: Metrics
 		lineageTag: MU08
 
-	measure 'Return Amount' = SUM([Return Amount])
+	measure 'Return Amount' = SUM('FACT_RETURNS'[Return Amount])
 		formatString: $#,##0.00
 		displayFolder: Metrics
 		lineageTag: MU09

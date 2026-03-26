@@ -1,9 +1,9 @@
 # Test Strategy — MicroStrategy to Power BI / Fabric Migration Tool
 
-**Version:** v3.0.0  
-**Date:** 2026-03-20  
+**Version:** v16.0.0  
+**Date:** 2026-03-26  
 **Coverage Target:** ≥80% overall, ≥95% expression converter  
-**Current:** 623 tests passing
+**Current:** 2,458 tests passing across 35 test files
 
 ---
 
@@ -13,7 +13,10 @@
 2. **No live MicroStrategy server required** — all tests use mock API responses and fixture data. The `MockMstrRestClient` in conftest.py replaces the real REST client.
 3. **Expression conversion is the highest-risk area** — parametrized tests cover every function mapping, level metric pattern, derived metric type, and ApplySimple SQL pattern.
 4. **Generation output is validated structurally** — TMDL syntax, PBIR schema, and .pbip project structure are verified against expected output snapshots.
-5. **Reference project**: TableauToPowerBI has 4,219 tests across 77 files. We target 2,000+ tests at maturity. Current: 623 tests across 15 test files.
+5. **Reference project**: TableauToPowerBI has 6,818 tests across 141 files. We target matching coverage at maturity. Current: 2,458 tests across 35 test files.
+6. **Property-based testing** — randomized invariant tests ensure correctness beyond hand-picked examples.
+7. **Fuzz testing** — adversarial inputs (malformed expressions, SQL injection, unicode) validate defensive handling.
+8. **Regression snapshots** — SHA-256 hash-based drift detection ensures output stability across versions.
 
 ---
 
@@ -349,6 +352,8 @@ When building tests, follow this order for maximum risk reduction:
 |--------|--------|------|
 | Line coverage | ≥80% overall | `pytest-cov` |
 | Expression converter coverage | ≥95% | `pytest-cov` module filter |
-| Test count | 800+ at Sprint C, 2000+ at v1.0 | `pytest --co -q | wc -l` |
+| Test count | 2,458 currently (target: 3,500+ at parity) | `pytest --co -q \| wc -l` |
 | Test execution time | <30s for unit tests | `pytest --durations=10` |
 | Snapshot drift | 0 unreviewed changes | Git diff on expected_output/ |
+| Property-based tests | 100+ invariants | Hypothesis-style randomized |
+| Fuzz tests | 50+ adversarial inputs | Malformed, injection, unicode |

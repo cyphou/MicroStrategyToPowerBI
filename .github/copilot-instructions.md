@@ -88,7 +88,7 @@ python migrate.py --help
 
 ## Conventions
 
-- Reference project: `../TableauToPowerBI/` (v17.0.0, mature architecture)
+- Reference project: `../TableauToPowerBI/` (v27.1.0, mature architecture — 6,818 tests, 96.2% coverage)
 - Follow the same patterns as TableauToPowerBI wherever applicable
 - Zero external dependencies for core logic (only `requests` for REST API)
 - All extraction modules return plain dicts/lists serializable to JSON
@@ -97,16 +97,17 @@ python migrate.py --help
 
 ## Multi-Agent Development
 
-6 specialized agents in `.github/agents/` handle domain-specific work:
+7 specialized agents in `.github/agents/` handle domain-specific work:
 
 | Agent | Invoke for | Key files |
-|-------|-----------|-----------|
+|-------|-----------|----------|
 | `@extraction` | REST API, schema/report/dossier extraction | `microstrategy_export/*` |
 | `@expression` | MSTR→DAX conversion, function mappings | `expression_converter.py`, `metric_extractor.py` |
 | `@generation` | TMDL, visuals, .pbip, M queries, deploy | `powerbi_import/*` |
 | `@testing` | Unit tests, fixtures, coverage | `tests/*` |
 | `@validation` | Assessment, fidelity scoring, reports | Validation/reporting modules |
 | `@orchestrator` | CLI, config, cross-module coordination | `migrate.py`, `docs/`, `pyproject.toml` |
+| `@parity` | Gap analysis vs TableauToPowerBI reference | `docs/DEVELOPMENT_PLAN.md` (gap analysis section), all modules |
 
 ## v3.0 Features
 
@@ -156,6 +157,38 @@ python migrate.py --help
 - **Governance report**: 6-category pre-migration checklist (ownership, classification, RLS, lineage, documentation, readiness) with scoring
 - CLI flags: `--lineage`, `--purview ACCOUNT`, `--governance`
 
+## v16.0 Features
+
+- **Fabric constants**: Centralized Spark type map (50+ MSTR→Delta types), TMDL type map, PySpark aggregation map, JDBC driver/URL maps, column sanitization, reserved word detection
+- **Fabric naming**: Name sanitization for Lakehouse tables (64-char limit, no spaces), Dataflow/Pipeline/Semantic Model names, collision detection with numeric suffix resolution
+- **Calculated column utilities**: Classify MSTR expressions as lakehouse-eligible (PySpark pre-compute) or DAX-only; convert eligible expressions to PySpark `withColumn()` calls with 30+ function mappings
+- **Dataflow Gen2 generator**: Generate Fabric Dataflow Gen2 definitions with Power Query M mashup → Lakehouse Delta table destination; 6 connector templates + freeform SQL support
+- **DirectLake semantic model generator**: Dedicated generator with expression-less tables, entityName partition bindings, DirectLake-specific properties, relationship TMDL, shared expression for Lakehouse binding
+- **Centralized auth**: Azure AD authentication module with Service Principal, Managed Identity, interactive browser flow, token caching + refresh
+- **Fabric REST API client**: Generic client with GET/POST/PATCH/DELETE, automatic retry (429/5xx), exponential backoff, pagination, workspace/item CRUD, long-running operation polling
+- **Bundle deployer**: Atomic deployment of shared semantic model + N thin reports; rollback on partial failure; post-deployment endorsement (Promoted/Certified); environment-based config loading
+- **2,458 total tests**: From 2,354 pre-v16.0 → 2,458 (~104 new Fabric + deploy tests)
+- CLI flags: `--deploy-env dev|staging|prod`
+
+## v15.0 Features
+
+- **DAX optimizer**: AST-based DAX rewriting with 5 rules — ISBLANK→COALESCE, chained IF→SWITCH (≥3 branches), nested CALCULATE flattening, redundant CALCULATE removal, CALCULATE simplification
+- **Time Intelligence injection**: Auto-generate YTD (`TOTALYTD`), PY (`SAMEPERIODLASTYEAR`), YoY% variants for date-based measures via `--auto-time-intelligence`
+- **Equivalence tester**: Cross-platform row-level value comparison with configurable numeric tolerance + lightweight SSIM screenshot comparison (no external deps)
+- **Regression suite**: Golden snapshot generation/comparison for TMDL, JSON, M, PQ files; SHA-256 hash-based drift detection with manifest tracking; `--snapshot-update` to re-baseline
+- **Security validator**: Path traversal detection, ZIP slip prevention, XXE pattern detection, dangerous extension blocking (.exe/.bat/.ps1), sensitive file warnings (.env/.key/.pem)
+- **2,354 total tests**: From 2,260 pre-v15.0 → 2,354 (~89 new quality gate tests)
+- CLI flags: `--optimize-dax`, `--auto-time-intelligence`, `--snapshot-update`
+
+## v11.0 Features
+
+- **Change detection**: Compare current vs previous intermediate JSON files to detect added/modified/deleted MicroStrategy objects; also supports API-based detection via REST API `modificationTime` polling
+- **Drift report**: Compare live PBI output against previous migration baseline to detect manual user edits; generates JSON + HTML conflict report
+- **Three-way reconciler**: MSTR source (new) × PBI target (live) × PBI target (baseline) merge engine; auto-applies safe changes, preserves user edits, flags conflicts; dry-run mode
+- **Scheduled migration**: Cron-compatible pipeline script: change detection → drift report → reconciliation → reporting; configurable via `migration_schedule.json`
+- **2,260 total tests**: From 2,208 pre-v11.0 → 2,260 (52 new migration ops tests)
+- CLI flags: `--watch`, `--reconcile`, `--previous-dir`, `--baseline-dir`
+
 ## v10.0 Features
 
 - **Property-based testing**: 100+ randomized invariant tests for expression converter, TMDL, visual generator, validator
@@ -163,6 +196,15 @@ python migrate.py --help
 - **Test generation from mappings**: Auto-generated parametrized tests from `_FUNCTION_MAP`, `_VIZ_TYPE_MAP`, `_DATA_TYPE_MAP`, `_GEO_ROLE_MAP` (181 test cases)
 - **Gap-filling tests**: Comprehensive tests for 20+ under-tested modules (semantic matcher, notebook generator, pipeline generator, dashboard, shared model, etc.)
 - **2,073 total tests**: From 885 pre-v10.0 → 2,073 (140% increase)
+
+## v9.0 Features
+
+- **Real-time source detection**: Classify MicroStrategy dashboards as batch/near-realtime/streaming based on refresh policies, cache settings, subscriptions
+- **Push dataset generation**: Generate Power BI REST API push dataset definitions with type mapping and retention policies
+- **Eventstream integration**: Fabric Real-Time Intelligence Eventstream definitions for streaming data sources
+- **Refresh schedule migration**: Map MSTR cache/subscription schedules to PBI dataset refresh configurations with time slot generation
+- **2,208 total tests**: From 2,175 pre-v9.0 → 2,208 (33 new streaming tests)
+- CLI flags: `--realtime`
 
 ## v8.0 Features
 
@@ -176,3 +218,14 @@ python migrate.py --help
 - CLI flags: `--cultures en-US,fr-FR,de-DE`
 - **2,157 total tests**: From 2,073 pre-v8.0 → 2,157 (84 new i18n tests)
 - **2,175 total tests**: Bug bash added 18 regression tests covering fixed crash bugs and API contract validation
+
+## Roadmap (v15.0–v19.0) — TableauToPowerBI Parity
+
+New development phases identified via gap analysis against the reference project (v27.1.0):
+
+- **v15.0 DAX Optimization & Quality Gates**: `dax_optimizer.py`, `equivalence_tester.py`, `regression_suite.py`, `security_validator.py`
+- **v16.0 Fabric Deep Integration Phase 2**: `dataflow_generator.py`, `fabric_constants.py`, `fabric_naming.py`, `calc_column_utils.py`, `fabric_semantic_model_generator.py`, `deploy/auth.py`, `deploy/client.py`, `deploy/bundle_deployer.py`
+- **v17.0 Enterprise Operations & Monitoring**: `monitoring.py`, `sla_tracker.py`, `alerts_generator.py`, `refresh_generator.py`, `recovery_report.py`
+- **v18.0 Content Library & Templates**: `model_templates.py`, `dax_recipes.py`, `marketplace.py`, `html_template.py`
+- **v19.0 Developer Experience & Extensibility**: `notebook_api.py`, `geo_passthrough.py`, `governance.py`, `deploy/multi_tenant.py`, `Dockerfile`
+- See `docs/DEVELOPMENT_PLAN.md` for full gap analysis table and sprint details

@@ -303,4 +303,4 @@ class TestCLIv6Args:
             with redirect_stderr(buf_err), redirect_stdout(buf_out):
                 parser.parse_args(['--version'])
         output = buf_err.getvalue() + buf_out.getvalue()
-        assert '8.0.0' in output
+        assert '16.0.0' in output

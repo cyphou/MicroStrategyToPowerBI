@@ -1,0 +1,137 @@
+[
+  {
+    "id": "MET_0001",
+    "name": "Total Revenue",
+    "metric_type": "simple",
+    "expression": "Sum(Revenue)",
+    "aggregation": "sum",
+    "column_ref": {
+      "fact_id": "FACT_0001",
+      "fact_name": "Revenue"
+    },
+    "format_string": "$#,##0.00",
+    "subtotal_type": "sum",
+    "folder_path": "\\Metrics\\Sales",
+    "is_smart_metric": false,
+    "dependencies": [],
+    "description": "Total revenue"
+  },
+  {
+    "id": "MET_0002",
+    "name": "Total Cost",
+    "metric_type": "simple",
+    "expression": "Sum(Cost)",
+    "aggregation": "sum",
+    "column_ref": {
+      "fact_id": "FACT_0003",
+      "fact_name": "Cost"
+    },
+    "format_string": "$#,##0.00",
+    "subtotal_type": "sum",
+    "folder_path": "\\Metrics\\Sales",
+    "is_smart_metric": false,
+    "dependencies": [],
+    "description": "Total COGS"
+  },
+  {
+    "id": "MET_0003",
+    "name": "Gross Profit",
+    "metric_type": "compound",
+    "expression": "Sum(Revenue) - Sum(Cost)",
+    "aggregation": "",
+    "column_ref": null,
+    "format_string": "$#,##0.00",
+    "subtotal_type": "sum",
+    "folder_path": "\\Metrics\\Sales",
+    "is_smart_metric": false,
+    "dependencies": [
+      "MET_0001",
+      "MET_0002"
+    ],
+    "description": "Gross profit"
+  },
+  {
+    "id": "MET_0004",
+    "name": "Gross Margin",
+    "metric_type": "compound",
+    "expression": "(Sum(Revenue) - Sum(Cost)) / Sum(Revenue)",
+    "aggregation": "",
+    "column_ref": null,
+    "format_string": "0.0%",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics\\Sales",
+    "is_smart_metric": false,
+    "dependencies": [
+      "MET_0001",
+      "MET_0002"
+    ],
+    "description": "Gross margin %"
+  },
+  {
+    "id": "MET_0005",
+    "name": "Units Sold",
+    "metric_type": "simple",
+    "expression": "Sum(Quantity)",
+    "aggregation": "sum",
+    "column_ref": {
+      "fact_id": "FACT_0002",
+      "fact_name": "Quantity"
+    },
+    "format_string": "#,##0",
+    "subtotal_type": "sum",
+    "folder_path": "\\Metrics\\Sales",
+    "is_smart_metric": false,
+    "dependencies": [],
+    "description": "Total units sold"
+  },
+  {
+    "id": "MET_0006",
+    "name": "Avg Discount",
+    "metric_type": "simple",
+    "expression": "Avg(Discount Pct)",
+    "aggregation": "avg",
+    "column_ref": {
+      "fact_id": "FACT_0004",
+      "fact_name": "Discount Pct"
+    },
+    "format_string": "0.0%",
+    "subtotal_type": "avg",
+    "folder_path": "\\Metrics\\Sales",
+    "is_smart_metric": false,
+    "dependencies": [],
+    "description": "Average discount"
+  },
+  {
+    "id": "MET_0007",
+    "name": "Total Inventory",
+    "metric_type": "simple",
+    "expression": "Sum(On Hand)",
+    "aggregation": "sum",
+    "column_ref": {
+      "fact_id": "FACT_0005",
+      "fact_name": "On Hand"
+    },
+    "format_string": "#,##0",
+    "subtotal_type": "sum",
+    "folder_path": "\\Metrics\\Inventory",
+    "is_smart_metric": false,
+    "dependencies": [],
+    "description": "Current inventory"
+  },
+  {
+    "id": "MET_0008",
+    "name": "Revenue per Store",
+    "metric_type": "compound",
+    "expression": "Sum(Revenue) / Count<Distinct=True>(Store)",
+    "aggregation": "",
+    "column_ref": null,
+    "format_string": "$#,##0",
+    "subtotal_type": "none",
+    "folder_path": "\\Metrics\\Sales",
+    "is_smart_metric": false,
+    "dependencies": [
+      "MET_0001"
+    ],
+    "description": "Revenue per store"
+  }
+]

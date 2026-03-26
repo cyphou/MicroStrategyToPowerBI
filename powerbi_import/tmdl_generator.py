@@ -359,8 +359,11 @@ def generate_relationships_tmdl(relationships):
     Returns:
         str: TMDL content
     """
+    # Detect and resolve ambiguous paths before emitting TMDL.
+    resolved = _resolve_ambiguous_paths(relationships)
+
     blocks = []
-    for rel in relationships:
+    for rel in resolved:
         from_table = rel["from_table"]
         from_col = rel["from_column"]
         to_table = rel["to_table"]
@@ -377,9 +380,159 @@ def generate_relationships_tmdl(relationships):
         else:
             lines.append("\tcrossFilteringBehavior: oneDirection")
 
+        if not rel.get("active", True):
+            lines.append("\tisActive: false")
+
         blocks.append('\n'.join(lines))
 
     return '\n\n'.join(blocks) + '\n'
+
+
+def _resolve_ambiguous_paths(relationships):
+    """Detect ambiguous relationship paths and deactivate edges to resolve them.
+
+    Power BI requires a single active path between any two tables.  When
+    multiple active paths exist (e.g. DIM→FACT_A→FACT_B and DIM→FACT_B),
+    the engine refuses to load the model.
+
+    Strategy (star-schema aware):
+      1. Fact-to-fact edges are deactivated first (highest priority).
+      2. For diamond patterns (DIM→FACT_A, DIM→FACT_B), edges to the
+         *secondary* fact table (fewer dimension connections) are deactivated.
+      3. The primary fact table (most dimension connections) keeps all
+         its active relationships intact.
+
+    Returns a new list of relationship dicts (originals are not mutated).
+    """
+    import copy
+    from collections import deque
+
+    rels = [copy.copy(r) for r in relationships]
+
+    def _rebuild_adj():
+        a: dict[str, set[str]] = {}
+        for r in rels:
+            if r.get("active", True):
+                a.setdefault(r["from_table"], set()).add(r["to_table"])
+                a.setdefault(r["to_table"], set()).add(r["from_table"])
+        return a
+
+    def _has_multiple_paths(adj, start, end, excluded_edge=None):
+        """Return True if >=2 simple paths exist between start and end."""
+        queue = deque([(start, frozenset([start]))])
+        count = 0
+        while queue and count < 2:
+            node, visited = queue.popleft()
+            for nb in adj.get(node, set()):
+                if nb in visited:
+                    continue
+                edge = tuple(sorted([node, nb]))
+                if excluded_edge and edge == excluded_edge:
+                    continue
+                if nb == end:
+                    count += 1
+                    if count >= 2:
+                        return True
+                else:
+                    queue.append((nb, visited | {nb}))
+        return count >= 2
+
+    def _dim_connection_count(table_name):
+        """Count how many active dimension→table relationships exist."""
+        return sum(
+            1 for r in rels
+            if r.get("active", True)
+            and r["to_table"] == table_name
+            and not r["from_table"].upper().startswith("FACT")
+        ) + sum(
+            1 for r in rels
+            if r.get("active", True)
+            and r["from_table"] == table_name
+            and not r["to_table"].upper().startswith("FACT")
+        )
+
+    # Iterate until no ambiguity remains (max iterations = number of edges)
+    for _ in range(len(rels)):
+        adj = _rebuild_adj()
+        tables = list(adj.keys())
+
+        # Find any ambiguous pair
+        ambiguous_pair = None
+        for i in range(len(tables)):
+            for j in range(i + 1, len(tables)):
+                if _has_multiple_paths(adj, tables[i], tables[j]):
+                    ambiguous_pair = (tables[i], tables[j])
+                    break
+            if ambiguous_pair:
+                break
+
+        if not ambiguous_pair:
+            break  # No ambiguity left
+
+        t1, t2 = ambiguous_pair
+
+        # Find candidate edges whose removal still keeps t1↔t2 connected
+        candidates = []
+        for r in rels:
+            if not r.get("active", True):
+                continue
+            edge = tuple(sorted([r["from_table"], r["to_table"]]))
+            # Check if removing this edge still leaves t1↔t2 reachable
+            if _has_multiple_paths(adj, t1, t2, excluded_edge=edge) or \
+               not _has_multiple_paths(adj, t1, t2, excluded_edge=edge):
+                # More precisely: check connectivity, not just multi-path
+                # BFS for simple connectivity after excluding edge
+                seen = {t1}
+                q = deque([t1])
+                while q:
+                    n = q.popleft()
+                    for nb in adj.get(n, set()):
+                        if nb in seen:
+                            continue
+                        e = tuple(sorted([n, nb]))
+                        if e == edge:
+                            continue
+                        seen.add(nb)
+                        q.append(nb)
+                if t2 in seen:
+                    candidates.append((r, edge))
+
+        if not candidates:
+            break  # Cannot resolve without disconnecting
+
+        # Score candidates: lower = more preferred for deactivation
+        def _score(item):
+            r, _edge = item
+            ft = r["from_table"].upper()
+            tt = r["to_table"].upper()
+            # Priority 1: fact-to-fact edges (most preferred to deactivate)
+            both_fact = ft.startswith("FACT") and tt.startswith("FACT")
+            # Priority 2: edges to secondary fact tables
+            # Identify the fact table in this relationship and score by
+            # how many dimension connections it has.  Fewer dims = secondary
+            # fact = preferred for deactivation.  We negate so that the
+            # fact with MORE connections (primary) gets a HIGHER score
+            # (= less preferred for deactivation).
+            fact_table = None
+            if tt.startswith("FACT"):
+                fact_table = r["to_table"]
+            elif ft.startswith("FACT"):
+                fact_table = r["from_table"]
+            fact_dims = _dim_connection_count(fact_table) if fact_table else 0
+            # Lower fact_dims → secondary fact → deactivate first (score=0+fact_dims)
+            # Higher fact_dims → primary fact → keep active (score=0+fact_dims, sorted ascending → picked last)
+            return (0 if both_fact else 1, fact_dims, r["from_table"])
+
+        candidates.sort(key=_score)
+        best_rel, best_edge = candidates[0]
+        best_rel["active"] = False
+        logger.info(
+            "Deactivated relationship %s→%s to resolve ambiguous "
+            "path between %s and %s",
+            best_rel["from_table"], best_rel["to_table"], t1, t2,
+        )
+
+    return rels
 
 
 def generate_roles_tmdl(security_filters, attr_by_id):
@@ -526,8 +679,11 @@ def _generate_measure(metric, table_name):
     name = metric["name"]
     name_str = f"'{name}'" if _needs_quoting(name) else name
 
-    # Convert expression to DAX
-    result = convert_metric_to_dax(metric)
+    # Convert expression to DAX — pass table context so the converter
+    # can produce fully-qualified column references ('Table'[Column])
+    # and avoid circular dependencies when measure name == column name.
+    ctx = {"table_name": table_name}
+    result = convert_metric_to_dax(metric, context=ctx)
     dax = result.get("dax", "")
 
     # For compound metrics that reference other metrics by name,
@@ -817,10 +973,15 @@ def _generate_field_parameter_table(selector):
         item_name = item.get("name", f"Item{idx}")
         rows.append(f'("{item_name}", NAMEOF([{item_name}]), {idx})')
 
-    dax_expr = "{\n" + ",\n".join(f"    {r}" for r in rows) + "\n}"
     lines.append(f"\tpartition '{name}' = calculated")
     lines.append("\t\tmode: import")
-    lines.append(f"\t\texpression:= {dax_expr}")
+    lines.append("\t\texpression:= ```")
+    lines.append("\t\t\t{")
+    for i, r in enumerate(rows):
+        comma = "," if i < len(rows) - 1 else ""
+        lines.append(f"\t\t\t\t{r}{comma}")
+    lines.append("\t\t\t}")
+    lines.append("\t\t\t```")
     lines.append("")
 
     return "\n".join(lines).rstrip() + "\n"

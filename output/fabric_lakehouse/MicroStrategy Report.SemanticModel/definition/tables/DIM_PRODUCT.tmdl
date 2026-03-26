@@ -1,0 +1,37 @@
+table DIM_PRODUCT
+	lineageTag: DS_0002
+
+	column PRODUCT_ID
+		dataType: int64
+		isHidden
+		isKey
+		sourceColumn: PRODUCT_ID
+		lineageTag: col-04c07320
+
+	column Product
+		dataType: string
+		sourceColumn: PRODUCT_NAME
+		lineageTag: col-d6727350
+
+	column BRAND
+		dataType: string
+		isHidden
+		sourceColumn: BRAND
+		lineageTag: col-174345b2
+
+	column DEPARTMENT
+		dataType: string
+		isHidden
+		sourceColumn: DEPARTMENT
+		lineageTag: col-ced1ec07
+
+	column UNIT_COST
+		dataType: double
+		sourceColumn: UNIT_COST
+		lineageTag: col-a6cbce53
+
+
+	partition DIM_PRODUCT = entity
+		mode: directLake
+		entityName: DIM_PRODUCT
+		annotation LakehouseName = RetailLakehouse

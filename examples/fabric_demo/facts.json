@@ -1,0 +1,86 @@
+[
+  {
+    "id": "FACT_0001",
+    "name": "Revenue",
+    "expressions": [
+      {
+        "table": "FACT_SALES",
+        "column": "REVENUE"
+      }
+    ],
+    "data_type": "real",
+    "default_aggregation": "sum",
+    "format_string": "$#,##0.00",
+    "description": "Sales revenue"
+  },
+  {
+    "id": "FACT_0002",
+    "name": "Quantity",
+    "expressions": [
+      {
+        "table": "FACT_SALES",
+        "column": "QUANTITY"
+      }
+    ],
+    "data_type": "integer",
+    "default_aggregation": "sum",
+    "format_string": "#,##0",
+    "description": "Units sold"
+  },
+  {
+    "id": "FACT_0003",
+    "name": "Cost",
+    "expressions": [
+      {
+        "table": "FACT_SALES",
+        "column": "COST"
+      }
+    ],
+    "data_type": "real",
+    "default_aggregation": "sum",
+    "format_string": "$#,##0.00",
+    "description": "COGS"
+  },
+  {
+    "id": "FACT_0004",
+    "name": "Discount Pct",
+    "expressions": [
+      {
+        "table": "FACT_SALES",
+        "column": "DISCOUNT_PCT"
+      }
+    ],
+    "data_type": "real",
+    "default_aggregation": "avg",
+    "format_string": "0.0%",
+    "description": "Discount percentage"
+  },
+  {
+    "id": "FACT_0005",
+    "name": "On Hand",
+    "expressions": [
+      {
+        "table": "FACT_INVENTORY",
+        "column": "ON_HAND"
+      }
+    ],
+    "data_type": "integer",
+    "default_aggregation": "sum",
+    "format_string": "#,##0",
+    "description": "Inventory on hand"
+  },
+  {
+    "id": "FACT_0006",
+    "name": "On Order",
+    "expressions": [
+      {
+        "table": "FACT_INVENTORY",
+        "column": "ON_ORDER"
+      }
+    ],
+    "data_type": "integer",
+    "default_aggregation": "sum",
+    "format_string": "#,##0",
+    "description": "Inventory on order"
+  }
+]

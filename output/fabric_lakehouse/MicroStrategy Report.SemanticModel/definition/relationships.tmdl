@@ -1,0 +1,24 @@
+relationship rel_FACT_SALES_DIM_STORE
+	fromColumn: FACT_SALES.STORE_ID
+	toColumn: DIM_STORE.STORE_ID
+	crossFilteringBehavior: oneDirection
+
+relationship rel_FACT_SALES_DIM_PRODUCT
+	fromColumn: FACT_SALES.PRODUCT_ID
+	toColumn: DIM_PRODUCT.PRODUCT_ID
+	crossFilteringBehavior: oneDirection
+
+relationship rel_FACT_SALES_DIM_DATE
+	fromColumn: FACT_SALES.DATE_KEY
+	toColumn: DIM_DATE.DATE_KEY
+	crossFilteringBehavior: oneDirection
+
+relationship rel_FACT_INVENTORY_DIM_PRODUCT
+	fromColumn: FACT_INVENTORY.PRODUCT_ID
+	toColumn: DIM_PRODUCT.PRODUCT_ID
+	crossFilteringBehavior: oneDirection
+
+relationship rel_FACT_INVENTORY_DIM_STORE
+	fromColumn: FACT_INVENTORY.STORE_ID
+	toColumn: DIM_STORE.STORE_ID
+	crossFilteringBehavior: oneDirection

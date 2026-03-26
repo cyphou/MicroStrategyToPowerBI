@@ -20,8 +20,10 @@ table 'Year Selector'
 
 	partition 'Year Selector' = calculated
 		mode: import
-		expression:= {
-    ("2024", NAMEOF([2024]), 0),
-    ("2025", NAMEOF([2025]), 1),
-    ("2026", NAMEOF([2026]), 2)
-}
+		expression:= ```
+			{
+				("2024", NAMEOF([2024]), 0),
+				("2025", NAMEOF([2025]), 1),
+				("2026", NAMEOF([2026]), 2)
+			}
+			```

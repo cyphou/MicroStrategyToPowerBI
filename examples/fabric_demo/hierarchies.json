@@ -1,0 +1,44 @@
+[
+  {
+    "id": "HIER_0001",
+    "name": "Geography",
+    "levels": [
+      {
+        "id": "ATTR_0003",
+        "name": "Country",
+        "order": 0
+      },
+      {
+        "id": "ATTR_0002",
+        "name": "City",
+        "order": 1
+      },
+      {
+        "id": "ATTR_0001",
+        "name": "Store",
+        "order": 2
+      }
+    ]
+  },
+  {
+    "id": "HIER_0002",
+    "name": "Product Category",
+    "levels": [
+      {
+        "id": "ATTR_0006",
+        "name": "Department",
+        "order": 0
+      },
+      {
+        "id": "ATTR_0005",
+        "name": "Brand",
+        "order": 1
+      },
+      {
+        "id": "ATTR_0004",
+        "name": "Product",
+        "order": 2
+      }
+    ]
+  }
+]

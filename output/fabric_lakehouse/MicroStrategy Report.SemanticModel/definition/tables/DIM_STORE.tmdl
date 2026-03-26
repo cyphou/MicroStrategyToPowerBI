@@ -1,0 +1,40 @@
+table DIM_STORE
+	lineageTag: DS_0001
+
+	column STORE_ID
+		dataType: int64
+		isHidden
+		isKey
+		sourceColumn: STORE_ID
+		lineageTag: col-476a013c
+
+	column Store
+		dataType: string
+		sourceColumn: STORE_NAME
+		lineageTag: col-14f0ea6c
+
+	column CITY
+		dataType: string
+		isHidden
+		sourceColumn: CITY
+		lineageTag: col-ca0d52ee
+		dataCategory: City
+
+	column COUNTRY
+		dataType: string
+		isHidden
+		sourceColumn: COUNTRY
+		lineageTag: col-0ecd8b33
+		dataCategory: Country
+
+	column STORE_TYPE
+		dataType: string
+		isHidden
+		sourceColumn: STORE_TYPE
+		lineageTag: col-14f3ff1b
+
+
+	partition DIM_STORE = entity
+		mode: directLake
+		entityName: DIM_STORE
+		annotation LakehouseName = RetailLakehouse

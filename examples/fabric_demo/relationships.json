@@ -1,0 +1,47 @@
+[
+  {
+    "id": "REL_0001",
+    "from_table": "FACT_SALES",
+    "from_column": "STORE_ID",
+    "to_table": "DIM_STORE",
+    "to_column": "STORE_ID",
+    "cardinality": "many_to_one",
+    "cross_filter": "single"
+  },
+  {
+    "id": "REL_0002",
+    "from_table": "FACT_SALES",
+    "from_column": "PRODUCT_ID",
+    "to_table": "DIM_PRODUCT",
+    "to_column": "PRODUCT_ID",
+    "cardinality": "many_to_one",
+    "cross_filter": "single"
+  },
+  {
+    "id": "REL_0003",
+    "from_table": "FACT_SALES",
+    "from_column": "DATE_KEY",
+    "to_table": "DIM_DATE",
+    "to_column": "DATE_KEY",
+    "cardinality": "many_to_one",
+    "cross_filter": "single"
+  },
+  {
+    "id": "REL_0004",
+    "from_table": "FACT_INVENTORY",
+    "from_column": "PRODUCT_ID",
+    "to_table": "DIM_PRODUCT",
+    "to_column": "PRODUCT_ID",
+    "cardinality": "many_to_one",
+    "cross_filter": "single"
+  },
+  {
+    "id": "REL_0005",
+    "from_table": "FACT_INVENTORY",
+    "from_column": "STORE_ID",
+    "to_table": "DIM_STORE",
+    "to_column": "STORE_ID",
+    "cardinality": "many_to_one",
+    "cross_filter": "single"
+  }
+]

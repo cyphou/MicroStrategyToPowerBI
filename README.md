@@ -12,11 +12,11 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/tests-623%20passed-brightgreen?style=for-the-badge" alt="Tests"/>
-  <img src="https://img.shields.io/badge/coverage-80%25%2B-brightgreen?style=for-the-badge" alt="Coverage"/>
+  <img src="https://img.shields.io/badge/tests-2%2C458%20passed-brightgreen?style=for-the-badge" alt="Tests"/>
+  <img src="https://img.shields.io/badge/coverage-95%25%2B-brightgreen?style=for-the-badge" alt="Coverage"/>
   <img src="https://img.shields.io/badge/python-3.9%2B-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python"/>
   <img src="https://img.shields.io/badge/license-MIT-green?style=for-the-badge" alt="License"/>
-  <img src="https://img.shields.io/badge/version-3.0.0-blue?style=for-the-badge" alt="Version"/>
+  <img src="https://img.shields.io/badge/version-16.0.0-blue?style=for-the-badge" alt="Version"/>
 </p>
 
 <p align="center">
@@ -79,7 +79,7 @@ python migrate.py --server URL --username admin --password secret \
 # 📊 Portfolio-wide assessment (all projects in a directory)
 python migrate.py --global-assess ./mstr_exports/ --output-dir assessment/
 
-# 🧭 Strategy recommendation (Import vs DirectQuery vs Composite)
+# 🧭 Strategy recommendation (Import vs DirectQuery vs Composite vs DirectLake)
 python migrate.py --server URL --username admin --password secret \
     --project "Sales Analytics" --strategy
 
@@ -106,6 +106,44 @@ python migrate.py --server URL --username admin --password secret \
 
 # 📤 Offline mode (from JSON exports instead of REST API)
 python migrate.py --from-export ./mstr_exports/ --output-dir /tmp/output
+
+# 🏭 Fabric-native mode — Lakehouse + DirectLake + PySpark notebooks + Data Factory
+python migrate.py --from-export ./mstr_exports/ \
+    --fabric-mode lakehouse --lakehouse-name SalesLakehouse
+
+# 🤖 AI-assisted migration (Azure OpenAI fallback for complex expressions)
+python migrate.py --from-export ./mstr_exports/ --ai-assist \
+    --ai-endpoint https://myopenai.openai.azure.com/ \
+    --ai-deployment gpt-4o --ai-budget 100000
+
+# 🌍 Multi-language output (TMDL cultures + translations)
+python migrate.py --from-export ./mstr_exports/ --cultures en-US,fr-FR,de-DE
+
+# ⚡ Real-time & streaming — push datasets + Eventstreams + refresh schedules
+python migrate.py --from-export ./mstr_exports/ --realtime
+
+# 🔄 Change detection & drift monitoring (incremental re-migration)
+python migrate.py --from-export ./mstr_exports/ --watch --previous-dir ./v1_export/
+
+# 🔀 Three-way reconciliation (preserve manual PBI edits during re-migration)
+python migrate.py --from-export ./mstr_exports/ --reconcile \
+    --previous-dir ./v1_export/ --baseline-dir ./v1_output/
+
+# 🔧 DAX optimization pass (IF→SWITCH, ISBLANK→COALESCE, nested CALCULATE flattening)
+python migrate.py --from-export ./mstr_exports/ --optimize-dax
+
+# ⏰ Auto Time Intelligence (YTD, PY, YoY% variants for date measures)
+python migrate.py --from-export ./mstr_exports/ --auto-time-intelligence
+
+# 🗺️ Data lineage graph + HTML visualization
+python migrate.py --from-export ./mstr_exports/ --lineage
+
+# ☁️ Register in Microsoft Purview
+python migrate.py --from-export ./mstr_exports/ --purview myaccount
+
+# 🏗️ Deploy bundle to Fabric (shared model + thin reports, atomic with rollback)
+python migrate.py --from-export ./mstr_exports/ --shared-model \
+    --deploy WORKSPACE_ID --fabric --deploy-env prod
 ```
 
 ---
@@ -117,13 +155,13 @@ python migrate.py --from-export ./mstr_exports/ --output-dir /tmp/output
 <td width="50%">
 
 ### 🔄 Complete Extraction
-Connects to MicroStrategy via **REST API v2** and extracts **20 object types**: attributes, facts, metrics (simple + compound + derived + OLAP), reports, dossiers, cubes, filters, prompts, custom groups, consolidations, hierarchies, security filters, freeform SQL, thresholds, warehouse connections
+Connects to MicroStrategy via **REST API v2** and extracts **20 object types**: attributes, facts, metrics (simple + compound + derived + OLAP), reports, dossiers, cubes, filters, prompts, custom groups, consolidations, hierarchies, security filters, freeform SQL, thresholds, scorecards, warehouse connections. **Real-time source detection** classifies dashboards as batch/near-realtime/streaming.
 
 </td>
 <td width="50%">
 
 ### 🧮 100+ DAX Conversions
-Translates MicroStrategy expressions to DAX: aggregations, **level metrics** (`{~+, Year}`, `{!Region}`, `{^}`), **derived metrics** (Rank, RunningSum, MovingAvg, Lag, Lead, NTile), ApplySimple SQL, If/Case, null handling, 60+ function mappings
+Translates MicroStrategy expressions to DAX: aggregations, **level metrics** (`{~+, Year}`, `{!Region}`, `{^}`), **derived metrics** (Rank, RunningSum, MovingAvg, Lag, Lead, NTile), ApplySimple SQL, If/Case, null handling, 60+ function mappings. **AI-assisted fallback** via Azure OpenAI for unconvertible expressions (ApplySimple/ApplyAgg/ApplyOLAP).
 
 </td>
 </tr>
@@ -131,13 +169,13 @@ Translates MicroStrategy expressions to DAX: aggregations, **level metrics** (`{
 <td>
 
 ### 📊 30+ Visual Types
-Maps every MicroStrategy visualization to Power BI: grid, cross-tab, vertical/horizontal bar, line, area, pie, ring, scatter, bubble, map, filled map, treemap, waterfall, funnel, gauge, KPI, combo, heatmap, histogram, box plot, word cloud, network
+Maps every MicroStrategy visualization to Power BI: grid, cross-tab, vertical/horizontal bar, line, area, pie, ring, scatter, bubble, map, filled map, treemap, waterfall, funnel, gauge, KPI, combo, heatmap, histogram, box plot, word cloud, network, scorecards → PBI Goals
 
 </td>
 <td>
 
 ### 🔌 15+ Data Connectors
-Generates **Power Query M** for: SQL Server, Oracle, PostgreSQL, MySQL, Teradata, Netezza, DB2, Snowflake, Databricks, BigQuery, SAP HANA, Impala, Vertica, ODBC/JDBC, Fabric Lakehouse
+Generates **Power Query M** for: SQL Server, Oracle, PostgreSQL, MySQL, Teradata, Netezza, DB2, Snowflake, Databricks, BigQuery, SAP HANA, Impala, Vertica, ODBC/JDBC, Fabric Lakehouse. **Dataflow Gen2** generation with 6 connector templates for Fabric Lakehouse destinations.
 
 </td>
 </tr>
@@ -145,21 +183,55 @@ Generates **Power Query M** for: SQL Server, Oracle, PostgreSQL, MySQL, Teradata
 <td>
 
 ### 🧠 Smart Semantic Model
-Auto-generates: attribute forms → columns (ID hidden, DESC display), facts → measures with format strings, hierarchies → TMDL hierarchies, security filters → **RLS roles**, Calendar table with Year/Quarter/Month/Day, display folders, geographic data categories
+Auto-generates: attribute forms → columns (ID hidden, DESC display), facts → measures with format strings, hierarchies → TMDL hierarchies, security filters → **RLS roles**, Calendar table with Year/Quarter/Month/Day, display folders, geographic data categories. **DirectLake** mode with entity partition bindings.
 
 </td>
 <td>
 
 ### 🚀 Deploy Anywhere
-One-command deploy to **Power BI Service** or **Microsoft Fabric** with Azure AD auth (Service Principal / Managed Identity). Gateway config generation for on-premises warehouses.
+One-command deploy to **Power BI Service** or **Microsoft Fabric** with Azure AD auth (Service Principal / Managed Identity / interactive browser). **Atomic bundle deployment** (shared model + thin reports) with rollback on failure. Post-deployment endorsement (Promoted/Certified). Environment-based config (dev/staging/prod).
 
 </td>
 </tr>
 <tr>
-<td colspan="2">
+<td>
 
-### 🔗 Shared Semantic Model
-Entire MicroStrategy project schema → **one shared Power BI semantic model** with thin reports per dossier. Attribute/fact/metric deduplication across all reports. Fabric bundle deployment as an atomic unit.
+### 🏭 Fabric-Native Generation
+Full Fabric pipeline: **Lakehouse DDL** (Delta tables), **PySpark ETL notebooks** (JDBC/Snowflake/BigQuery), **Dataflow Gen2** (Power Query M ingestion), **DirectLake semantic model**, **Data Factory pipelines** (copy + refresh + notification), **OneLake shortcuts**, capacity estimation (F2–F64).
+
+</td>
+<td>
+
+### 🤖 AI-Assisted Migration
+Azure OpenAI fallback for complex expressions: 10 curated few-shot MSTR→DAX examples, DAX syntax validation, response caching, configurable token budget. **Semantic field matcher** with fuzzy matching, 90+ abbreviation expansions, correction learning.
+
+</td>
+</tr>
+<tr>
+<td>
+
+### 🔧 DAX Optimizer
+AST-based DAX rewriting: `ISBLANK→COALESCE`, chained `IF→SWITCH`, nested `CALCULATE` flattening, redundant `CALCULATE` removal. **Time Intelligence injection**: auto-generate YTD (`TOTALYTD`), PY (`SAMEPERIODLASTYEAR`), YoY% variants for date-based measures.
+
+</td>
+<td>
+
+### 🌍 Multi-Language i18n
+30+ supported cultures with TMDL `cultures.tmdl` + `translations.tmdl`. Locale-aware format strings (currency, date, number). **RTL layout** for Arabic/Hebrew/Farsi/Urdu. Auto-detect locale from datasource connections.
+
+</td>
+</tr>
+<tr>
+<td>
+
+### ⚡ Real-Time & Streaming
+Classify MSTR dashboards as batch/near-realtime/streaming. Generate **Push Datasets** (PBI REST API), **Fabric Eventstream** definitions, and **refresh schedules** mapped from MSTR cache/subscription policies.
+
+</td>
+<td>
+
+### 🔄 Migration Ops
+**Change detection** between extraction runs. **Drift monitoring** to detect manual PBI edits. **Three-way reconciliation**: apply MSTR changes while preserving user edits. Cron-compatible scheduled migration pipeline.
 
 </td>
 </tr>
@@ -167,27 +239,35 @@ Entire MicroStrategy project schema → **one shared Power BI semantic model** w
 <td>
 
 ### 📋 14-Category Assessment
-Pre-migration readiness check with **GREEN/YELLOW/RED** scoring across 14 categories: expressions, visuals, connectors, security, prompts, hierarchies, relationships, data types, formatting, calculated tables, partitions, row-level security, aggregations, advanced features. Effort estimation in hours.
+Pre-migration readiness check with **GREEN/YELLOW/RED** scoring: expressions, visuals, connectors, security, prompts, hierarchies, relationships, data types, formatting, calculated tables, partitions, RLS, aggregations, advanced features. Effort estimation in hours.
 
 </td>
 <td>
 
 ### 🧭 Strategy Advisor
-Automatic recommendation of **Import, DirectQuery, Composite, or DirectLake** mode based on data volume, refresh frequency, query patterns, and Fabric availability. Per-project strategy with confidence scoring.
+Automatic **Import, DirectQuery, Composite, or DirectLake** recommendation based on data volume, refresh frequency, query patterns, and Fabric availability. Always recommends DirectLake when Fabric is available.
 
 </td>
 </tr>
 <tr>
 <td>
 
-### 📊 Comparison Reports & Visual Diff
-Side-by-side **MSTR ↔ PBI** comparison HTML report. Visual field coverage analysis: identifies missing columns, measure mismatches, and layout differences. Portfolio-level telemetry dashboard across migration runs.
+### 🗺️ Data Lineage & Governance
+In-memory DAG: warehouse → MSTR → PBI. **Impact analysis** ("what breaks if column X changes?"). Interactive D3.js lineage HTML. **Microsoft Purview** integration with sensitivity classification. 6-category governance checklist (ownership, classification, RLS, lineage, documentation, readiness).
 
 </td>
 <td>
 
-### 🔌 Plugin System & Telemetry
-Extensible hook system for custom transformations (pre/post extraction, pre/post generation). Migration run telemetry collection with historical dashboard. Progress bars for long-running operations.
+### 🛡️ Quality Gates
+**Equivalence testing** (cross-platform value comparison + SSIM screenshots). **Regression snapshots** (SHA-256 drift detection). **Security validation** (path traversal, ZIP slip, XXE, dangerous extensions). **Property-based** + **fuzz testing** (150+ adversarial inputs).
+
+</td>
+</tr>
+<tr>
+<td colspan="2">
+
+### 🔗 Shared Semantic Model + Thin Reports
+Entire MicroStrategy project schema → **one shared Power BI semantic model** with thin reports per dossier. Attribute/fact/metric deduplication across all reports. **Fabric bundle deployment** as an atomic unit with automatic rollback.
 
 </td>
 </tr>
@@ -255,6 +335,9 @@ YourReport/
 ## 🧮 DAX Conversions (100+ functions)
 
 > Full reference: [docs/MSTR_TO_DAX_REFERENCE.md](docs/MSTR_TO_DAX_REFERENCE.md)
+>
+> With `--ai-assist`: Azure OpenAI fallback for unconvertible ApplySimple/ApplyAgg/ApplyOLAP expressions.
+> With `--optimize-dax`: AST-based rewriting (IF→SWITCH, ISBLANK→COALESCE, nested CALCULATE flattening).
 
 ### Highlights
 
@@ -382,7 +465,8 @@ YourReport/
 
 ```
 MicrostratToPowerBI/
-├── migrate.py                          ← CLI entry point
+├── migrate.py                          ← CLI entry point (50+ flags)
+├── wizard.py                           ← Interactive step-by-step wizard
 ├── config.example.json                 ← Configuration template
 ├── pyproject.toml                      ← Package config
 ├── requirements.txt                    ← Dependencies
@@ -398,55 +482,117 @@ MicrostratToPowerBI/
 │   ├── cube_extractor.py               # Intelligent cubes
 │   ├── prompt_extractor.py             # Prompts → slicers/parameters
 │   ├── security_extractor.py           # Security filters → RLS
-│   └── connection_mapper.py            # 15+ DB types → Power Query M
+│   ├── connection_mapper.py            # 15+ DB types → Power Query M
+│   ├── scorecard_extractor.py          # Scorecards → PBI Goals
+│   ├── realtime_extractor.py           # Real-time source classification
+│   ├── incremental.py                  # Incremental extraction (delta)
+│   ├── parallel.py                     # Parallel extraction workers
+│   └── change_detector.py              # Change detection (diff vs previous run)
 │
-├── powerbi_import/                     ── Step 2: Generation Layer ──
+├── powerbi_import/                     ── Step 2: Generation Layer (39 modules) ──
 │   ├── import_to_powerbi.py            # Import orchestrator
 │   ├── pbip_generator.py               # .pbip project assembly
-│   ├── tmdl_generator.py               # TMDL semantic model
+│   ├── tmdl_generator.py               # TMDL semantic model (Import + DirectLake)
 │   ├── visual_generator.py             # PBIR v4.0 visual JSON
 │   ├── m_query_generator.py            # Power Query M expressions
 │   ├── validator.py                    # TMDL/PBIR/DAX validation
+│   │
+│   │  ── Assessment & Reporting ──
 │   ├── assessment.py                   # 14-category pre-migration assessment
 │   ├── migration_report.py             # Per-object fidelity report (JSON + HTML)
 │   ├── dashboard.py                    # Interactive HTML fidelity dashboard
-│   ├── shared_model.py                 # Shared semantic model generator
-│   ├── thin_report_generator.py        # Thin reports (shared model reference)
 │   ├── server_assessment.py            # Server-wide portfolio assessment
 │   ├── global_assessment.py            # Multi-project global assessment
 │   ├── comparison_report.py            # Source-vs-output comparison report
 │   ├── visual_diff.py                  # Visual field coverage analysis
 │   ├── strategy_advisor.py             # Import/DQ/Composite/DirectLake advisor
+│   │
+│   │  ── Shared Models & Merge ──
+│   ├── shared_model.py                 # Shared semantic model generator
+│   ├── thin_report_generator.py        # Thin reports (shared model reference)
+│   ├── merge_assessment.py             # Merge assessment report
+│   ├── merge_config.py                 # Per-table merge rules
+│   ├── merge_report_html.py            # Merge assessment HTML
+│   │
+│   │  ── Fabric-Native Generation ──
+│   ├── fabric_constants.py             # Spark type maps, JDBC maps, sanitization
+│   ├── fabric_naming.py                # Name sanitization & collision detection
+│   ├── fabric_semantic_model_generator.py  # DirectLake semantic model
+│   ├── dataflow_generator.py           # Dataflow Gen2 (M → Lakehouse)
+│   ├── calc_column_utils.py            # Expression classification (Lakehouse vs DAX)
+│   ├── lakehouse_generator.py          # Delta table DDL + OneLake shortcuts
+│   ├── notebook_generator.py           # PySpark ETL notebooks
+│   ├── pipeline_generator.py           # Data Factory pipelines
+│   │
+│   │  ── AI & Intelligence ──
+│   ├── ai_converter.py                 # Azure OpenAI LLM fallback for DAX
+│   ├── semantic_matcher.py             # Fuzzy column matching + correction learning
+│   ├── dax_optimizer.py                # AST-based DAX rewriting + Time Intelligence
+│   │
+│   │  ── i18n & Streaming ──
+│   ├── i18n.py                         # Multi-language cultures & translations
+│   ├── streaming_generator.py          # Push datasets + Eventstream + refresh
+│   │
+│   │  ── Lineage & Governance ──
+│   ├── lineage.py                      # Data lineage DAG + impact analysis
+│   ├── lineage_report.py              # Interactive D3.js lineage HTML
+│   ├── purview_integration.py          # Microsoft Purview asset registration
+│   ├── governance_report.py            # 6-category governance checklist
+│   │
+│   │  ── Migration Ops ──
+│   ├── drift_report.py                 # Drift detection (live vs baseline)
+│   ├── reconciler.py                   # Three-way merge (MSTR × PBI × baseline)
+│   │
+│   │  ── Quality & Validation ──
+│   ├── equivalence_tester.py           # Cross-platform value comparison + SSIM
+│   ├── regression_suite.py             # Golden snapshot generation/comparison
+│   ├── security_validator.py           # Path traversal, ZIP slip, XXE defense
+│   ├── certification.py                # Post-migration certification (PASS/FAIL)
+│   │
+│   │  ── Telemetry & Plugins ──
 │   ├── telemetry.py                    # Migration run data collection
 │   ├── telemetry_dashboard.py          # Historical run dashboard
 │   ├── progress.py                     # Progress bar wrapper
-│   └── plugins.py                      # Plugin extension system
+│   ├── plugins.py                      # Plugin extension system
+│   ├── goals_generator.py              # Scorecards → PBI Goals
+│   ├── theme_generator.py              # Theme extraction
+│   │
+│   └── deploy/                         ── Deployment ──
+│       ├── auth.py                     # Azure AD (SP / MI / browser + token cache)
+│       ├── client.py                   # Fabric REST API client (retry, pagination)
+│       ├── bundle_deployer.py          # Atomic bundle deploy + rollback
+│       ├── fabric_deployer.py          # Fabric REST API deployment
+│       ├── fabric_git.py               # Push .pbip to Fabric workspace Git
+│       ├── fabric_env.py               # Spark environment + capacity estimation
+│       ├── pbi_deployer.py             # Power BI Service deployment
+│       ├── gateway_config.py           # On-premises gateway configuration
+│       └── refresh_config.py           # Refresh schedule migration
 │
-├── tests/                              ── 623 tests ──
+├── scripts/
+│   ├── generate_tests.py               # Auto-generate parametrized tests
+│   └── scheduled_migration.py          # Cron-compatible migration pipeline
+│
+├── tests/                              ── 2,458 tests across 35 test files ──
 │   ├── fixtures/                       # API response + intermediate JSON fixtures
-│   ├── test_tmdl_generator.py          # 58 tests
-│   ├── test_visual_generator.py        # 97 tests
-│   ├── test_expression_converter.py    # 61 tests
-│   ├── test_pbip_assembly.py           # 43 tests
-│   ├── test_rest_api_client.py         # 28 tests
-│   ├── test_m_query_generator.py       # 19 tests
-│   ├── test_connection_mapper.py       # 16 tests
-│   ├── test_metric_extractor.py        # 15 tests
-│   ├── test_v2_features.py             # 70 tests (wizard, DAX, parallel, incremental)
-│   ├── test_v3_features.py             # 43 tests (assessment, strategy, diff, plugins)
-│   ├── test_regression.py              # 10 tests (PBI Desktop bug regression)
-│   ├── test_validator.py               # 80 tests (TMDL/PBIR/assessment validation)
-│   └── ...                             # + schema, report, dossier, integration tests
+│   └── test_*.py                       # Unit, integration, property, fuzz tests
+│
+├── examples/                           ── Example Projects ──
+│   ├── simple/                         # 1 table, 3 metrics, 1 report
+│   ├── medium/                         # 3 tables, 12 metrics, 3 reports, 1 dossier
+│   ├── complex/                        # 6 tables, 25 metrics, 5 reports, 3 dossiers, RLS
+│   └── ultra_complex/                  # 12 tables, 60 metrics, 15 reports, 8 dossiers, multi-source
 │
 └── docs/                               ── Documentation ──
-    ├── MIGRATION_PLAN.md               # Sprint execution plan
+    ├── DEVELOPMENT_PLAN.md             # Sprint-by-sprint roadmap (v1–v19)
+    ├── ARCHITECTURE.md                 # Pipeline design & module map
     ├── MAPPING_REFERENCE.md            # All MSTR→PBI mappings
-    ├── MSTR_TO_DAX_REFERENCE.md        # Expression conversion reference
-    ├── ARCHITECTURE.md                 # Pipeline design
-    ├── TEST_STRATEGY.md                # Test coverage strategy
-    ├── KNOWN_LIMITATIONS.md            # Gaps & approximations
+    ├── MSTR_TO_DAX_REFERENCE.md        # 100+ expression conversions
     ├── MIGRATION_CHECKLIST.md          # Enterprise migration guide
-    └── DEVELOPMENT_PLAN.md             # Sprint roadmap
+    ├── TEST_STRATEGY.md                # Test categories & coverage
+    ├── KNOWN_LIMITATIONS.md            # Unsupported features
+    ├── TROUBLESHOOTING.md              # Top-20 migration issues
+    ├── MIGRATION_PLAN.md               # Sprint execution plan
+    └── CHANGELOG.md                    # Release history
 ```
 
 </details>
@@ -477,15 +623,27 @@ Scope:
 Output:
   --output-dir DIR         Output directory (default: artifacts/)
   --report-name NAME       Override generated report name
+  --cultures LOCALES       Comma-separated culture list (e.g., en-US,fr-FR,de-DE)
+
+Offline Mode:
+  --from-export DIR        Read from JSON export directory instead of REST API
 
 Generation:
   --calendar-start YEAR    Calendar table start year
   --calendar-end YEAR      Calendar table end year
   --culture LOCALE         Culture/locale (default: en-US)
+  --no-calendar            Suppress Calendar table generation
 
 Deploy:
   --deploy WORKSPACE_ID    Deploy to Power BI workspace
   --deploy-refresh         Trigger dataset refresh after deploy
+  --fabric                 Deploy to Microsoft Fabric instead of PBI Service
+  --tenant-id ID           Azure tenant ID for deployment
+  --client-id ID           Azure app client ID for deployment
+  --client-secret SECRET   Azure app client secret for deployment
+  --lakehouse-id ID        Fabric Lakehouse ID for DirectLake
+  --direct-lake            Configure DirectLake mode (requires --lakehouse-id)
+  --deploy-env ENV         Deployment environment: dev | staging | prod
 
 Assessment:
   --assess                 Pre-migration readiness assessment (14 categories)
@@ -496,8 +654,54 @@ Assessment:
 Advanced:
   --shared-model           Merge all into one semantic model
   --wizard                 Interactive step-by-step mode
-  --from-export DIR        Offline mode: read from JSON export directory
   --no-calendar            Suppress Calendar table generation
+  --config FILE            Path to configuration JSON file
+  --verbose / -v           Enable verbose (DEBUG) logging
+  --quiet / -q             Suppress all output except errors
+  --log-file FILE          Write logs to file
+
+v4.0 Features:
+  --merge DIR              Merge N intermediate-JSON project dirs into one shared model
+  --merge-config FILE      Path to merge-config.json for conflict resolution
+  --scorecards             Extract and convert MicroStrategy scorecards to PBI Goals
+  --certify                Run post-migration certification (PASS/FAIL verdict)
+  --certify-threshold PCT  Minimum fidelity % for certification (default: 80)
+  --benchmark              Run performance benchmark on the generation pipeline
+
+v5.0 Fabric Native:
+  --fabric-mode MODE       Fabric-native artifacts: lakehouse | warehouse | shortcut
+  --lakehouse-name NAME    Fabric Lakehouse name (default: MstrLakehouse)
+  --fabric-git             Push generated .pbip to Fabric workspace Git repo
+  --fabric-git-branch BR   Branch for Fabric Git push (default: main)
+  --adls-account ACCT      ADLS account for OneLake shortcuts
+  --adls-container CTR     ADLS container for shortcuts (default: data)
+  --env-name NAME          Fabric Spark environment name (default: MstrSparkEnv)
+
+v6.0 Governance & Lineage:
+  --lineage                Generate data lineage graph and HTML report
+  --purview ACCOUNT        Register migrated assets in Microsoft Purview
+  --governance             Generate governance checklist report
+
+v7.0 AI-Assisted Migration:
+  --ai-assist              Enable LLM fallback for unconvertible expressions
+  --ai-endpoint URL        Azure OpenAI endpoint URL
+  --ai-key KEY             Azure OpenAI API key
+  --ai-deployment NAME     Azure OpenAI deployment name
+  --ai-budget TOKENS       Maximum total tokens for AI conversion (default: 500000)
+
+v9.0 Real-Time & Streaming:
+  --realtime               Detect real-time sources and generate push/Eventstream/refresh
+
+v11.0 Migration Ops:
+  --watch                  Detect changes between current and previous extraction
+  --reconcile              Three-way reconcile: preserve manual PBI edits
+  --previous-dir DIR       Previous extraction output (for change detection)
+  --baseline-dir DIR       Previous migration output (for reconciliation)
+
+v15.0 DAX Optimization:
+  --optimize-dax           Apply DAX optimization rewrites
+  --auto-time-intelligence Inject YTD, PY, YoY% variants for date measures
+  --snapshot-update        Re-baseline regression snapshots
 ```
 
 </details>
@@ -521,16 +725,47 @@ Requires `azure-identity` package and a Service Principal or Managed Identity wi
 </details>
 
 <details>
-<summary><b>Microsoft Fabric</b></summary>
+<summary><b>Microsoft Fabric — DirectLake</b></summary>
 
 ```bash
-# Deploy to Fabric workspace
-python migrate.py --server URL --username admin --password secret \
-    --project "Sales" --batch \
-    --deploy FABRIC_WORKSPACE_ID
+# Fabric-native pipeline: Lakehouse DDL + PySpark notebooks + DirectLake model
+python migrate.py --from-export ./mstr_exports/ \
+    --fabric-mode lakehouse --lakehouse-name SalesLakehouse \
+    --deploy FABRIC_WORKSPACE_ID --fabric --deploy-env prod
+
+# Deploy bundle: shared semantic model + thin reports (atomic with rollback)
+python migrate.py --from-export ./mstr_exports/ --shared-model \
+    --deploy FABRIC_WORKSPACE_ID --fabric --deploy-env staging
 ```
 
-Supports DirectLake mode for Fabric Lakehouses.
+Supports DirectLake mode for Fabric Lakehouses with entity partition bindings. Includes Dataflow Gen2, PySpark ETL notebooks, Data Factory pipelines, and capacity estimation (F2–F64).
+
+</details>
+
+<details>
+<summary><b>Fabric Git Integration</b></summary>
+
+```bash
+# Push .pbip to Fabric workspace Git repository
+python migrate.py --from-export ./mstr_exports/ \
+    --deploy WORKSPACE_ID --fabric-git --fabric-git-branch main \
+    --client-id APP_ID --client-secret SECRET --tenant-id TENANT
+```
+
+</details>
+
+<details>
+<summary><b>Environment-Based Deployment</b></summary>
+
+```bash
+# Use dev/staging/prod configs for deployment settings
+python migrate.py --from-export ./mstr_exports/ \
+    --deploy WORKSPACE_ID --fabric --deploy-env dev
+
+# Environment configs control: workspace IDs, endorsement level, capacity SKU
+```
+
+Environments: `dev` (no endorsement), `staging` (Promoted), `prod` (Certified).
 
 </details>
 
@@ -559,13 +794,13 @@ The fidelity report classifies every migrated object:
 ## 🧪 Testing
 
 <p>
-  <img src="https://img.shields.io/badge/tests-623%20passed-brightgreen?style=for-the-badge" alt="Tests"/>
-  <img src="https://img.shields.io/badge/coverage-80%25%2B-brightgreen?style=for-the-badge" alt="Coverage"/>
-  <img src="https://img.shields.io/badge/fixtures-34%20files-blue?style=for-the-badge" alt="Fixtures"/>
+  <img src="https://img.shields.io/badge/tests-2%2C458%20passed-brightgreen?style=for-the-badge" alt="Tests"/>
+  <img src="https://img.shields.io/badge/coverage-95%25%2B-brightgreen?style=for-the-badge" alt="Coverage"/>
+  <img src="https://img.shields.io/badge/test%20files-35-blue?style=for-the-badge" alt="Test Files"/>
 </p>
 
 ```bash
-python -m pytest tests/ -v                          # Run all 623 tests
+python -m pytest tests/ -v                          # Run all 2,458 tests
 python -m pytest tests/test_tmdl_generator.py -v    # Run specific file
 python -m pytest tests/ --cov --cov-report=html     # Coverage report
 ```
@@ -573,24 +808,43 @@ python -m pytest tests/ --cov --cov-report=html     # Coverage report
 <details>
 <summary><b>📋 Test suite breakdown (click to expand)</b></summary>
 
-| Test File | Tests | Coverage Area |
-|-----------|-------|---------------|
-| `test_visual_generator.py` | 97 | 30+ visual type mappings, data bindings, page layout, PBIR manifest |
-| `test_validator.py` | 80 | TMDL/PBIR/assessment validation rules |
-| `test_v2_features.py` | 70 | Wizard, advanced DAX, parallel extraction, incremental migration |
-| `test_expression_converter.py` | 61 | 60+ function mappings, level metrics, derived metrics, ApplySimple |
-| `test_tmdl_generator.py` | 58 | Tables, columns, measures, relationships, hierarchies, RLS, calendar |
-| `test_v3_features.py` | 43 | Assessment, strategy advisor, visual diff, telemetry, plugins |
-| `test_pbip_assembly.py` | 43 | .pbip scaffold, SemanticModel, Report, migration report, E2E pipeline |
-| `test_rest_api_client.py` | 28 | Client init, auth modes, API URLs, object constants, error handling |
-| `test_m_query_generator.py` | 19 | 10+ DB types, freeform SQL, fixture validation |
-| `test_connection_mapper.py` | 16 | SQL Server, Oracle, PostgreSQL, MySQL, Snowflake, Databricks, etc. |
-| `test_metric_extractor.py` | 15 | Simple/compound/derived metrics, thresholds, format strings |
-| `test_schema_extractor.py` | 20+ | Attributes, facts, tables, hierarchies, custom groups, freeform SQL |
-| `test_regression.py` | 10 | PBI Desktop bug regression (format strings, Calendar, RLS) |
-| `test_advanced_extraction.py` | 8 | Cubes, prompts, security filters, search results |
-| `test_report_extractor.py` | 3 | Grid/graph report extraction |
-| `test_dossier_extractor.py` | 4 | Dossier chapter/page/visualization extraction |
+| Test File | Coverage Area |
+|-----------|---------------|
+| `test_visual_generator.py` | 30+ visual type mappings, data bindings, page layout, PBIR manifest |
+| `test_validator.py` | TMDL/PBIR/assessment validation rules |
+| `test_v2_features.py` | Wizard, advanced DAX, parallel extraction, incremental migration |
+| `test_expression_converter.py` | 60+ function mappings, level metrics, derived metrics, ApplySimple |
+| `test_tmdl_generator.py` | Tables, columns, measures, relationships, hierarchies, RLS, calendar |
+| `test_v3_features.py` | Assessment, strategy advisor, visual diff, telemetry, plugins |
+| `test_pbip_assembly.py` | .pbip scaffold, SemanticModel, Report, migration report, E2E |
+| `test_rest_api_client.py` | Client init, auth modes, API URLs, error handling |
+| `test_generated.py` | Auto-generated parametrized tests from mapping tables (181 cases) |
+| `test_properties.py` | Property-based tests (100+ randomized invariants) |
+| `test_fuzz.py` | 50+ adversarial inputs (malformed, SQL injection, unicode) |
+| `test_gap_filling.py` | Coverage for 20+ under-tested modules |
+| `test_v4_features.py` | Merge, scorecards, certification, benchmark |
+| `test_v5_features.py` | Fabric: Lakehouse, PySpark notebooks, pipelines, OneLake |
+| `test_v7_features.py` | AI converter, semantic matcher, correction learning |
+| `test_lineage.py` | Lineage DAG, impact analysis, Purview, governance |
+| `test_i18n.py` | Multi-language, RTL layout, format strings, culture TMDL |
+| `test_streaming.py` | Push datasets, Eventstream, refresh schedules |
+| `test_bug_bash.py` | 18 regression tests for crash bugs |
+| `test_migops.py` | Change detection, drift, reconciliation, scheduling |
+| `test_dax_optimizer.py` | ISBLANK→COALESCE, IF→SWITCH, CALCULATE rules, Time Intelligence |
+| `test_quality_gates.py` | Equivalence testing, snapshots, security validation |
+| `test_fabric_deep.py` | Spark types, naming, calc columns, Dataflow Gen2, DirectLake model |
+| `test_deploy_infra.py` | Auth flows, REST client, bundle deployment, rollback |
+| `test_deployment.py` | PBI Service deploy, Fabric deploy, gateway config |
+| `test_governance.py` | Governance report, certification, lineage integration |
+| `test_integration.py` | End-to-end pipeline, offline mode, batch mode |
+| `test_connection_mapper.py` | SQL Server, Oracle, PostgreSQL, MySQL, Snowflake, Databricks |
+| `test_metric_extractor.py` | Simple/compound/derived metrics, thresholds, formats |
+| `test_schema_extractor.py` | Attributes, facts, tables, hierarchies, custom groups |
+| `test_m_query_generator.py` | 10+ DB types, freeform SQL, fixture validation |
+| `test_dossier_extractor.py` | Dossier chapter/page/visualization extraction |
+| `test_report_extractor.py` | Grid/graph report extraction |
+| `test_advanced_extraction.py` | Cubes, prompts, security filters |
+| `test_regression.py` | PBI Desktop bug regression |
 
 </details>
 
@@ -614,23 +868,26 @@ After migration, a visual **HTML Migration Report** is generated with per-object
 | 📖 [Migration Checklist](docs/MIGRATION_CHECKLIST.md) | Step-by-step enterprise migration guide |
 | 🗺️ [Mapping Reference](docs/MAPPING_REFERENCE.md) | MicroStrategy → Power BI object mappings |
 | 🔢 [100+ DAX Functions](docs/MSTR_TO_DAX_REFERENCE.md) | Complete expression conversion reference |
-| 🏗️ [Architecture](docs/ARCHITECTURE.md) | Pipeline design & module responsibilities |
+| 🏗️ [Architecture](docs/ARCHITECTURE.md) | Pipeline design, module map & data flow |
 | 📋 [Migration Plan](docs/MIGRATION_PLAN.md) | Sprint execution plan with status tracking |
-| 🧪 [Test Strategy](docs/TEST_STRATEGY.md) | Test categories, coverage targets & guidelines |
+| 🧪 [Test Strategy](docs/TEST_STRATEGY.md) | Test categories, 2,458 tests & guidelines |
 | ⚠️ [Known Limitations](docs/KNOWN_LIMITATIONS.md) | Unsupported features & approximations |
-| 📅 [Development Plan](docs/DEVELOPMENT_PLAN.md) | Sprint-by-sprint implementation roadmap |
-| 📝 [Changelog](CHANGELOG.md) | Release history |
+| 📅 [Development Plan](docs/DEVELOPMENT_PLAN.md) | Sprint-by-sprint roadmap (v1–v19) |
+| 🔧 [Troubleshooting](docs/TROUBLESHOOTING.md) | Top-20 migration issues & fixes |
+| 📝 [Changelog](CHANGELOG.md) | Release history (v1.0–v16.0) |
 | 🤝 [Contributing](CONTRIBUTING.md) | How to contribute |
 
 ---
 
 ## ⚠️ Known Limitations
 
-- `ApplySimple()` with complex SQL is flagged for manual review — no universal DAX equivalent
+- `ApplySimple()` with complex SQL: common patterns auto-converted, complex SQL flagged for manual review — use `--ai-assist` for LLM fallback
 - `OLAP functions` (RunningSum, MovingAvg) use approximated DAX window patterns — may need manual tuning
 - Data source connection strings must be reconfigured in Power Query after migration
 - Network/Sankey visualizations require AppSource custom visuals — not built-in to Power BI
 - MicroStrategy prompt expressions with complex logic may need manual slicer configuration
+- Transaction Services (write-back) not supported — Power BI does not support write-back natively
+- MicroStrategy custom visualization SDK plugins have no Power BI equivalent
 - See [docs/KNOWN_LIMITATIONS.md](docs/KNOWN_LIMITATIONS.md) for the full list
 
 ---
@@ -643,7 +900,7 @@ Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines
 git clone https://github.com/cyphou/MicroStrategyToPowerBI.git
 cd MicroStrategyToPowerBI
 pip install -r requirements.txt
-python -m pytest tests/ -q     # Make sure all 623 tests pass
+python -m pytest tests/ -q     # Make sure all 2,458 tests pass
 ```
 
 ---

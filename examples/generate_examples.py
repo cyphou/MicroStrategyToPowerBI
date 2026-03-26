@@ -1156,10 +1156,296 @@ def _dossier(did, name, pages):
             "chapters": [{"key": f"{did}_ch01", "name": "Main", "pages": pages}]}
 
 
+# ══════════════════════════════════════════════════════════════════
+#  FABRIC DEMO — "Fabric DirectLake Migration"
+#  Demonstrates Fabric-native features: Snowflake source, DirectLake,
+#  multi-language (en-US + fr-FR), real-time dashboard,
+#  scorecards, RLS, streaming metrics
+# ══════════════════════════════════════════════════════════════════
+
+def generate_fabric_demo():
+    d = os.path.join(BASE, "fabric_demo")
+
+    datasources = [
+        {"id": "DS_0001", "name": "DIM_STORE", "physical_table": "DIM_STORE",
+         "db_connection": {"db_type": "snowflake", "server": "acme.snowflakecomputing.com",
+                           "database": "RETAIL_DW", "schema": "PUBLIC", "warehouse": "COMPUTE_WH"},
+         "columns": [{"name": "STORE_ID", "data_type": "integer"}, {"name": "STORE_NAME", "data_type": "nVarChar"},
+                     {"name": "CITY", "data_type": "nVarChar"}, {"name": "COUNTRY", "data_type": "nVarChar"},
+                     {"name": "STORE_TYPE", "data_type": "nVarChar"}],
+         "is_freeform_sql": False, "sql_statement": "", "type": "table"},
+        {"id": "DS_0002", "name": "DIM_PRODUCT", "physical_table": "DIM_PRODUCT",
+         "db_connection": {"db_type": "snowflake", "server": "acme.snowflakecomputing.com",
+                           "database": "RETAIL_DW", "schema": "PUBLIC", "warehouse": "COMPUTE_WH"},
+         "columns": [{"name": "PRODUCT_ID", "data_type": "integer"}, {"name": "PRODUCT_NAME", "data_type": "nVarChar"},
+                     {"name": "BRAND", "data_type": "nVarChar"}, {"name": "DEPARTMENT", "data_type": "nVarChar"},
+                     {"name": "UNIT_COST", "data_type": "real"}],
+         "is_freeform_sql": False, "sql_statement": "", "type": "table"},
+        {"id": "DS_0003", "name": "DIM_DATE", "physical_table": "DIM_DATE",
+         "db_connection": {"db_type": "snowflake", "server": "acme.snowflakecomputing.com",
+                           "database": "RETAIL_DW", "schema": "PUBLIC", "warehouse": "COMPUTE_WH"},
+         "columns": [{"name": "DATE_KEY", "data_type": "date"}, {"name": "YEAR", "data_type": "integer"},
+                     {"name": "QUARTER", "data_type": "integer"}, {"name": "MONTH", "data_type": "integer"},
+                     {"name": "MONTH_NAME", "data_type": "nVarChar"}, {"name": "DAY_OF_WEEK", "data_type": "nVarChar"}],
+         "is_freeform_sql": False, "sql_statement": "", "type": "table"},
+        {"id": "DS_0004", "name": "FACT_SALES", "physical_table": "FACT_SALES",
+         "db_connection": {"db_type": "snowflake", "server": "acme.snowflakecomputing.com",
+                           "database": "RETAIL_DW", "schema": "PUBLIC", "warehouse": "COMPUTE_WH"},
+         "columns": [{"name": "SALE_ID", "data_type": "integer"}, {"name": "STORE_ID", "data_type": "integer"},
+                     {"name": "PRODUCT_ID", "data_type": "integer"}, {"name": "DATE_KEY", "data_type": "date"},
+                     {"name": "REVENUE", "data_type": "real"}, {"name": "QUANTITY", "data_type": "integer"},
+                     {"name": "COST", "data_type": "real"}, {"name": "DISCOUNT_PCT", "data_type": "real"}],
+         "is_freeform_sql": False, "sql_statement": "", "type": "table"},
+        {"id": "DS_0005", "name": "FACT_INVENTORY", "physical_table": "FACT_INVENTORY",
+         "db_connection": {"db_type": "snowflake", "server": "acme.snowflakecomputing.com",
+                           "database": "RETAIL_DW", "schema": "PUBLIC", "warehouse": "COMPUTE_WH"},
+         "columns": [{"name": "PRODUCT_ID", "data_type": "integer"}, {"name": "STORE_ID", "data_type": "integer"},
+                     {"name": "DATE_KEY", "data_type": "date"}, {"name": "ON_HAND", "data_type": "integer"},
+                     {"name": "ON_ORDER", "data_type": "integer"}, {"name": "REORDER_POINT", "data_type": "integer"}],
+         "is_freeform_sql": False, "sql_statement": "", "type": "table"},
+    ]
+
+    attributes = [
+        {"id": "ATTR_0001", "name": "Store", "description": "Retail store",
+         "forms": [{"name": "ID", "category": "ID", "data_type": "integer", "column_name": "STORE_ID", "table": "DIM_STORE"},
+                   {"name": "DESC", "category": "DESC", "data_type": "nVarChar", "column_name": "STORE_NAME", "table": "DIM_STORE"}],
+         "data_type": "integer", "geographic_role": None, "sort_order": "ascending",
+         "display_format": "", "parent_attributes": [], "child_attributes": [], "lookup_table": "DIM_STORE"},
+        {"id": "ATTR_0002", "name": "City", "description": "Store city",
+         "forms": [{"name": "ID", "category": "ID", "data_type": "nVarChar", "column_name": "CITY", "table": "DIM_STORE"}],
+         "data_type": "nVarChar", "geographic_role": "city", "sort_order": "ascending",
+         "display_format": "", "parent_attributes": [{"id": "ATTR_0003", "name": "Country"}],
+         "child_attributes": [{"id": "ATTR_0001", "name": "Store"}], "lookup_table": "DIM_STORE"},
+        {"id": "ATTR_0003", "name": "Country", "description": "Store country",
+         "forms": [{"name": "ID", "category": "ID", "data_type": "nVarChar", "column_name": "COUNTRY", "table": "DIM_STORE"}],
+         "data_type": "nVarChar", "geographic_role": "country", "sort_order": "ascending",
+         "display_format": "", "parent_attributes": [], "child_attributes": [{"id": "ATTR_0002", "name": "City"}],
+         "lookup_table": "DIM_STORE"},
+        {"id": "ATTR_0004", "name": "Product", "description": "Product item",
+         "forms": [{"name": "ID", "category": "ID", "data_type": "integer", "column_name": "PRODUCT_ID", "table": "DIM_PRODUCT"},
+                   {"name": "DESC", "category": "DESC", "data_type": "nVarChar", "column_name": "PRODUCT_NAME", "table": "DIM_PRODUCT"}],
+         "data_type": "integer", "geographic_role": None, "sort_order": "ascending",
+         "display_format": "", "parent_attributes": [], "child_attributes": [], "lookup_table": "DIM_PRODUCT"},
+        {"id": "ATTR_0005", "name": "Brand", "description": "Product brand",
+         "forms": [{"name": "ID", "category": "ID", "data_type": "nVarChar", "column_name": "BRAND", "table": "DIM_PRODUCT"}],
+         "data_type": "nVarChar", "geographic_role": None, "sort_order": "ascending",
+         "display_format": "", "parent_attributes": [], "child_attributes": [{"id": "ATTR_0004", "name": "Product"}],
+         "lookup_table": "DIM_PRODUCT"},
+        {"id": "ATTR_0006", "name": "Department", "description": "Product department",
+         "forms": [{"name": "ID", "category": "ID", "data_type": "nVarChar", "column_name": "DEPARTMENT", "table": "DIM_PRODUCT"}],
+         "data_type": "nVarChar", "geographic_role": None, "sort_order": "ascending",
+         "display_format": "", "parent_attributes": [], "child_attributes": [{"id": "ATTR_0005", "name": "Brand"}],
+         "lookup_table": "DIM_PRODUCT"},
+        {"id": "ATTR_0007", "name": "Date", "description": "Calendar date",
+         "forms": [{"name": "ID", "category": "ID", "data_type": "date", "column_name": "DATE_KEY", "table": "DIM_DATE"}],
+         "data_type": "date", "geographic_role": None, "sort_order": "ascending",
+         "display_format": "yyyy-MM-dd", "parent_attributes": [], "child_attributes": [], "lookup_table": "DIM_DATE"},
+        {"id": "ATTR_0008", "name": "Store Type", "description": "Flagship/Standard/Outlet",
+         "forms": [{"name": "ID", "category": "ID", "data_type": "nVarChar", "column_name": "STORE_TYPE", "table": "DIM_STORE"}],
+         "data_type": "nVarChar", "geographic_role": None, "sort_order": "ascending",
+         "display_format": "", "parent_attributes": [], "child_attributes": [], "lookup_table": "DIM_STORE"},
+    ]
+
+    facts = [
+        {"id": "FACT_0001", "name": "Revenue", "expressions": [{"table": "FACT_SALES", "column": "REVENUE"}],
+         "data_type": "real", "default_aggregation": "sum", "format_string": "$#,##0.00", "description": "Sales revenue"},
+        {"id": "FACT_0002", "name": "Quantity", "expressions": [{"table": "FACT_SALES", "column": "QUANTITY"}],
+         "data_type": "integer", "default_aggregation": "sum", "format_string": "#,##0", "description": "Units sold"},
+        {"id": "FACT_0003", "name": "Cost", "expressions": [{"table": "FACT_SALES", "column": "COST"}],
+         "data_type": "real", "default_aggregation": "sum", "format_string": "$#,##0.00", "description": "COGS"},
+        {"id": "FACT_0004", "name": "Discount Pct", "expressions": [{"table": "FACT_SALES", "column": "DISCOUNT_PCT"}],
+         "data_type": "real", "default_aggregation": "avg", "format_string": "0.0%", "description": "Discount percentage"},
+        {"id": "FACT_0005", "name": "On Hand", "expressions": [{"table": "FACT_INVENTORY", "column": "ON_HAND"}],
+         "data_type": "integer", "default_aggregation": "sum", "format_string": "#,##0", "description": "Inventory on hand"},
+        {"id": "FACT_0006", "name": "On Order", "expressions": [{"table": "FACT_INVENTORY", "column": "ON_ORDER"}],
+         "data_type": "integer", "default_aggregation": "sum", "format_string": "#,##0", "description": "Inventory on order"},
+    ]
+
+    metrics = [
+        {"id": "MET_0001", "name": "Total Revenue", "metric_type": "simple", "expression": "Sum(Revenue)",
+         "aggregation": "sum", "column_ref": {"fact_id": "FACT_0001", "fact_name": "Revenue"},
+         "format_string": "$#,##0.00", "subtotal_type": "sum", "folder_path": "\\Metrics\\Sales",
+         "is_smart_metric": False, "dependencies": [], "description": "Total revenue"},
+        {"id": "MET_0002", "name": "Total Cost", "metric_type": "simple", "expression": "Sum(Cost)",
+         "aggregation": "sum", "column_ref": {"fact_id": "FACT_0003", "fact_name": "Cost"},
+         "format_string": "$#,##0.00", "subtotal_type": "sum", "folder_path": "\\Metrics\\Sales",
+         "is_smart_metric": False, "dependencies": [], "description": "Total COGS"},
+        {"id": "MET_0003", "name": "Gross Profit", "metric_type": "compound",
+         "expression": "Sum(Revenue) - Sum(Cost)", "aggregation": "", "column_ref": None,
+         "format_string": "$#,##0.00", "subtotal_type": "sum", "folder_path": "\\Metrics\\Sales",
+         "is_smart_metric": False, "dependencies": ["MET_0001", "MET_0002"], "description": "Gross profit"},
+        {"id": "MET_0004", "name": "Gross Margin", "metric_type": "compound",
+         "expression": "(Sum(Revenue) - Sum(Cost)) / Sum(Revenue)", "aggregation": "", "column_ref": None,
+         "format_string": "0.0%", "subtotal_type": "none", "folder_path": "\\Metrics\\Sales",
+         "is_smart_metric": False, "dependencies": ["MET_0001", "MET_0002"], "description": "Gross margin %"},
+        {"id": "MET_0005", "name": "Units Sold", "metric_type": "simple", "expression": "Sum(Quantity)",
+         "aggregation": "sum", "column_ref": {"fact_id": "FACT_0002", "fact_name": "Quantity"},
+         "format_string": "#,##0", "subtotal_type": "sum", "folder_path": "\\Metrics\\Sales",
+         "is_smart_metric": False, "dependencies": [], "description": "Total units sold"},
+        {"id": "MET_0006", "name": "Avg Discount", "metric_type": "simple", "expression": "Avg(Discount Pct)",
+         "aggregation": "avg", "column_ref": {"fact_id": "FACT_0004", "fact_name": "Discount Pct"},
+         "format_string": "0.0%", "subtotal_type": "avg", "folder_path": "\\Metrics\\Sales",
+         "is_smart_metric": False, "dependencies": [], "description": "Average discount"},
+        {"id": "MET_0007", "name": "Total Inventory", "metric_type": "simple", "expression": "Sum(On Hand)",
+         "aggregation": "sum", "column_ref": {"fact_id": "FACT_0005", "fact_name": "On Hand"},
+         "format_string": "#,##0", "subtotal_type": "sum", "folder_path": "\\Metrics\\Inventory",
+         "is_smart_metric": False, "dependencies": [], "description": "Current inventory"},
+        {"id": "MET_0008", "name": "Revenue per Store", "metric_type": "compound",
+         "expression": "Sum(Revenue) / Count<Distinct=True>(Store)", "aggregation": "", "column_ref": None,
+         "format_string": "$#,##0", "subtotal_type": "none", "folder_path": "\\Metrics\\Sales",
+         "is_smart_metric": False, "dependencies": ["MET_0001"], "description": "Revenue per store"},
+    ]
+
+    derived = [
+        {"id": "DER_0001", "name": "Revenue Rank", "metric_type": "derived", "expression": "Rank(Sum(Revenue))",
+         "aggregation": "", "column_ref": None, "format_string": "#,##0", "subtotal_type": "none",
+         "folder_path": "\\Metrics\\Derived", "is_smart_metric": True, "dependencies": ["MET_0001"],
+         "description": "Store revenue rank"},
+        {"id": "DER_0002", "name": "YTD Revenue", "metric_type": "derived",
+         "expression": "RunningSum(Sum(Revenue)) {~+, Date}", "aggregation": "", "column_ref": None,
+         "format_string": "$#,##0.00", "subtotal_type": "none", "folder_path": "\\Metrics\\Derived",
+         "is_smart_metric": True, "dependencies": ["MET_0001"], "description": "Year-to-date revenue"},
+        {"id": "DER_0003", "name": "Revenue MoM", "metric_type": "derived",
+         "expression": "Lag(Sum(Revenue), 1) {Date}", "aggregation": "", "column_ref": None,
+         "format_string": "$#,##0.00", "subtotal_type": "none", "folder_path": "\\Metrics\\Derived",
+         "is_smart_metric": True, "dependencies": ["MET_0001"], "description": "Previous month revenue"},
+    ]
+
+    reports = [
+        {"id": "RPT_0001", "name": "Store Performance", "description": "Store-level revenue analysis",
+         "report_type": "grid",
+         "grid": {"rows": [{"id": "ATTR_0003", "name": "Country", "type": "attribute", "forms": ["ID"]},
+                           {"id": "ATTR_0002", "name": "City", "type": "attribute", "forms": ["ID"]},
+                           {"id": "ATTR_0001", "name": "Store", "type": "attribute", "forms": ["DESC"]}],
+                  "columns": [], "metrics_position": "columns"},
+         "graph": None,
+         "metrics": [{"id": "MET_0001", "name": "Total Revenue"}, {"id": "MET_0003", "name": "Gross Profit"},
+                     {"id": "MET_0004", "name": "Gross Margin"}, {"id": "DER_0001", "name": "Revenue Rank"}],
+         "filters": [], "sorts": [{"attribute": "Total Revenue", "order": "descending"}],
+         "subtotals": [{"type": "grand_total", "position": "bottom", "function": "sum"}],
+         "page_by": [], "thresholds": [], "prompts": []},
+        {"id": "RPT_0002", "name": "Revenue Trend", "description": "Monthly revenue with prior period",
+         "report_type": "graph",
+         "grid": {"rows": [{"id": "ATTR_0007", "name": "Date", "type": "attribute", "forms": ["ID"]}],
+                  "columns": [], "metrics_position": "rows"},
+         "graph": {"type": "line", "mstr_type": "line",
+                   "attributes_on_axis": [{"id": "ATTR_0007", "name": "Date"}],
+                   "metrics_on_axis": [{"id": "MET_0001", "name": "Total Revenue"}, {"id": "DER_0003", "name": "Revenue MoM"}],
+                   "color_by": ""},
+         "metrics": [{"id": "MET_0001", "name": "Total Revenue"}, {"id": "DER_0003", "name": "Revenue MoM"}],
+         "filters": [], "sorts": [], "subtotals": [], "page_by": [], "thresholds": [], "prompts": []},
+    ]
+
+    dossiers = [{
+        "id": "DOSS_0001", "name": "Retail Analytics Dashboard",
+        "description": "Fabric DirectLake demo dashboard with KPIs, map, and inventory",
+        "chapters": [{
+            "key": "ch_01", "name": "Sales Overview",
+            "pages": [{
+                "key": "pg_01", "name": "KPI Summary",
+                "visualizations": [
+                    {"key": "v_01", "name": "Total Revenue KPI", "visualization_type": "kpi",
+                     "pbi_visual_type": "kpi", "position": {"x": 0, "y": 0, "width": 320, "height": 200},
+                     "data_bindings": {"metrics": [{"id": "MET_0001", "name": "Total Revenue"}]},
+                     "formatting": {"show_trend": True}},
+                    {"key": "v_02", "name": "Gross Margin KPI", "visualization_type": "kpi",
+                     "pbi_visual_type": "kpi", "position": {"x": 320, "y": 0, "width": 320, "height": 200},
+                     "data_bindings": {"metrics": [{"id": "MET_0004", "name": "Gross Margin"}]},
+                     "formatting": {}},
+                    {"key": "v_03", "name": "Revenue by Country", "visualization_type": "filled_map",
+                     "pbi_visual_type": "filledMap", "position": {"x": 0, "y": 200, "width": 640, "height": 400},
+                     "data_bindings": {"attributes": [{"id": "ATTR_0003", "name": "Country"}],
+                                       "metrics": [{"id": "MET_0001", "name": "Total Revenue"}]},
+                     "formatting": {}},
+                    {"key": "v_04", "name": "Revenue Trend", "visualization_type": "line",
+                     "pbi_visual_type": "lineChart", "position": {"x": 640, "y": 0, "width": 640, "height": 600},
+                     "data_bindings": {"attributes": [{"id": "ATTR_0007", "name": "Date"}],
+                                       "metrics": [{"id": "MET_0001", "name": "Total Revenue"}, {"id": "DER_0002", "name": "YTD Revenue"}]},
+                     "formatting": {}},
+                ],
+            },
+            {
+                "key": "pg_02", "name": "Inventory Status",
+                "visualizations": [
+                    {"key": "v_05", "name": "Inventory by Department", "visualization_type": "horizontal_bar",
+                     "pbi_visual_type": "clusteredBarChart", "position": {"x": 0, "y": 0, "width": 640, "height": 400},
+                     "data_bindings": {"attributes": [{"id": "ATTR_0006", "name": "Department"}],
+                                       "metrics": [{"id": "MET_0007", "name": "Total Inventory"}]},
+                     "formatting": {}},
+                    {"key": "v_06", "name": "Store Inventory Grid", "visualization_type": "grid",
+                     "pbi_visual_type": "tableEx", "position": {"x": 640, "y": 0, "width": 640, "height": 400},
+                     "data_bindings": {"rows": [{"id": "ATTR_0001", "name": "Store"}],
+                                       "metrics": [{"id": "MET_0007", "name": "Total Inventory"}, {"id": "MET_0005", "name": "Units Sold"}]},
+                     "formatting": {}},
+                ],
+            }],
+        }],
+    }]
+
+    hierarchies = [
+        {"id": "HIER_0001", "name": "Geography", "levels": [
+            {"id": "ATTR_0003", "name": "Country", "order": 0},
+            {"id": "ATTR_0002", "name": "City", "order": 1},
+            {"id": "ATTR_0001", "name": "Store", "order": 2}]},
+        {"id": "HIER_0002", "name": "Product Category", "levels": [
+            {"id": "ATTR_0006", "name": "Department", "order": 0},
+            {"id": "ATTR_0005", "name": "Brand", "order": 1},
+            {"id": "ATTR_0004", "name": "Product", "order": 2}]},
+    ]
+
+    relationships = [
+        {"id": "REL_0001", "from_table": "FACT_SALES", "from_column": "STORE_ID",
+         "to_table": "DIM_STORE", "to_column": "STORE_ID", "cardinality": "many_to_one", "cross_filter": "single"},
+        {"id": "REL_0002", "from_table": "FACT_SALES", "from_column": "PRODUCT_ID",
+         "to_table": "DIM_PRODUCT", "to_column": "PRODUCT_ID", "cardinality": "many_to_one", "cross_filter": "single"},
+        {"id": "REL_0003", "from_table": "FACT_SALES", "from_column": "DATE_KEY",
+         "to_table": "DIM_DATE", "to_column": "DATE_KEY", "cardinality": "many_to_one", "cross_filter": "single"},
+        {"id": "REL_0004", "from_table": "FACT_INVENTORY", "from_column": "PRODUCT_ID",
+         "to_table": "DIM_PRODUCT", "to_column": "PRODUCT_ID", "cardinality": "many_to_one", "cross_filter": "single"},
+        {"id": "REL_0005", "from_table": "FACT_INVENTORY", "from_column": "STORE_ID",
+         "to_table": "DIM_STORE", "to_column": "STORE_ID", "cardinality": "many_to_one", "cross_filter": "single"},
+    ]
+
+    security_filters = [
+        {"id": "SF_0001", "name": "Store Region Filter",
+         "filter_expression": "[Country] = @UserRegion",
+         "assignments": [{"type": "group", "name": "RegionalManagers"}]},
+    ]
+
+    scorecards = [{
+        "id": "SC_0001", "name": "Retail Performance Scorecard",
+        "description": "Key retail KPIs for executive review",
+        "objectives": [
+            {"id": "OBJ_0001", "name": "Revenue Growth", "metric_id": "MET_0001",
+             "target_value": 10000000, "current_value": 8750000, "status": "yellow",
+             "perspective": "Financial"},
+            {"id": "OBJ_0002", "name": "Margin Target", "metric_id": "MET_0004",
+             "target_value": 0.35, "current_value": 0.32, "status": "yellow",
+             "perspective": "Financial"},
+            {"id": "OBJ_0003", "name": "Inventory Turnover", "metric_id": "MET_0007",
+             "target_value": 5000, "current_value": 4200, "status": "green",
+             "perspective": "Operations"},
+        ],
+    }]
+
+    for name, data in [("datasources", datasources), ("attributes", attributes),
+                       ("facts", facts), ("metrics", metrics), ("derived_metrics", derived),
+                       ("reports", reports), ("dossiers", dossiers), ("cubes", []),
+                       ("prompts", []), ("hierarchies", hierarchies),
+                       ("relationships", relationships),
+                       ("security_filters", security_filters), ("freeform_sql", []),
+                       ("scorecards", scorecards),
+                       *((k, v) for k, v in _EMPTY.items())]:
+        _w(d, name, data)
+    print(f"  ✓ fabric_demo/ — 5 tables, {len(metrics)} metrics, {len(derived)} derived, "
+          f"{len(reports)} reports, {len(dossiers)} dossier, 1 scorecard, 1 RLS filter")
+
+
 if __name__ == "__main__":
     print("Generating MicroStrategy example projects...")
     generate_simple()
     generate_medium()
     generate_complex()
     generate_ultra_complex()
-    print("\nDone! All 4 example projects generated.")
+    generate_fabric_demo()
+    print("\nDone! All 5 example projects generated.")

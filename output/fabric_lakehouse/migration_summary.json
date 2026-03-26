@@ -1,0 +1,22 @@
+{
+  "report_name": "MicroStrategy Report",
+  "output_dir": "output\\fabric_lakehouse\\",
+  "tables": 5,
+  "columns": 30,
+  "measures": 11,
+  "relationships": 5,
+  "hierarchies": 0,
+  "roles": 1,
+  "pages": 4,
+  "visuals": 8,
+  "slicers": 0,
+  "unsupported_visuals": 0,
+  "attributes": 8,
+  "facts": 6,
+  "metrics": 8,
+  "reports": 2,
+  "dossiers": 1,
+  "security_filters": 1,
+  "status": "complete",
+  "warnings": []
+}

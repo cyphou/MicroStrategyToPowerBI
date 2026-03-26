@@ -1,6 +1,6 @@
 # Troubleshooting Guide
 
-Top-20 migration issues and how to resolve them.
+**Version:** v16.0.0 — Top-30 migration issues and how to resolve them.
 
 ---
 
@@ -161,3 +161,83 @@ Top-20 migration issues and how to resolve them.
 **Symptom:** Special characters in column/table names cause TMDL parse errors.
 
 **Fix:** TMDL auto-quotes names containing spaces or special characters. If issues persist, check for zero-width characters or non-ASCII escaping in source attribute names.
+
+---
+
+## 21. Fabric Lakehouse Table Names Truncated
+
+**Symptom:** Lakehouse table names are shorter than expected or have numeric suffixes.
+
+**Fix:** Fabric Lakehouse tables have a 64-character limit. The `fabric_naming.py` module truncates long names and appends `_2`, `_3` suffixes for collisions. Review `lakehouse_tables.json` for the mapping.
+
+---
+
+## 22. DirectLake Model Shows Empty Tables
+
+**Symptom:** DirectLake semantic model loads but tables show no data.
+
+**Fix:** Ensure the Lakehouse Delta tables exist and contain data. The DirectLake model uses `entityName` partition bindings — verify the entity names match the actual Lakehouse table names. Check the shared expression for correct Lakehouse binding.
+
+---
+
+## 23. Dataflow Gen2 Connector Error
+
+**Symptom:** Dataflow Gen2 fails to refresh with "data source error".
+
+**Fix:** Verify the data source credentials are configured in the Fabric workspace settings. The generated Dataflow uses M connector templates — check that the gateway/credentials for the source database are correctly mapped.
+
+---
+
+## 24. AI-Assisted Conversion Returns BLANK()
+
+**Symptom:** `--ai-assist` enabled but converted expression is still `BLANK()`.
+
+**Fix:** Check Azure OpenAI endpoint and credentials. The AI converter has a token budget (default: 500K) — if exceeded, remaining expressions are skipped. Increase with `--ai-budget`. Also check `ai_cache.json` for previously cached (possibly stale) results.
+
+---
+
+## 25. Multi-Language Culture Files Missing
+
+**Symptom:** `--cultures en-US,fr-FR` runs but only `en-US` appears in the model.
+
+**Fix:** Additional cultures are written to `cultures.tmdl` and `translations.tmdl` in the TMDL definition folder. Open the `.pbip` in Power BI Desktop and check Model → Languages to verify culture files loaded. Ensure culture codes are valid (e.g., `fr-FR` not `FR` or `french`).
+
+---
+
+## 26. RTL Layout Not Applied
+
+**Symptom:** Arabic/Hebrew visuals don't show right-to-left layout.
+
+**Fix:** RTL layout requires Arabic, Hebrew, Farsi, or Urdu in the `--cultures` list. The tool mirrors x-coordinates and sets `textDirection: RTL`. If using a custom layout, manually adjust visual positions.
+
+---
+
+## 27. Change Detection Shows No Changes
+
+**Symptom:** `--watch` reports "no changes detected" even though objects changed.
+
+**Fix:** Ensure `--previous-dir` points to the correct previous extraction output. Change detection compares JSON files byte-by-byte — whitespace-only changes may be ignored. Re-extract both runs with identical settings.
+
+---
+
+## 28. Reconciliation Conflicts
+
+**Symptom:** `--reconcile` flags many conflicts that seem identical.
+
+**Fix:** Three-way reconciliation compares MSTR source (new), PBI target (live), and PBI target (baseline). If the baseline is stale (not from the same migration version), false conflicts appear. Run `--reconcile --dry-run` first to preview without applying changes.
+
+---
+
+## 29. Bundle Deployment Rollback
+
+**Symptom:** `--deploy` with `--shared-model` partially fails and rolls back.
+
+**Fix:** The bundle deployer creates the shared semantic model first, then thin reports. If a report deployment fails, the entire bundle is rolled back. Check the deployment log for the specific error (usually 403 permission or 409 conflict). Verify workspace permissions and that no item with the same name already exists.
+
+---
+
+## 30. DAX Optimizer Changes Breaking Measures
+
+**Symptom:** `--optimize-dax` produces different results than the original DAX.
+
+**Fix:** The optimizer applies semantic-preserving rewrites (IF→SWITCH, ISBLANK→COALESCE, CALCULATE simplification). If results differ, the issue is likely a SWITCH(TRUE(), ...) with overlapping conditions. Run without `--optimize-dax` to verify the original DAX produces correct results, then compare.

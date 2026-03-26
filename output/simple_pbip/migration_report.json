@@ -1,0 +1,85 @@
+{
+  "summary": {
+    "report_name": "MicroStrategy Report",
+    "total_objects": 8,
+    "fidelity_score": 0.963,
+    "fidelity_counts": {
+      "fully_migrated": 7,
+      "approximated": 1,
+      "manual_review": 0,
+      "unsupported": 0
+    },
+    "type_counts": {
+      "metric": 3,
+      "attribute": 2,
+      "fact": 2,
+      "report": 1
+    },
+    "generation": {
+      "tables": 1,
+      "columns": 4,
+      "measures": 3,
+      "relationships": 0,
+      "pages": 1,
+      "visuals": 1
+    }
+  },
+  "objects": [
+    {
+      "type": "metric",
+      "id": "MET_0001",
+      "name": "Total Sales",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MET_0002",
+      "name": "Total Quantity",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MET_0003",
+      "name": "Avg Price",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "ATTR_0001",
+      "name": "Order ID",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "ATTR_0002",
+      "name": "Product Name",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "fact",
+      "id": "FACT_0001",
+      "name": "Amount",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "fact",
+      "id": "FACT_0002",
+      "name": "Quantity",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "report",
+      "id": "RPT_0001",
+      "name": "Product Sales Summary",
+      "fidelity": "fully_migrated",
+      "note": ""
+    }
+  ]
+}

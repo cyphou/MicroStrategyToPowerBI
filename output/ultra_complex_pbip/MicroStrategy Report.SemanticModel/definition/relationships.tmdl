@@ -32,16 +32,19 @@ relationship rel_DIM_PRODUCT_FACT_RETURNS
 	fromColumn: DIM_PRODUCT.PROD_ID
 	toColumn: FACT_RETURNS.PROD_ID
 	crossFilteringBehavior: oneDirection
+	isActive: false
 
 relationship rel_DIM_DATE_FACT_RETURNS
 	fromColumn: DIM_DATE.DATE_KEY
 	toColumn: FACT_RETURNS.DATE_KEY
 	crossFilteringBehavior: oneDirection
+	isActive: false
 
 relationship rel_FACT_SALES_FACT_RETURNS
 	fromColumn: FACT_SALES.SALE_ID
 	toColumn: FACT_RETURNS.SALE_ID
 	crossFilteringBehavior: oneDirection
+	isActive: false
 
 relationship rel_DIM_PRODUCT_FACT_INVENTORY
 	fromColumn: DIM_PRODUCT.PROD_ID
@@ -52,6 +55,7 @@ relationship rel_DIM_DATE_FACT_INVENTORY
 	fromColumn: DIM_DATE.DATE_KEY
 	toColumn: FACT_INVENTORY.DATE_KEY
 	crossFilteringBehavior: oneDirection
+	isActive: false
 
 relationship rel_DIM_WAREHOUSE_FACT_INVENTORY
 	fromColumn: DIM_WAREHOUSE.WAREHOUSE_ID
@@ -62,18 +66,22 @@ relationship rel_DIM_CUSTOMER_FACT_WEB_VISITS
 	fromColumn: DIM_CUSTOMER.CUST_ID
 	toColumn: FACT_WEB_VISITS.CUST_ID
 	crossFilteringBehavior: oneDirection
+	isActive: false
 
 relationship rel_DIM_DATE_FACT_WEB_VISITS
 	fromColumn: DIM_DATE.DATE_KEY
 	toColumn: FACT_WEB_VISITS.DATE_KEY
 	crossFilteringBehavior: oneDirection
+	isActive: false
 
 relationship rel_DIM_CHANNEL_FACT_MARKETING_SPEND
 	fromColumn: DIM_CHANNEL.CHANNEL_ID
 	toColumn: FACT_MARKETING_SPEND.CHANNEL_ID
 	crossFilteringBehavior: oneDirection
+	isActive: false
 
 relationship rel_DIM_DATE_FACT_MARKETING_SPEND
 	fromColumn: DIM_DATE.DATE_KEY
 	toColumn: FACT_MARKETING_SPEND.DATE_KEY
 	crossFilteringBehavior: oneDirection
+	isActive: false

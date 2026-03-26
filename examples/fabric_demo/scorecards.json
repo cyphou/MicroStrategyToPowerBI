@@ -1,0 +1,36 @@
+[
+  {
+    "id": "SC_0001",
+    "name": "Retail Performance Scorecard",
+    "description": "Key retail KPIs for executive review",
+    "objectives": [
+      {
+        "id": "OBJ_0001",
+        "name": "Revenue Growth",
+        "metric_id": "MET_0001",
+        "target_value": 10000000,
+        "current_value": 8750000,
+        "status": "yellow",
+        "perspective": "Financial"
+      },
+      {
+        "id": "OBJ_0002",
+        "name": "Margin Target",
+        "metric_id": "MET_0004",
+        "target_value": 0.35,
+        "current_value": 0.32,
+        "status": "yellow",
+        "perspective": "Financial"
+      },
+      {
+        "id": "OBJ_0003",
+        "name": "Inventory Turnover",
+        "metric_id": "MET_0007",
+        "target_value": 5000,
+        "current_value": 4200,
+        "status": "green",
+        "perspective": "Operations"
+      }
+    ]
+  }
+]

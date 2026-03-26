@@ -85,47 +85,47 @@ table FACT_SALES
 		sourceColumn: COMMISSION
 		lineageTag: col-f4ea71bf
 
-	measure 'Total Revenue' = SUM([Revenue])
+	measure 'Total Revenue' = SUM('FACT_SALES'[Revenue])
 		formatString: $#,##0.00
 		displayFolder: Metrics
 		lineageTag: MU01
 
-	measure 'Total Cost' = SUM([Cost])
+	measure 'Total Cost' = SUM('FACT_SALES'[Cost])
 		formatString: $#,##0.00
 		displayFolder: Metrics
 		lineageTag: MU02
 
-	measure 'Total Quantity' = SUM([Quantity])
+	measure 'Total Quantity' = SUM('FACT_SALES'[Quantity])
 		formatString: #,##0
 		displayFolder: Metrics
 		lineageTag: MU03
 
-	measure 'Total Discount' = SUM([Discount])
+	measure 'Total Discount' = SUM('FACT_SALES'[Discount])
 		formatString: $#,##0.00
 		displayFolder: Metrics
 		lineageTag: MU04
 
-	measure 'Total Tax' = SUM([Tax])
+	measure 'Total Tax' = SUM('FACT_SALES'[Tax])
 		formatString: $#,##0.00
 		displayFolder: Metrics
 		lineageTag: MU05
 
-	measure 'Total Shipping' = SUM([Shipping])
+	measure 'Total Shipping' = SUM('FACT_SALES'[Shipping])
 		formatString: $#,##0.00
 		displayFolder: Metrics
 		lineageTag: MU06
 
-	measure 'Total Commission' = SUM([Commission])
+	measure 'Total Commission' = SUM('FACT_SALES'[Commission])
 		formatString: $#,##0.00
 		displayFolder: Metrics
 		lineageTag: MU07
 
-	measure 'Customer Count' = DISTINCTCOUNT([Customer])
+	measure 'Customer Count' = DISTINCTCOUNT('FACT_SALES'[Customer])
 		formatString: #,##0
 		displayFolder: Metrics
 		lineageTag: MU18
 
-	measure 'Product Count' = DISTINCTCOUNT([Product])
+	measure 'Product Count' = DISTINCTCOUNT('FACT_SALES'[Product])
 		formatString: #,##0
 		displayFolder: Metrics
 		lineageTag: MU19

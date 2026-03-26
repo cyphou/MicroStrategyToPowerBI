@@ -1,0 +1,30 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.5.0/schema.json",
+  "name": "v_03",
+  "position": {
+    "x": 0,
+    "y": 188,
+    "width": 800,
+    "height": 375,
+    "z": 0,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "filledMap",
+    "objects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Revenue by Country'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

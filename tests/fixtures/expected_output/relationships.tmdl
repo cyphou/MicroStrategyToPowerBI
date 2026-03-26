@@ -22,3 +22,4 @@ relationship rel_LU_DATE_FACT_INVENTORY
 	fromColumn: LU_DATE.DATE_ID
 	toColumn: FACT_INVENTORY.DATE_ID
 	crossFilteringBehavior: oneDirection
+	isActive: false

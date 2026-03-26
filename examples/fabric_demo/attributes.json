@@ -1,0 +1,209 @@
+[
+  {
+    "id": "ATTR_0001",
+    "name": "Store",
+    "description": "Retail store",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "integer",
+        "column_name": "STORE_ID",
+        "table": "DIM_STORE"
+      },
+      {
+        "name": "DESC",
+        "category": "DESC",
+        "data_type": "nVarChar",
+        "column_name": "STORE_NAME",
+        "table": "DIM_STORE"
+      }
+    ],
+    "data_type": "integer",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_STORE"
+  },
+  {
+    "id": "ATTR_0002",
+    "name": "City",
+    "description": "Store city",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "nVarChar",
+        "column_name": "CITY",
+        "table": "DIM_STORE"
+      }
+    ],
+    "data_type": "nVarChar",
+    "geographic_role": "city",
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [
+      {
+        "id": "ATTR_0003",
+        "name": "Country"
+      }
+    ],
+    "child_attributes": [
+      {
+        "id": "ATTR_0001",
+        "name": "Store"
+      }
+    ],
+    "lookup_table": "DIM_STORE"
+  },
+  {
+    "id": "ATTR_0003",
+    "name": "Country",
+    "description": "Store country",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "nVarChar",
+        "column_name": "COUNTRY",
+        "table": "DIM_STORE"
+      }
+    ],
+    "data_type": "nVarChar",
+    "geographic_role": "country",
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [
+      {
+        "id": "ATTR_0002",
+        "name": "City"
+      }
+    ],
+    "lookup_table": "DIM_STORE"
+  },
+  {
+    "id": "ATTR_0004",
+    "name": "Product",
+    "description": "Product item",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "integer",
+        "column_name": "PRODUCT_ID",
+        "table": "DIM_PRODUCT"
+      },
+      {
+        "name": "DESC",
+        "category": "DESC",
+        "data_type": "nVarChar",
+        "column_name": "PRODUCT_NAME",
+        "table": "DIM_PRODUCT"
+      }
+    ],
+    "data_type": "integer",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_PRODUCT"
+  },
+  {
+    "id": "ATTR_0005",
+    "name": "Brand",
+    "description": "Product brand",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "nVarChar",
+        "column_name": "BRAND",
+        "table": "DIM_PRODUCT"
+      }
+    ],
+    "data_type": "nVarChar",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [
+      {
+        "id": "ATTR_0004",
+        "name": "Product"
+      }
+    ],
+    "lookup_table": "DIM_PRODUCT"
+  },
+  {
+    "id": "ATTR_0006",
+    "name": "Department",
+    "description": "Product department",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "nVarChar",
+        "column_name": "DEPARTMENT",
+        "table": "DIM_PRODUCT"
+      }
+    ],
+    "data_type": "nVarChar",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [
+      {
+        "id": "ATTR_0005",
+        "name": "Brand"
+      }
+    ],
+    "lookup_table": "DIM_PRODUCT"
+  },
+  {
+    "id": "ATTR_0007",
+    "name": "Date",
+    "description": "Calendar date",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "date",
+        "column_name": "DATE_KEY",
+        "table": "DIM_DATE"
+      }
+    ],
+    "data_type": "date",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "yyyy-MM-dd",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_DATE"
+  },
+  {
+    "id": "ATTR_0008",
+    "name": "Store Type",
+    "description": "Flagship/Standard/Outlet",
+    "forms": [
+      {
+        "name": "ID",
+        "category": "ID",
+        "data_type": "nVarChar",
+        "column_name": "STORE_TYPE",
+        "table": "DIM_STORE"
+      }
+    ],
+    "data_type": "nVarChar",
+    "geographic_role": null,
+    "sort_order": "ascending",
+    "display_format": "",
+    "parent_attributes": [],
+    "child_attributes": [],
+    "lookup_table": "DIM_STORE"
+  }
+]

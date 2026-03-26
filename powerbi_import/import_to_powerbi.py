@@ -128,6 +128,15 @@ class PowerBIImporter:
             json.dump(summary, f, indent=2, ensure_ascii=False)
         print(f"  Migration summary: {summary_path}")
 
+        # Generate migration fidelity report (JSON + HTML)
+        try:
+            from powerbi_import.migration_report import generate_migration_report
+            generate_migration_report(converted, stats, output_dir,
+                                      report_name=report_name)
+            print(f"  Migration report:  {os.path.join(output_dir, 'migration_report.html')}")
+        except Exception as e:
+            logger.warning("Migration report generation failed: %s", e)
+
         return summary
 
     def _load_converted_objects(self):

@@ -43,12 +43,12 @@ table FACT_INVENTORY
 		sourceColumn: REORDER_POINT
 		lineageTag: col-f92981c8
 
-	measure 'Inventory On Hand' = SUM([On Hand])
+	measure 'Inventory On Hand' = SUM('FACT_INVENTORY'[On Hand])
 		formatString: #,##0
 		displayFolder: Metrics
 		lineageTag: MU10
 
-	measure 'Inventory On Order' = SUM([On Order])
+	measure 'Inventory On Order' = SUM('FACT_INVENTORY'[On Order])
 		formatString: #,##0
 		displayFolder: Metrics
 		lineageTag: MU11

@@ -1,0 +1,131 @@
+[
+  {
+    "id": "RPT_0001",
+    "name": "Store Performance",
+    "description": "Store-level revenue analysis",
+    "report_type": "grid",
+    "grid": {
+      "rows": [
+        {
+          "id": "ATTR_0003",
+          "name": "Country",
+          "type": "attribute",
+          "forms": [
+            "ID"
+          ]
+        },
+        {
+          "id": "ATTR_0002",
+          "name": "City",
+          "type": "attribute",
+          "forms": [
+            "ID"
+          ]
+        },
+        {
+          "id": "ATTR_0001",
+          "name": "Store",
+          "type": "attribute",
+          "forms": [
+            "DESC"
+          ]
+        }
+      ],
+      "columns": [],
+      "metrics_position": "columns"
+    },
+    "graph": null,
+    "metrics": [
+      {
+        "id": "MET_0001",
+        "name": "Total Revenue"
+      },
+      {
+        "id": "MET_0003",
+        "name": "Gross Profit"
+      },
+      {
+        "id": "MET_0004",
+        "name": "Gross Margin"
+      },
+      {
+        "id": "DER_0001",
+        "name": "Revenue Rank"
+      }
+    ],
+    "filters": [],
+    "sorts": [
+      {
+        "attribute": "Total Revenue",
+        "order": "descending"
+      }
+    ],
+    "subtotals": [
+      {
+        "type": "grand_total",
+        "position": "bottom",
+        "function": "sum"
+      }
+    ],
+    "page_by": [],
+    "thresholds": [],
+    "prompts": []
+  },
+  {
+    "id": "RPT_0002",
+    "name": "Revenue Trend",
+    "description": "Monthly revenue with prior period",
+    "report_type": "graph",
+    "grid": {
+      "rows": [
+        {
+          "id": "ATTR_0007",
+          "name": "Date",
+          "type": "attribute",
+          "forms": [
+            "ID"
+          ]
+        }
+      ],
+      "columns": [],
+      "metrics_position": "rows"
+    },
+    "graph": {
+      "type": "line",
+      "mstr_type": "line",
+      "attributes_on_axis": [
+        {
+          "id": "ATTR_0007",
+          "name": "Date"
+        }
+      ],
+      "metrics_on_axis": [
+        {
+          "id": "MET_0001",
+          "name": "Total Revenue"
+        },
+        {
+          "id": "DER_0003",
+          "name": "Revenue MoM"
+        }
+      ],
+      "color_by": ""
+    },
+    "metrics": [
+      {
+        "id": "MET_0001",
+        "name": "Total Revenue"
+      },
+      {
+        "id": "DER_0003",
+        "name": "Revenue MoM"
+      }
+    ],
+    "filters": [],
+    "sorts": [],
+    "subtotals": [],
+    "page_by": [],
+    "thresholds": [],
+    "prompts": []
+  }
+]

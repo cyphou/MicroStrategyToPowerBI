@@ -27,8 +27,10 @@ relationship rel_DIM_DATE_FACT_RETURNS
 	fromColumn: DIM_DATE.DATE_KEY
 	toColumn: FACT_RETURNS.DATE_KEY
 	crossFilteringBehavior: oneDirection
+	isActive: false
 
 relationship rel_FACT_SALES_FACT_RETURNS
 	fromColumn: FACT_SALES.SALE_ID
 	toColumn: FACT_RETURNS.SALE_ID
 	crossFilteringBehavior: oneDirection
+	isActive: false

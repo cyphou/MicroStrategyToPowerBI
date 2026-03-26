@@ -1,0 +1,187 @@
+[
+  {
+    "id": "DOSS_0001",
+    "name": "Retail Analytics Dashboard",
+    "description": "Fabric DirectLake demo dashboard with KPIs, map, and inventory",
+    "chapters": [
+      {
+        "key": "ch_01",
+        "name": "Sales Overview",
+        "pages": [
+          {
+            "key": "pg_01",
+            "name": "KPI Summary",
+            "visualizations": [
+              {
+                "key": "v_01",
+                "name": "Total Revenue KPI",
+                "visualization_type": "kpi",
+                "pbi_visual_type": "kpi",
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 320,
+                  "height": 200
+                },
+                "data_bindings": {
+                  "metrics": [
+                    {
+                      "id": "MET_0001",
+                      "name": "Total Revenue"
+                    }
+                  ]
+                },
+                "formatting": {
+                  "show_trend": true
+                }
+              },
+              {
+                "key": "v_02",
+                "name": "Gross Margin KPI",
+                "visualization_type": "kpi",
+                "pbi_visual_type": "kpi",
+                "position": {
+                  "x": 320,
+                  "y": 0,
+                  "width": 320,
+                  "height": 200
+                },
+                "data_bindings": {
+                  "metrics": [
+                    {
+                      "id": "MET_0004",
+                      "name": "Gross Margin"
+                    }
+                  ]
+                },
+                "formatting": {}
+              },
+              {
+                "key": "v_03",
+                "name": "Revenue by Country",
+                "visualization_type": "filled_map",
+                "pbi_visual_type": "filledMap",
+                "position": {
+                  "x": 0,
+                  "y": 200,
+                  "width": 640,
+                  "height": 400
+                },
+                "data_bindings": {
+                  "attributes": [
+                    {
+                      "id": "ATTR_0003",
+                      "name": "Country"
+                    }
+                  ],
+                  "metrics": [
+                    {
+                      "id": "MET_0001",
+                      "name": "Total Revenue"
+                    }
+                  ]
+                },
+                "formatting": {}
+              },
+              {
+                "key": "v_04",
+                "name": "Revenue Trend",
+                "visualization_type": "line",
+                "pbi_visual_type": "lineChart",
+                "position": {
+                  "x": 640,
+                  "y": 0,
+                  "width": 640,
+                  "height": 600
+                },
+                "data_bindings": {
+                  "attributes": [
+                    {
+                      "id": "ATTR_0007",
+                      "name": "Date"
+                    }
+                  ],
+                  "metrics": [
+                    {
+                      "id": "MET_0001",
+                      "name": "Total Revenue"
+                    },
+                    {
+                      "id": "DER_0002",
+                      "name": "YTD Revenue"
+                    }
+                  ]
+                },
+                "formatting": {}
+              }
+            ]
+          },
+          {
+            "key": "pg_02",
+            "name": "Inventory Status",
+            "visualizations": [
+              {
+                "key": "v_05",
+                "name": "Inventory by Department",
+                "visualization_type": "horizontal_bar",
+                "pbi_visual_type": "clusteredBarChart",
+                "position": {
+                  "x": 0,
+                  "y": 0,
+                  "width": 640,
+                  "height": 400
+                },
+                "data_bindings": {
+                  "attributes": [
+                    {
+                      "id": "ATTR_0006",
+                      "name": "Department"
+                    }
+                  ],
+                  "metrics": [
+                    {
+                      "id": "MET_0007",
+                      "name": "Total Inventory"
+                    }
+                  ]
+                },
+                "formatting": {}
+              },
+              {
+                "key": "v_06",
+                "name": "Store Inventory Grid",
+                "visualization_type": "grid",
+                "pbi_visual_type": "tableEx",
+                "position": {
+                  "x": 640,
+                  "y": 0,
+                  "width": 640,
+                  "height": 400
+                },
+                "data_bindings": {
+                  "rows": [
+                    {
+                      "id": "ATTR_0001",
+                      "name": "Store"
+                    }
+                  ],
+                  "metrics": [
+                    {
+                      "id": "MET_0007",
+                      "name": "Total Inventory"
+                    },
+                    {
+                      "id": "MET_0005",
+                      "name": "Units Sold"
+                    }
+                  ]
+                },
+                "formatting": {}
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

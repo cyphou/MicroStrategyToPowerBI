@@ -1,0 +1,490 @@
+{
+  "summary": {
+    "report_name": "MicroStrategy Report",
+    "total_objects": 65,
+    "fidelity_score": 0.892,
+    "fidelity_counts": {
+      "fully_migrated": 43,
+      "approximated": 21,
+      "manual_review": 1,
+      "unsupported": 0
+    },
+    "type_counts": {
+      "metric": 18,
+      "derived_metric": 7,
+      "attribute": 15,
+      "fact": 10,
+      "report": 5,
+      "dossier": 3,
+      "security_filter": 2,
+      "prompt": 3,
+      "custom_group": 1,
+      "cube": 1
+    },
+    "generation": {
+      "tables": 7,
+      "columns": 40,
+      "measures": 25,
+      "relationships": 7,
+      "pages": 9,
+      "visuals": 19
+    }
+  },
+  "objects": [
+    {
+      "type": "metric",
+      "id": "MC01",
+      "name": "Total Revenue",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MC02",
+      "name": "Total Cost",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MC03",
+      "name": "Total Quantity",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MC04",
+      "name": "Total Discount",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MC05",
+      "name": "Total Tax",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MC06",
+      "name": "Return Quantity",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MC07",
+      "name": "Return Amount",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MC08",
+      "name": "Avg Unit Cost",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MC09",
+      "name": "Customer Count",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MC10",
+      "name": "Product Count",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MC11",
+      "name": "Profit",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MC12",
+      "name": "Profit Margin",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MC13",
+      "name": "Gross Revenue",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MC14",
+      "name": "Net Revenue",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MC15",
+      "name": "Return Rate",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MC16",
+      "name": "Revenue per Customer",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MC17",
+      "name": "Avg Order Value",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MC18",
+      "name": "Discount Rate",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "derived_metric",
+      "id": "DC01",
+      "name": "Revenue Rank",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "derived_metric",
+      "id": "DC02",
+      "name": "Running Revenue",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "derived_metric",
+      "id": "DC03",
+      "name": "Revenue MoM Change",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "derived_metric",
+      "id": "DC04",
+      "name": "3M Moving Avg Revenue",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "derived_metric",
+      "id": "DC05",
+      "name": "Revenue YoY",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "derived_metric",
+      "id": "DC06",
+      "name": "Profit NTile",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "derived_metric",
+      "id": "DC07",
+      "name": "Revenue Quartile",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AC01",
+      "name": "Customer",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AC02",
+      "name": "City",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AC03",
+      "name": "State",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AC04",
+      "name": "Country",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AC05",
+      "name": "Region",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AC06",
+      "name": "Segment",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AC07",
+      "name": "Product",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AC08",
+      "name": "Category",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AC09",
+      "name": "Subcategory",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AC10",
+      "name": "Brand",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AC11",
+      "name": "Date",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AC12",
+      "name": "Month",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AC13",
+      "name": "Quarter",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AC14",
+      "name": "Year",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AC15",
+      "name": "Channel",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "fact",
+      "id": "FC01",
+      "name": "Revenue",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "fact",
+      "id": "FC02",
+      "name": "Cost",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "fact",
+      "id": "FC03",
+      "name": "Quantity",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "fact",
+      "id": "FC04",
+      "name": "Discount",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "fact",
+      "id": "FC05",
+      "name": "Tax",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "fact",
+      "id": "FC06",
+      "name": "Return Qty",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "fact",
+      "id": "FC07",
+      "name": "Return Amount",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "fact",
+      "id": "FC08",
+      "name": "Unit Cost",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "fact",
+      "id": "FC09",
+      "name": "Fiscal Year",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "fact",
+      "id": "FC10",
+      "name": "Month Num",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "report",
+      "id": "RPT_C01",
+      "name": "Executive Revenue Summary",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "report",
+      "id": "RPT_C02",
+      "name": "Product Performance Matrix",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "report",
+      "id": "RPT_C03",
+      "name": "Monthly Trend Analysis",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "report",
+      "id": "RPT_C04",
+      "name": "Customer Profitability",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "report",
+      "id": "RPT_C05",
+      "name": "Returns Analysis",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "dossier",
+      "id": "DOSS_C01",
+      "name": "Executive Dashboard",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "dossier",
+      "id": "DOSS_C02",
+      "name": "Product Analytics",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "dossier",
+      "id": "DOSS_C03",
+      "name": "Customer Insights",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "security_filter",
+      "id": "SF_C01",
+      "name": "Region Filter - East",
+      "fidelity": "approximated",
+      "note": "Mapped to RLS role"
+    },
+    {
+      "type": "security_filter",
+      "id": "SF_C02",
+      "name": "Channel Filter - Online",
+      "fidelity": "approximated",
+      "note": "Mapped to RLS role"
+    },
+    {
+      "type": "prompt",
+      "id": "PRM_C01",
+      "name": "Select Year",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "prompt",
+      "id": "PRM_C02",
+      "name": "Revenue Threshold",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "prompt",
+      "id": "PRM_C03",
+      "name": "Select Region",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "custom_group",
+      "id": "CG_C01",
+      "name": "Customer Tier",
+      "fidelity": "manual_review",
+      "note": "Custom groups require manual DAX grouping"
+    },
+    {
+      "type": "cube",
+      "id": "CUBE_C01",
+      "name": "Sales Summary Cube",
+      "fidelity": "approximated",
+      "note": "Cube mapped to Import-mode table"
+    }
+  ]
+}

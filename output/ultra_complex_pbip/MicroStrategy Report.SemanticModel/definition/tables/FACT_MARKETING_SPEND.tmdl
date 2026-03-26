@@ -43,22 +43,22 @@ table FACT_MARKETING_SPEND
 		sourceColumn: CONVERSIONS
 		lineageTag: col-24e50302
 
-	measure 'Marketing Spend' = SUM([Marketing Spend])
+	measure 'Marketing Spend' = SUM('FACT_MARKETING_SPEND'[Marketing Spend])
 		formatString: $#,##0.00
 		displayFolder: Metrics
 		lineageTag: MU14
 
-	measure 'Total Impressions' = SUM([Impressions])
+	measure 'Total Impressions' = SUM('FACT_MARKETING_SPEND'[Impressions])
 		formatString: #,##0
 		displayFolder: Metrics
 		lineageTag: MU15
 
-	measure 'Total Clicks' = SUM([Clicks])
+	measure 'Total Clicks' = SUM('FACT_MARKETING_SPEND'[Clicks])
 		formatString: #,##0
 		displayFolder: Metrics
 		lineageTag: MU16
 
-	measure 'Total Conversions' = SUM([Conversions])
+	measure 'Total Conversions' = SUM('FACT_MARKETING_SPEND'[Conversions])
 		formatString: #,##0
 		displayFolder: Metrics
 		lineageTag: MU17

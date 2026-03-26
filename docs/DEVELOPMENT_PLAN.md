@@ -1,10 +1,10 @@
 # Development Plan — MicroStrategy to Power BI / Fabric Migration Tool
 
-**Version:** v3.0.0 (released) → v4.0–v14.0 (roadmap)  
-**Date:** 2026-03-20  
-**Based on:** Tableau to Power BI Migration Tool (v17.0.0 architecture)  
-**Current state:** v3.0 complete — 623 tests passing, 21 generation modules  
-**Long-term target:** v14.0 — full enterprise ecosystem, 5,000+ tests, web portal
+**Version:** v3.0.0 (released) → v4.0–v19.0 (roadmap)  
+**Date:** 2026-03-26  
+**Based on:** Tableau to Power BI Migration Tool (v27.1.0 architecture)  
+**Current state:** v16.0 complete — 2,458 tests passing, 39 generation modules  
+**Long-term target:** v19.0 — TableauToPowerBI parity, 4,000+ tests
 
 ---
 
@@ -821,10 +821,11 @@ v14    Enterprise Ecosystem        ░░░░░░░░░
 
 ---
 
-## v11.0 — Migration Ops (MigOps)
+## v11.0 — Migration Ops (MigOps) ✅ COMPLETE
 
 **Theme:** Continuous migration pipeline — change detection on MSTR server, auto-reconciliation, drift monitoring, scheduled re-migration.  
-**Priority:** MEDIUM — needed for phased multi-month enterprise migrations.
+**Priority:** MEDIUM — needed for phased multi-month enterprise migrations.  
+**Status:** COMPLETE — 3 new modules + 1 script, 52 new tests (→ 2,260 total), 4 CLI flags.
 
 ### Sprint AA — Change Detection
 
@@ -919,7 +920,7 @@ v14    Enterprise Ecosystem        ░░░░░░░░░
 | **v8.0** | Multi-Language & i18n | X | — | ~1,125 | Multi-culture TMDL, translated captions, RTL support |
 | **v9.0** | Real-Time & Streaming | Y | +2 | ~1,150 | Push datasets, Eventstream, refresh schedules |
 | **v10.0** | Deep Testing & Quality | Z | +2 | **~2,000+** | Property-based, mutation, fuzz, screenshot tests |
-| **v11.0** | Migration Ops | AA | +3 | ~2,040 | Change detection, drift report, auto-reconciliation |
+| **v11.0** ✅ | Migration Ops | AA | +3 | ~2,260 | Change detection, drift report, auto-reconciliation |
 | **v12.0** | Cross-Platform Federation | BB | +4 | ~2,090 | MSTR + Tableau + Cognos → unified PBI migration |
 | **v13.0** | Self-Service Web Portal | CC | +10 | ~2,140 | Web UI, approval workflow, Docker deployment |
 | **v14.0** | Enterprise Ecosystem | DD | +6 | ~2,180 | Power Automate, Teams, DevOps, Purview, Copilot |
@@ -955,4 +956,295 @@ v4.0 Production Maturity
 | **Low Effort** | v8.0 i18n, v9.0 Real-Time | v14.0 Ecosystem |
 | **High Effort** | v5.0 Fabric, v7.0 AI, v10.0 Testing | v12.0 Federation, v13.0 Portal |
 
-**Recommended execution order:** v4.0 → v5.0 → v7.0 → v6.0 → v10.0 → v8.0 → v9.0 → v11.0 → v12.0 → v13.0 → v14.0
+**Recommended execution order:** v4.0 → v5.0 → v7.0 → v6.0 → v10.0 → v8.0 → v9.0 → v11.0 → v15.0 → v16.0 → v17.0 → v12.0 → v18.0 → v13.0 → v19.0 → v14.0
+
+---
+---
+
+# Gap Analysis — TableauToPowerBI Reference (v27.1.0) vs MicrostratToPowerBI
+
+The reference project **TableauToPowerBI** (v27.1.0) has matured to **6,818+ tests**, **141 test files**, **96.2% coverage**, and **44 generation modules**. This section identifies the capability gaps and maps them to new development phases (v15.0–v19.0).
+
+## Current State Comparison
+
+| Metric | TableauToPowerBI (v27.1.0) | MicrostratToPowerBI (v10.0) | Gap |
+|--------|---------------------------|----------------------------|-----|
+| **Total tests** | 6,818 | 2,175 | −4,643 |
+| **Test files** | 141 | 31 | −110 |
+| **Coverage** | 96.2% | ~80% | −16% |
+| **Generation modules** | 44 | 21 | −23 |
+| **Deploy modules** | 7 | 5 | −2 |
+| **CLI flags** | 40+ | 25+ | −15 |
+| **Visual types** | 118+ | 35+ | −83 |
+| **DAX conversions** | 180+ | 60+ | −120 |
+| **M query connectors** | 33 | 15 | −18 |
+| **HTML reports** | 9 generators | 5 generators | −4 |
+| **Versions released** | 27.1 | 10.0 | N/A |
+
+## Missing Modules (25 total)
+
+### Generation Layer — Missing (16 modules)
+
+| # | Module | TableauToPowerBI Equivalent | Priority | Target Version |
+|---|--------|-----------------------------|----------|----------------|
+| 1 | `dax_optimizer.py` | AST-based DAX rewriter (IF→SWITCH, ISBLANK→COALESCE, Time Intelligence) | HIGH | v15.0 |
+| 2 | `equivalence_tester.py` | Cross-platform value validation, SSIM screenshot comparison | HIGH | v15.0 |
+| 3 | `regression_suite.py` | Snapshot generation & drift detection | HIGH | v15.0 |
+| 4 | `security_validator.py` | Path validation, ZIP slip defense, XXE protection | HIGH | v15.0 |
+| 5 | `dataflow_generator.py` | Power Query M ingestion + Lakehouse destinations | HIGH | v16.0 |
+| 6 | `fabric_constants.py` | Spark type maps, PySpark maps, sanitization functions | MEDIUM | v16.0 |
+| 7 | `fabric_naming.py` | Name sanitization for Lakehouse/Dataflow/Pipeline | MEDIUM | v16.0 |
+| 8 | `calc_column_utils.py` | Calculated column classification, MSTR→PySpark conversion | MEDIUM | v16.0 |
+| 9 | `fabric_semantic_model_generator.py` | Dedicated DirectLake semantic model generator | HIGH | v16.0 |
+| 10 | `alerts_generator.py` | Threshold extraction → PBI data-driven alerts | MEDIUM | v17.0 |
+| 11 | `refresh_generator.py` | MSTR cache/subscription schedules → PBI refresh config | MEDIUM | v17.0 |
+| 12 | `recovery_report.py` | Self-healing recovery tracking | LOW | v17.0 |
+| 13 | `sla_tracker.py` | Per-report SLA compliance | LOW | v17.0 |
+| 14 | `monitoring.py` | Metrics export (Azure Monitor, Prometheus, JSON) | MEDIUM | v17.0 |
+| 15 | `model_templates.py` | Industry-specific semantic model skeletons (Healthcare/Finance/Retail) | MEDIUM | v18.0 |
+| 16 | `dax_recipes.py` | Industry KPI measure templates | MEDIUM | v18.0 |
+
+### Infrastructure & DX — Missing (7 modules)
+
+| # | Module | TableauToPowerBI Equivalent | Priority | Target Version |
+|---|--------|-----------------------------|----------|----------------|
+| 17 | `marketplace.py` | Versioned pattern registry (DAX recipes, visual mappings) | LOW | v18.0 |
+| 18 | `html_template.py` | Shared CSS/JS template for all HTML report generators | MEDIUM | v18.0 |
+| 19 | `governance.py` | Naming conventions, PII detection, sensitivity labels, audit trail | HIGH | v19.0 |
+| 20 | `notebook_api.py` | Interactive Jupyter migration API | LOW | v19.0 |
+| 21 | `geo_passthrough.py` | GeoJSON/shapefile passthrough for shape maps | LOW | v19.0 |
+
+### Deployment — Missing (4 modules)
+
+| # | Module | TableauToPowerBI Equivalent | Priority | Target Version |
+|---|--------|-----------------------------|----------|----------------|
+| 22 | `deploy/auth.py` | Azure AD auth (Service Principal + Managed Identity) | HIGH | v16.0 |
+| 23 | `deploy/client.py` | Fabric REST API client | HIGH | v16.0 |
+| 24 | `deploy/bundle_deployer.py` | Fabric bundle deployment (shared model + thin reports) | MEDIUM | v16.0 |
+| 25 | `deploy/multi_tenant.py` | Multi-tenant deployment with template substitution | LOW | v19.0 |
+
+### Infrastructure Files — Missing
+
+| # | File | Purpose | Target Version |
+|---|------|---------|----------------|
+| 1 | `Dockerfile` | Production container | v13.0 (existing plan) |
+| 2 | `.coveragerc` | Coverage report settings | v15.0 |
+| 3 | `pyrightconfig.json` | Type checking config | v15.0 |
+| 4 | `docs/AGENTS.md` | Multi-agent architecture doc | v15.0 |
+| 5 | `docs/GAP_ANALYSIS.md` | Conversion gaps & limitations | v15.0 |
+| 6 | `docs/ENTERPRISE_GUIDE.md` | 8-phase enterprise migration guide | v17.0 |
+| 7 | `docs/DEPLOYMENT_GUIDE.md` | Fabric/PBI Service deployment guide | v16.0 |
+| 8 | `.github/workflows/gh-pages.yml` | API docs generation | v15.0 |
+| 9 | `.github/workflows/pr-diff.yml` | PR diff analysis | v15.0 |
+| 10 | `.github/workflows/publish.yml` | PyPI auto-publish (OIDC) | v15.0 |
+
+---
+---
+
+# v15.0 — DAX Optimization & Quality Gates
+
+**Theme:** AST-based DAX optimization, cross-platform equivalence testing, snapshot regression suite, security hardening.  
+**Priority:** HIGH — closes the quality gap with TableauToPowerBI reference project.  
+**Prerequisite:** v10.0 complete (2,175 tests, property/fuzz testing infrastructure)  
+**Reference:** TableauToPowerBI `dax_optimizer.py`, `equivalence_tester.py`, `regression_suite.py`, `security_validator.py`
+
+### Sprint EE — DAX Optimizer
+
+| # | Item | File(s) | Est. | Details |
+|---|------|---------|------|---------|
+| EE.1 | **DAX AST parser** | `powerbi_import/dax_optimizer.py` | Very High | Parse generated DAX measures into AST nodes (Function, Operator, Column, Measure, Literal). Support nested CALCULATE, FILTER, SWITCH, IF trees. |
+| EE.2 | **IF→SWITCH rewriter** | `powerbi_import/dax_optimizer.py` | Medium | Detect chained `IF(cond1, v1, IF(cond2, v2, ...))` → rewrite to `SWITCH(TRUE(), cond1, v1, cond2, v2, ...)` when ≥3 branches. |
+| EE.3 | **ISBLANK→COALESCE rewriter** | `powerbi_import/dax_optimizer.py` | Medium | `IF(ISBLANK(x), default, x)` → `COALESCE(x, default)`. Handle nested patterns. |
+| EE.4 | **Time Intelligence injection** | `powerbi_import/dax_optimizer.py` | High | Auto-detect date-based measures → inject Time Intelligence variants: YTD (`TOTALYTD`), QTD, MTD, PY (`SAMEPERIODLASTYEAR`), YoY growth. Configurable via `--auto-time-intelligence`. |
+| EE.5 | **CALCULATE simplification** | `powerbi_import/dax_optimizer.py` | High | Remove redundant `CALCULATE` wrapping. Merge nested `CALCULATE(CALCULATE(...))` into single call. Flatten `ALL`/`ALLEXCEPT` combinations. |
+| EE.6 | **Optimization report** | `powerbi_import/dax_optimizer.py` | Low | Summary: N measures optimized, patterns applied, before/after DAX length. Append to migration report. |
+| EE.7 | **CLI: `--optimize-dax`** | `migrate.py` | Low | Enable DAX optimization pass. Default: off (preserves 1:1 fidelity). |
+| EE.8 | **Tests** | `tests/test_dax_optimizer.py` | High | 60+ tests: each rewrite rule, nested patterns, no-op cases, optimization report. |
+
+### Sprint FF — Equivalence & Regression
+
+| # | Item | File(s) | Est. | Details |
+|---|------|---------|------|---------|
+| FF.1 | **Value equivalence tester** | `powerbi_import/equivalence_tester.py` | Very High | Compare MSTR report data (via REST API instances) vs. PBI measure results (via XMLA/REST). Row-level value matching with configurable tolerance (ε=0.01). |
+| FF.2 | **Screenshot comparison** | `powerbi_import/equivalence_tester.py` | High | Headless PBI Desktop screenshot → SSIM comparison against MSTR PDF export. Flag pages with SSIM < 0.85. |
+| FF.3 | **Snapshot regression suite** | `powerbi_import/regression_suite.py` | High | Generate golden snapshots from fixtures → store in `tests/fixtures/snapshots/`. On each run: compare output against baseline → flag diffs. `--snapshot-update` to re-baseline. |
+| FF.4 | **Snapshot scope** | `powerbi_import/regression_suite.py` | Medium | Scope: TMDL files, visual JSON, M query expressions, migration report JSON, model.tmdl header. 30+ snapshot files. |
+| FF.5 | **Security validator** | `powerbi_import/security_validator.py` | High | Path traversal detection (ZIP slip), XXE protection for any XML inputs, directory escape prevention. Validate all file paths before write. |
+| FF.6 | **CI integration** | `.github/workflows/ci.yml` | Low | Add snapshot comparison step. Add security validation step. Fail on regression or security finding. |
+| FF.7 | **Config files** | `.coveragerc`, `pyrightconfig.json` | Low | Coverage report settings (fail_under=85). Type checking configuration. |
+| FF.8 | **Docs** | `docs/AGENTS.md`, `docs/GAP_ANALYSIS.md` | Medium | Multi-agent architecture documentation. Conversion gaps & limitations reference. |
+| FF.9 | **CI workflows** | `.github/workflows/gh-pages.yml`, `pr-diff.yml`, `publish.yml` | Medium | API docs generation, PR diff analysis, PyPI auto-publish with OIDC trusted publisher. |
+| FF.10 | **Tests** | `tests/test_equivalence.py`, `tests/test_regression_suite.py`, `tests/test_security_validator.py` | High | 80+ tests: value comparison, screenshot SSIM, snapshot drift, security validation. |
+
+**v15.0 totals:** 2 sprints, 4 new modules + 3 config files + 3 CI workflows + 2 docs, ~140 new tests, 1 CLI flag
+
+---
+
+## v16.0 — Fabric Deep Integration (Phase 2)
+
+**Theme:** Full Fabric-native generation — dedicated DirectLake generator, Dataflow Gen2, proper naming/sanitization, atomic bundle deployment, multi-tenant support.  
+**Priority:** HIGH — completes the Fabric story started in v5.0.  
+**Prerequisite:** v5.0 complete (basic Fabric mode), v15.0 security validator  
+**Reference:** TableauToPowerBI `fabric_constants.py`, `fabric_naming.py`, `dataflow_generator.py`, `fabric_semantic_model_generator.py`, `calc_column_utils.py`, `deploy/auth.py`, `deploy/client.py`, `deploy/bundle_deployer.py`
+
+### Sprint GG — Fabric Generation Deep Dive
+
+| # | Item | File(s) | Est. | Details |
+|---|------|---------|------|---------|
+| GG.1 | **Fabric constants** | `powerbi_import/fabric_constants.py` | Medium | Centralized Spark type map (MSTR→Delta types), PySpark function map, column sanitization rules, reserved word list. Shared across all Fabric generators. |
+| GG.2 | **Fabric naming** | `powerbi_import/fabric_naming.py` | Medium | Name sanitization: strip special chars, enforce Lakehouse naming rules (64-char limit, no spaces in table names), Dataflow naming conventions, pipeline naming. Collision detection + suffix. |
+| GG.3 | **Calculated column utilities** | `powerbi_import/calc_column_utils.py` | High | Classify MSTR calculated objects: which can be pre-computed in Lakehouse (PySpark) vs. which must remain DAX measures. Convert eligible MSTR expressions → PySpark `withColumn()` calls. |
+| GG.4 | **Dataflow Gen2 generator** | `powerbi_import/dataflow_generator.py` | Very High | Generate Fabric Dataflow Gen2 definitions: Power Query M mashup with source connection → transformations → Lakehouse table destination. Support incremental refresh. JSON output compatible with Fabric REST API. |
+| GG.5 | **DirectLake semantic model generator** | `powerbi_import/fabric_semantic_model_generator.py` | High | Dedicated generator (not just `mode: directLake` flag in tmdl_generator): DirectLake-specific partitions, entity bindings, expression-less tables, proper fallback to DirectQuery. Separate from Import-mode TMDL path. |
+| GG.6 | **Deployment guide** | `docs/DEPLOYMENT_GUIDE.md` | Medium | Step-by-step Fabric + PBI Service deployment guide: prerequisites, authentication setup, workspace creation, semantic model deployment, refresh configuration, gateway setup. |
+| GG.7 | **Tests** | `tests/test_fabric_deep.py` | High | 50+ tests: constants, naming sanitization, calc column classification, Dataflow JSON, DirectLake TMDL, naming collisions. |
+
+### Sprint HH — Deployment Infrastructure
+
+| # | Item | File(s) | Est. | Details |
+|---|------|---------|------|---------|
+| HH.1 | **Auth module** | `powerbi_import/deploy/auth.py` | High | Centralized Azure AD authentication: Service Principal (client_id + secret), Managed Identity, interactive browser flow. Token caching + refresh. Shared across all deployers. |
+| HH.2 | **Fabric REST API client** | `powerbi_import/deploy/client.py` | High | Generic Fabric REST API client: create/update/delete items, manage workspaces, handle pagination, retry with exponential backoff, diagnostic logging. Used by all Fabric deployers. |
+| HH.3 | **Bundle deployer** | `powerbi_import/deploy/bundle_deployer.py` | High | Atomic deployment: shared semantic model + N thin reports as a single unit. Rollback on partial failure. Endorsement (Promoted/Certified) post-deployment. Dependency ordering. |
+| HH.4 | **Deploy config** | `powerbi_import/deploy/config/` | Medium | Environment-based configuration: `dev.json`, `staging.json`, `prod.json`. Workspace mapping, capacity assignment, gateway binding per environment. |
+| HH.5 | **CLI: `--deploy-env`** | `migrate.py` | Low | `--deploy-env dev\|staging\|prod` — select deployment environment config. |
+| HH.6 | **Tests** | `tests/test_deploy_infra.py` | High | 40+ tests: auth flows, API client retry, bundle deployment, config loading, rollback. |
+
+**v16.0 totals:** 2 sprints, 8 new modules + 1 doc + config dir, ~90 new tests, 1 CLI flag
+
+---
+
+## v17.0 — Enterprise Operations & Monitoring
+
+**Theme:** Production monitoring, SLA tracking, alert generation, refresh schedule migration, recovery tracking.  
+**Priority:** MEDIUM — needed for ongoing production operations post-migration.  
+**Prerequisite:** v5.0 (Fabric deployment), v6.0 (telemetry)  
+**Reference:** TableauToPowerBI `monitoring.py`, `sla_tracker.py`, `recovery_report.py`, `alerts_generator.py`, `refresh_generator.py`
+
+### Sprint II — Monitoring & Alerts
+
+| # | Item | File(s) | Est. | Details |
+|---|------|---------|------|---------|
+| II.1 | **Monitoring module** | `powerbi_import/monitoring.py` | High | Metrics export in 3 formats: Azure Monitor (custom metrics API), Prometheus (text exposition format), JSON (file-based). Metrics: migration duration, object counts, fidelity scores, error rates, DAX conversion success rate. |
+| II.2 | **SLA tracker** | `powerbi_import/sla_tracker.py` | Medium | Per-report SLA compliance: define target fidelity %, target conversion time, target deployment time. Track actual vs. target. Alert on SLA breach. Persistent SLA log. |
+| II.3 | **Alerts generator** | `powerbi_import/alerts_generator.py` | Medium | Map MSTR metric thresholds → Power BI data-driven alerts. Generate alert rule definitions via REST API. Support email + Teams notification targets. Threshold condition mapping (above/below/between/outside). |
+| II.4 | **Refresh schedule generator** | `powerbi_import/refresh_generator.py` | Medium | Map MSTR cache/subscription schedules → Power BI dataset refresh schedules. Support: daily, weekly, custom cron, incremental refresh. Generate REST API payload for `POST /datasets/{id}/refreshSchedule`. |
+| II.5 | **Recovery report** | `powerbi_import/recovery_report.py` | Medium | Self-healing recovery tracking: when migration encounters a recoverable error (e.g., missing attribute form), log the recovery action taken, alternative path used, and confidence impact. HTML report of all recovery events per run. |
+| II.6 | **Enterprise guide** | `docs/ENTERPRISE_GUIDE.md` | High | 8-phase enterprise migration guide: Discovery → Assessment → Pilot → Design → Build → Validate → Deploy → Operate. Team structure, governance model, timeline templates. |
+| II.7 | **CLI: `--alerts`, `--monitor`, `--sla`** | `migrate.py` | Low | `--alerts` maps thresholds to PBI alerts. `--monitor prometheus\|azure\|json` enables metrics export. `--sla CONFIG` sets SLA targets. |
+| II.8 | **Tests** | `tests/test_operations.py` | High | 50+ tests: monitoring output formats, SLA tracking, alert generation, refresh schedules, recovery logging. |
+
+**v17.0 totals:** 1 sprint, 5 new modules + 1 doc, ~50 new tests, 3 CLI flags
+
+---
+
+## v18.0 — Content Library & Templates
+
+**Theme:** Pre-built content — industry model templates, DAX recipe library, pattern marketplace, shared HTML template infrastructure.  
+**Priority:** MEDIUM — accelerates common migration scenarios with ready-made patterns.  
+**Prerequisite:** v15.0 (DAX optimizer for recipe integration)  
+**Reference:** TableauToPowerBI `model_templates.py`, `dax_recipes.py`, `marketplace.py`, `html_template.py`
+
+### Sprint JJ — Templates & Marketplace
+
+| # | Item | File(s) | Est. | Details |
+|---|------|---------|------|---------|
+| JJ.1 | **Model templates** | `powerbi_import/model_templates.py` | High | Industry-specific semantic model skeletons: Healthcare (patient, encounter, provider, claim), Finance (transaction, account, portfolio, risk), Retail (product, store, customer, sale). Pre-built tables, relationships, hierarchies, KPI measures. Applied via `--template healthcare\|finance\|retail`. |
+| JJ.2 | **DAX recipes** | `powerbi_import/dax_recipes.py` | High | Library of 100+ production-grade DAX measure patterns: Time Intelligence suite (YTD, QTD, MTD, PY, YoY, MoM), Financial (Gross Margin, CAGR, IRR), Retail (Same-Store Sales, Basket Size, Conversion), Healthcare (Readmission Rate, ALOS, Mortality). Tagged by industry + category. |
+| JJ.3 | **Pattern marketplace** | `powerbi_import/marketplace.py` | Medium | Versioned registry: DAX recipes, visual mapping overrides, custom transformation rules. Load from local `examples/marketplace/` or remote URL. Semantic versioning per pattern. |
+| JJ.4 | **Shared HTML template** | `powerbi_import/html_template.py` | Medium | Centralized CSS/JS template used by all 5+ HTML report generators (migration_report, comparison_report, governance_report, telemetry_dashboard, lineage_report). Consistent styling, dark mode, print-friendly. Reduces duplicate HTML/CSS across generators. |
+| JJ.5 | **Marketplace examples** | `examples/marketplace/` | Low | Bundled pattern packs: `time_intelligence.json`, `financial_kpis.json`, `retail_metrics.json`, `healthcare_measures.json`. README with usage instructions. |
+| JJ.6 | **CLI: `--template`, `--recipes`, `--marketplace`** | `migrate.py` | Low | `--template NAME` applies industry skeleton. `--recipes CATEGORY` injects DAX patterns. `--marketplace PATH\|URL` loads pattern registry. |
+| JJ.7 | **Tests** | `tests/test_content_library.py` | High | 45+ tests: template application, recipe injection, marketplace loading, HTML template rendering, versioning. |
+
+**v18.0 totals:** 1 sprint, 4 new modules + examples dir, ~45 new tests, 3 CLI flags
+
+---
+
+## v19.0 — Developer Experience & Extensibility
+
+**Theme:** Interactive Jupyter API, geo passthrough, advanced governance, multi-tenant deployment, containerization.  
+**Priority:** LOW — developer productivity and platform completeness.  
+**Prerequisite:** v16.0 (deploy infrastructure), v17.0 (governance base)  
+**Reference:** TableauToPowerBI `notebook_api.py`, `geo_passthrough.py`, `governance.py`, `deploy/multi_tenant.py`, `Dockerfile`
+
+### Sprint KK — Developer Tools
+
+| # | Item | File(s) | Est. | Details |
+|---|------|---------|------|---------|
+| KK.1 | **Jupyter notebook API** | `powerbi_import/notebook_api.py` | High | Interactive migration API for Jupyter notebooks: `MigrationSession` class with step-by-step methods (`connect()`, `assess()`, `extract()`, `generate()`, `validate()`, `deploy()`). Rich display for assessment results, lineage graphs, fidelity scores. |
+| KK.2 | **Geo passthrough** | `powerbi_import/geo_passthrough.py` | Medium | GeoJSON/TopoJSON/shapefile passthrough for MSTR map visualizations → PBI shape maps. Convert MSTR custom geography definitions to PBI-compatible GeoJSON. Embed or reference external files. |
+| KK.3 | **Advanced governance** | `powerbi_import/governance.py` | High | Beyond governance_report.py: automated naming convention enforcement (configurable regex rules), PII detection (pattern matching for SSN, email, phone, credit card), sensitivity label propagation, audit trail generation (who migrated what, when, with what parameters). |
+| KK.4 | **Multi-tenant deployer** | `powerbi_import/deploy/multi_tenant.py` | High | Deploy to N tenant workspaces with template substitution: tenant-specific connection strings, RLS user mappings, workspace names. Parameterized deployment manifest. Parallel tenant deployment. |
+| KK.5 | **Docker packaging** | `Dockerfile`, `docker-compose.yml` | Medium | Production container: `python:3.12-slim`, non-root user, health check, volume mounts for input/output. Docker Compose with worker + (optional) web UI. ARM template for Azure Container Apps. |
+| KK.6 | **CLI: `--multi-tenant`, `--governance-rules`** | `migrate.py` | Low | `--multi-tenant MANIFEST` deploys to multiple tenants. `--governance-rules FILE` applies custom naming/PII rules. |
+| KK.7 | **Tests** | `tests/test_dev_experience.py` | High | 50+ tests: notebook API, geo passthrough, governance rules, multi-tenant deployment, Docker build. |
+
+**v19.0 totals:** 1 sprint, 5 new modules + Docker files, ~50 new tests, 2 CLI flags
+
+---
+---
+
+# Updated Complete Roadmap Summary
+
+| Version | Theme | Sprints | New Modules | Cumulative Tests | Key Capability | Status |
+|---------|-------|---------|-------------|-----------------|----------------|--------|
+| **v1.0** | Foundation | 1–10 | 18 | 385 | Full extract → generate → deploy pipeline | ✅ DONE |
+| **v2.0** | Production Tooling | F–L | +6 | 570 | CI/CD, wizard, DAX depth, parallel, incremental | ✅ DONE |
+| **v3.0** | Enterprise Assessment | F–K | +11 | 623 | 14-category assessment, strategy, comparison, plugins | ✅ DONE |
+| **v4.0** | Production Maturity | L–Q | +5 | ~900 | OLAP hardening, merge, scorecard, scale, certification | ✅ DONE |
+| **v5.0** | Fabric Native | R–S | +4 | ~970 | DirectLake, Lakehouse, notebooks, Fabric Git | ✅ DONE |
+| **v6.0** | Governance & Lineage | T–U | +4 | ~1,040 | Lineage graph, impact analysis, Purview integration | ✅ DONE |
+| **v7.0** | AI-Assisted Migration | V–W | +2 | ~1,095 | LLM expression conversion, semantic field matching | ✅ DONE |
+| **v8.0** | Multi-Language & i18n | X | +1 | ~2,175 | Multi-culture TMDL, translated captions, RTL support | ✅ DONE |
+| **v9.0** | Real-Time & Streaming | Y | +2 | ~2,200 | Push datasets, Eventstream, refresh schedules | ✅ DONE |
+| **v10.0** | Deep Testing & Quality | Z | +2 | ~2,175 | Property-based, mutation, fuzz, generated tests | ✅ DONE |
+| **v11.0** | Migration Ops | AA | +3 | ~2,260 | Change detection, drift report, auto-reconciliation | ✅ DONE |
+| **v12.0** | Cross-Platform Federation | BB | +4 | ~2,290 | MSTR + Tableau + Cognos → unified PBI migration | 🔜 |
+| **v13.0** | Self-Service Web Portal | CC | +10 | ~2,340 | Web UI, approval workflow, Docker deployment | 🔜 |
+| **v14.0** | Enterprise Ecosystem | DD | +6 | ~2,380 | Power Automate, Teams, DevOps, Purview, Copilot | 🔜 |
+| **v15.0** | DAX Optimization & Quality Gates | EE–FF | +4 | ~2,354 | DAX optimizer, equivalence tester, regression snapshots, security | ✅ DONE |
+| **v16.0** | Fabric Deep Integration (Phase 2) | GG–HH | +8 | ~2,458 | Dataflow Gen2, DirectLake gen, auth/client/bundle deploy | ✅ DONE |
+| **v17.0** | Enterprise Operations & Monitoring | II | +5 | ~2,660 | Monitoring, SLA, alerts, refresh schedules, recovery | 🔜 |
+| **v18.0** | Content Library & Templates | JJ | +4 | ~2,705 | Model templates, DAX recipes, marketplace, HTML template | 🔜 |
+| **v19.0** | Developer Experience & Extensibility | KK | +5 | ~2,755 | Jupyter API, geo passthrough, governance, multi-tenant, Docker | 🔜 |
+
+**Grand totals (v1.0 → v19.0):**
+- **~101 modules** across 6 packages (`microstrategy_export/`, `powerbi_import/`, `universal_bi/`, `web/`, `integrations/`, `deploy/`)
+- **~2,755 tests** documented in plan (with continuous gap-filling targeting 4,000+)
+- **~35 CLI flags**
+- **19 development phases** across **~42 sprints**
+
+**Note:** Test count target should be revised upward. The TableauToPowerBI reference has 6,818 tests at v27.1. A dedicated test expansion campaign (extending v10.0 methodology) should run alongside each new version to close the ~4,000-test gap.
+
+---
+
+## Updated Phase Dependency Graph
+
+```
+v4.0 Production Maturity
+ ├── v5.0 Fabric Native (depends on: strategy advisor, DirectLake detection)
+ │    └── v16.0 Fabric Deep Integration Phase 2 (depends on: v5.0 basic Fabric)
+ │         └── v19.0 Developer Experience (depends on: deploy infrastructure)
+ ├── v6.0 Governance & Lineage (depends on: merge tools, assessment)
+ │    ├── v14.0 Enterprise Ecosystem (depends on: Purview integration)
+ │    └── v17.0 Enterprise Operations (depends on: telemetry, governance)
+ │         └── v18.0 Content Library (depends on: stable generation)
+ ├── v7.0 AI-Assisted Migration (depends on: expression converter, manual_review items)
+ ├── v8.0 Multi-Language (independent — can be done anytime after v4.0)
+ ├── v9.0 Real-Time & Streaming (independent — can be done anytime after v4.0)
+ ├── v10.0 Deep Testing (depends on: all generation modules stable)
+ │    └── v15.0 DAX Optimization & Quality Gates (depends on: testing infrastructure)
+ ├── v11.0 Migration Ops (depends on: incremental mode, telemetry)
+ └── v12.0 Cross-Platform (depends on: merge tools, lineage)
+      └── v13.0 Web Portal (depends on: all migration modes stable)
+```
+
+## Updated Priority Matrix
+
+| | High Impact | Low Impact |
+|---|---|---|
+| **Low Effort** | v9.0 Real-Time, v18.0 Content | v14.0 Ecosystem, v19.0 DX |
+| **High Effort** | v15.0 DAX Quality, v16.0 Fabric Phase 2, v17.0 Ops | v12.0 Federation, v13.0 Portal |
+
+**Recommended execution order:** v9.0 ✅ → v11.0 ✅ → v15.0 ✅ → v16.0 ✅ → v17.0 → v12.0 → v18.0 → v13.0 → v19.0 → v14.0

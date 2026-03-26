@@ -1,6 +1,6 @@
 # MicroStrategy Example Projects
 
-Four pre-built intermediate JSON projects at increasing complexity levels for testing, demos, and development.
+Five pre-built intermediate JSON projects at increasing complexity levels for testing, demos, and development. Includes a **Fabric-native demo** showcasing DirectLake, multi-language, and streaming features.
 
 ## Complexity Levels
 
@@ -10,6 +10,7 @@ Four pre-built intermediate JSON projects at increasing complexity levels for te
 | **Medium** | 3 | 8 | 5 | 10+2 derived | 3 (grid/graph/grid+graph) | 1 (KPIs + charts) | Hierarchies, relationships |
 | **Complex** | 6 | 15 | 10 | 18+7 OLAP derived | 5 | 3 | RLS, prompts, thresholds, freeform SQL, custom groups, scorecards |
 | **Ultra Complex** | 12 | 30 | 20 | 40+20 OLAP derived | 15 | 8 | Multi-source (Oracle+SQL Server+Snowflake), panel stacks, selectors, info windows, 2 scorecards, freeform SQL, consolidations |
+| **Fabric Demo** | 5 | 8 | 6 | 8+3 derived | 2 | 1 | Snowflake source, hierarchies, RLS, scorecard — designed for `--fabric-mode lakehouse` |
 
 ## Directory Structure
 
@@ -43,13 +44,52 @@ examples/<level>/
 ### Run migration on an example
 
 ```bash
-python migrate.py --input examples/medium/ --output output/medium_pbip/
+python migrate.py --from-export examples/medium/ --output-dir output/medium_pbip/
 ```
 
 ### Run assessment on an example
 
 ```bash
-python migrate.py --input examples/complex/ --assess
+python migrate.py --from-export examples/complex/ --assess
+```
+
+### Fabric-native migration (DirectLake + Lakehouse)
+
+```bash
+python migrate.py --from-export examples/fabric_demo/ --output-dir output/fabric_pbip/ \
+    --fabric-mode lakehouse --lakehouse-name RetailLakehouse
+```
+
+### Multi-language migration
+
+```bash
+python migrate.py --from-export examples/medium/ --output-dir output/i18n_pbip/ \
+    --cultures en-US,fr-FR,de-DE
+```
+
+### DAX optimization pass
+
+```bash
+python migrate.py --from-export examples/complex/ --output-dir output/optimized_pbip/ \
+    --optimize-dax --auto-time-intelligence
+```
+
+### Data lineage visualization
+
+```bash
+python migrate.py --from-export examples/ultra_complex/ --output-dir output/lineage/ --lineage
+```
+
+### Strategy advisor
+
+```bash
+python migrate.py --from-export examples/complex/ --strategy
+```
+
+### Shared model + thin reports
+
+```bash
+python migrate.py --from-export examples/complex/ --output-dir output/shared/ --shared-model
 ```
 
 ### Regenerate examples
@@ -71,3 +111,22 @@ Oracle-based star schema with 6 dimension/fact tables. Features: OLAP derived me
 
 ### Ultra Complex — "Global Enterprise Analytics"
 Multi-source (Oracle + SQL Server + Snowflake) implementation with 12 tables covering sales, returns, inventory, web analytics, and marketing. Features: 20 OLAP derived metrics (including ApplyOLAP expressions), panel stacks, selectors, info windows, 2 scorecards with balanced perspectives, 2 freeform SQL views, 3 RLS filters, custom groups with complex expressions, 15 reports, and 8 dossiers.
+
+### Fabric Demo — "Retail Analytics on Fabric"
+Snowflake-sourced retail analytics (5 tables: DIM_STORE, DIM_PRODUCT, DIM_DATE, FACT_SALES, FACT_INVENTORY). Designed to showcase Fabric-native features: **DirectLake** semantic model with entity partition bindings, **Lakehouse DDL** generation, **Dataflow Gen2** for Snowflake-to-Lakehouse ingestion, **PySpark ETL notebooks**, hierarchies (Geography: Country→City→Store, Product: Department→Brand→Product), RLS filter, and a Retail Performance Scorecard. Use with `--fabric-mode lakehouse` for full Fabric pipeline generation.
+
+**Recommended Fabric commands:**
+```bash
+# Full Fabric pipeline
+python migrate.py --from-export examples/fabric_demo/ --output-dir output/fabric/ \
+    --fabric-mode lakehouse --lakehouse-name RetailLakehouse
+
+# With DirectLake + deployment
+python migrate.py --from-export examples/fabric_demo/ --output-dir output/fabric/ \
+    --fabric-mode lakehouse --lakehouse-name RetailLakehouse \
+    --deploy WORKSPACE_ID --fabric --deploy-env dev
+
+# With lineage + governance
+python migrate.py --from-export examples/fabric_demo/ --output-dir output/fabric/ \
+    --fabric-mode lakehouse --lineage --governance
+```

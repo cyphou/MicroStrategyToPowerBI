@@ -1,0 +1,235 @@
+{
+  "summary": {
+    "report_name": "MicroStrategy Report",
+    "total_objects": 29,
+    "fidelity_score": 0.928,
+    "fidelity_counts": {
+      "fully_migrated": 22,
+      "approximated": 7,
+      "manual_review": 0,
+      "unsupported": 0
+    },
+    "type_counts": {
+      "metric": 8,
+      "derived_metric": 3,
+      "attribute": 8,
+      "fact": 6,
+      "report": 2,
+      "dossier": 1,
+      "security_filter": 1
+    },
+    "generation": {
+      "tables": 5,
+      "columns": 30,
+      "measures": 11,
+      "relationships": 5,
+      "pages": 4,
+      "visuals": 8
+    }
+  },
+  "objects": [
+    {
+      "type": "metric",
+      "id": "MET_0001",
+      "name": "Total Revenue",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MET_0002",
+      "name": "Total Cost",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MET_0003",
+      "name": "Gross Profit",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MET_0004",
+      "name": "Gross Margin",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MET_0005",
+      "name": "Units Sold",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MET_0006",
+      "name": "Avg Discount",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MET_0007",
+      "name": "Total Inventory",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MET_0008",
+      "name": "Revenue per Store",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "derived_metric",
+      "id": "DER_0001",
+      "name": "Revenue Rank",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "derived_metric",
+      "id": "DER_0002",
+      "name": "YTD Revenue",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "derived_metric",
+      "id": "DER_0003",
+      "name": "Revenue MoM",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "ATTR_0001",
+      "name": "Store",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "ATTR_0002",
+      "name": "City",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "ATTR_0003",
+      "name": "Country",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "ATTR_0004",
+      "name": "Product",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "ATTR_0005",
+      "name": "Brand",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "ATTR_0006",
+      "name": "Department",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "ATTR_0007",
+      "name": "Date",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "ATTR_0008",
+      "name": "Store Type",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "fact",
+      "id": "FACT_0001",
+      "name": "Revenue",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "fact",
+      "id": "FACT_0002",
+      "name": "Quantity",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "fact",
+      "id": "FACT_0003",
+      "name": "Cost",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "fact",
+      "id": "FACT_0004",
+      "name": "Discount Pct",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "fact",
+      "id": "FACT_0005",
+      "name": "On Hand",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "fact",
+      "id": "FACT_0006",
+      "name": "On Order",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "report",
+      "id": "RPT_0001",
+      "name": "Store Performance",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "report",
+      "id": "RPT_0002",
+      "name": "Revenue Trend",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "dossier",
+      "id": "DOSS_0001",
+      "name": "Retail Analytics Dashboard",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "security_filter",
+      "id": "SF_0001",
+      "name": "Store Region Filter",
+      "fidelity": "approximated",
+      "note": "Mapped to RLS role"
+    }
+  ]
+}

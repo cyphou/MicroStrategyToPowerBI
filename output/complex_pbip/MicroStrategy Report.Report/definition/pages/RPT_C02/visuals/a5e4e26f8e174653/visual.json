@@ -1,0 +1,43 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.5.0/schema.json",
+  "name": "a5e4e26f8e174653",
+  "position": {
+    "x": 0,
+    "y": 0,
+    "width": 1280,
+    "height": 500,
+    "z": 0,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "matrix",
+    "objects": {
+      "subTotals": [
+        {
+          "properties": {
+            "rowSubtotals": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Product Performance Matrix'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

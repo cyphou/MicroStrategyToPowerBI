@@ -1,0 +1,1043 @@
+{
+  "summary": {
+    "report_name": "MicroStrategy Report",
+    "total_objects": 144,
+    "fidelity_score": 0.89,
+    "fidelity_counts": {
+      "fully_migrated": 94,
+      "approximated": 48,
+      "manual_review": 2,
+      "unsupported": 0
+    },
+    "type_counts": {
+      "metric": 40,
+      "derived_metric": 20,
+      "attribute": 30,
+      "fact": 20,
+      "report": 15,
+      "dossier": 8,
+      "security_filter": 3,
+      "prompt": 4,
+      "custom_group": 2,
+      "cube": 2
+    },
+    "generation": {
+      "tables": 15,
+      "columns": 90,
+      "measures": 60,
+      "relationships": 16,
+      "pages": 25,
+      "visuals": 51
+    }
+  },
+  "objects": [
+    {
+      "type": "metric",
+      "id": "MU01",
+      "name": "Total Revenue",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MU02",
+      "name": "Total Cost",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MU03",
+      "name": "Total Quantity",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MU04",
+      "name": "Total Discount",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MU05",
+      "name": "Total Tax",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MU06",
+      "name": "Total Shipping",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MU07",
+      "name": "Total Commission",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MU08",
+      "name": "Return Quantity",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MU09",
+      "name": "Return Amount",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MU10",
+      "name": "Inventory On Hand",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MU11",
+      "name": "Inventory On Order",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MU12",
+      "name": "Total Page Views",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MU13",
+      "name": "Total Sessions",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MU14",
+      "name": "Marketing Spend",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MU15",
+      "name": "Total Impressions",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MU16",
+      "name": "Total Clicks",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MU17",
+      "name": "Total Conversions",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MU18",
+      "name": "Customer Count",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MU19",
+      "name": "Product Count",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MU20",
+      "name": "Avg Unit Cost",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MU21",
+      "name": "Profit",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MU22",
+      "name": "Profit Margin",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MU23",
+      "name": "Gross Revenue",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MU24",
+      "name": "Net Revenue",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MU25",
+      "name": "Return Rate",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MU26",
+      "name": "Revenue per Customer",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MU27",
+      "name": "Avg Order Value",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MU28",
+      "name": "Discount Rate",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MU29",
+      "name": "Click-Through Rate",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MU30",
+      "name": "Cost per Click",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MU31",
+      "name": "Cost per Conversion",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MU32",
+      "name": "ROAS",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MU33",
+      "name": "Avg Session Duration",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MU34",
+      "name": "Bounce Rate",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MU35",
+      "name": "Inventory Weeks of Supply",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MU36",
+      "name": "Fill Rate",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MU37",
+      "name": "Commission Rate",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MU38",
+      "name": "Effective Tax Rate",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MU39",
+      "name": "Revenue per Page View",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "metric",
+      "id": "MU40",
+      "name": "Customer Lifetime Value",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "derived_metric",
+      "id": "DU01",
+      "name": "Revenue Rank",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "derived_metric",
+      "id": "DU02",
+      "name": "Running Revenue",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "derived_metric",
+      "id": "DU03",
+      "name": "Revenue MoM %",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "derived_metric",
+      "id": "DU04",
+      "name": "3M Moving Avg",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "derived_metric",
+      "id": "DU05",
+      "name": "Revenue YoY %",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "derived_metric",
+      "id": "DU06",
+      "name": "Profit Quartile",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "derived_metric",
+      "id": "DU07",
+      "name": "6M Moving Sum",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "derived_metric",
+      "id": "DU08",
+      "name": "Lead Revenue",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "derived_metric",
+      "id": "DU09",
+      "name": "First Month Revenue",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "derived_metric",
+      "id": "DU10",
+      "name": "Last Month Revenue",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "derived_metric",
+      "id": "DU11",
+      "name": "Cost Running Avg",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "derived_metric",
+      "id": "DU12",
+      "name": "Profit Running Sum",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "derived_metric",
+      "id": "DU13",
+      "name": "Rank by Profit",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "derived_metric",
+      "id": "DU14",
+      "name": "Revenue Band",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "derived_metric",
+      "id": "DU15",
+      "name": "ApplyOLAP RowNum",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "derived_metric",
+      "id": "DU16",
+      "name": "ApplyOLAP Rank",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "derived_metric",
+      "id": "DU17",
+      "name": "ApplyOLAP Lag",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "derived_metric",
+      "id": "DU18",
+      "name": "ApplyOLAP CumSum",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "derived_metric",
+      "id": "DU19",
+      "name": "Conversion Rank",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "derived_metric",
+      "id": "DU20",
+      "name": "Spend Running Sum",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AU01",
+      "name": "Customer",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AU02",
+      "name": "City",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AU03",
+      "name": "State",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AU04",
+      "name": "Country",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AU05",
+      "name": "Region",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AU06",
+      "name": "Segment",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AU07",
+      "name": "Customer Tier",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AU08",
+      "name": "Account Manager",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AU09",
+      "name": "Product",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AU10",
+      "name": "Category",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AU11",
+      "name": "Subcategory",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AU12",
+      "name": "Brand",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AU13",
+      "name": "Date",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AU14",
+      "name": "Month",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AU15",
+      "name": "Quarter",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AU16",
+      "name": "Year",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AU17",
+      "name": "Fiscal Year",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AU18",
+      "name": "Channel",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AU19",
+      "name": "Channel Type",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AU20",
+      "name": "Employee",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AU21",
+      "name": "Department",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AU22",
+      "name": "Promotion",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AU23",
+      "name": "Promo Type",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AU24",
+      "name": "Warehouse",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AU25",
+      "name": "Device Type",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AU26",
+      "name": "Return Reason",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AU27",
+      "name": "Is Holiday",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AU28",
+      "name": "Is Active Product",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AU29",
+      "name": "Fiscal Quarter",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "attribute",
+      "id": "AU30",
+      "name": "Manager",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "fact",
+      "id": "FU01",
+      "name": "Revenue",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "fact",
+      "id": "FU02",
+      "name": "Cost",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "fact",
+      "id": "FU03",
+      "name": "Quantity",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "fact",
+      "id": "FU04",
+      "name": "Discount",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "fact",
+      "id": "FU05",
+      "name": "Tax",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "fact",
+      "id": "FU06",
+      "name": "Shipping",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "fact",
+      "id": "FU07",
+      "name": "Commission",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "fact",
+      "id": "FU08",
+      "name": "Return Qty",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "fact",
+      "id": "FU09",
+      "name": "Return Amount",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "fact",
+      "id": "FU10",
+      "name": "On Hand",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "fact",
+      "id": "FU11",
+      "name": "On Order",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "fact",
+      "id": "FU12",
+      "name": "Reorder Point",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "fact",
+      "id": "FU13",
+      "name": "Page Views",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "fact",
+      "id": "FU14",
+      "name": "Session Duration",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "fact",
+      "id": "FU15",
+      "name": "Marketing Spend",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "fact",
+      "id": "FU16",
+      "name": "Impressions",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "fact",
+      "id": "FU17",
+      "name": "Clicks",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "fact",
+      "id": "FU18",
+      "name": "Conversions",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "fact",
+      "id": "FU19",
+      "name": "Unit Cost",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "fact",
+      "id": "FU20",
+      "name": "Capacity",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "report",
+      "id": "RPT_U01",
+      "name": "Executive Revenue Summary",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "report",
+      "id": "RPT_U02",
+      "name": "Product Performance Matrix",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "report",
+      "id": "RPT_U03",
+      "name": "Monthly Trend",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "report",
+      "id": "RPT_U04",
+      "name": "Customer Profitability",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "report",
+      "id": "RPT_U05",
+      "name": "Returns Drill-Down",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "report",
+      "id": "RPT_U06",
+      "name": "Channel Mix",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "report",
+      "id": "RPT_U07",
+      "name": "Inventory Status",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "report",
+      "id": "RPT_U08",
+      "name": "Marketing ROI",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "report",
+      "id": "RPT_U09",
+      "name": "Web Analytics",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "report",
+      "id": "RPT_U10",
+      "name": "Employee Revenue",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "report",
+      "id": "RPT_U11",
+      "name": "Promotion Impact",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "report",
+      "id": "RPT_U12",
+      "name": "Fiscal Year Comparison",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "report",
+      "id": "RPT_U13",
+      "name": "Customer Segmentation",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "report",
+      "id": "RPT_U14",
+      "name": "Geographic Breakdown",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "report",
+      "id": "RPT_U15",
+      "name": "Revenue Ranking",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "dossier",
+      "id": "DOSS_U01",
+      "name": "CEO Dashboard",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "dossier",
+      "id": "DOSS_U02",
+      "name": "Sales Operations",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "dossier",
+      "id": "DOSS_U03",
+      "name": "Product Intelligence",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "dossier",
+      "id": "DOSS_U04",
+      "name": "Customer 360",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "dossier",
+      "id": "DOSS_U05",
+      "name": "Marketing Analytics",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "dossier",
+      "id": "DOSS_U06",
+      "name": "Web & Digital",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "dossier",
+      "id": "DOSS_U07",
+      "name": "Finance Dashboard",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "dossier",
+      "id": "DOSS_U08",
+      "name": "Returns & Quality",
+      "fidelity": "fully_migrated",
+      "note": ""
+    },
+    {
+      "type": "security_filter",
+      "id": "SFU01",
+      "name": "Region Filter - Americas",
+      "fidelity": "approximated",
+      "note": "Mapped to RLS role"
+    },
+    {
+      "type": "security_filter",
+      "id": "SFU02",
+      "name": "Region Filter - EMEA",
+      "fidelity": "approximated",
+      "note": "Mapped to RLS role"
+    },
+    {
+      "type": "security_filter",
+      "id": "SFU03",
+      "name": "Channel Filter - Digital",
+      "fidelity": "approximated",
+      "note": "Mapped to RLS role"
+    },
+    {
+      "type": "prompt",
+      "id": "PU01",
+      "name": "Select Year",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "prompt",
+      "id": "PU02",
+      "name": "Select Region",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "prompt",
+      "id": "PU03",
+      "name": "Revenue Min",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "prompt",
+      "id": "PU04",
+      "name": "Date Range",
+      "fidelity": "approximated",
+      "note": ""
+    },
+    {
+      "type": "custom_group",
+      "id": "CGU01",
+      "name": "Customer Tier Groups",
+      "fidelity": "manual_review",
+      "note": "Custom groups require manual DAX grouping"
+    },
+    {
+      "type": "custom_group",
+      "id": "CGU02",
+      "name": "Product Performance",
+      "fidelity": "manual_review",
+      "note": "Custom groups require manual DAX grouping"
+    },
+    {
+      "type": "cube",
+      "id": "CUBE_U01",
+      "name": "Sales Summary",
+      "fidelity": "approximated",
+      "note": "Cube mapped to Import-mode table"
+    },
+    {
+      "type": "cube",
+      "id": "CUBE_U02",
+      "name": "Marketing Cube",
+      "fidelity": "approximated",
+      "note": "Cube mapped to Import-mode table"
+    }
+  ]
+}

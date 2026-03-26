@@ -1,0 +1,49 @@
+table FACT_INVENTORY
+	lineageTag: DS_0005
+
+	column PRODUCT_ID
+		dataType: int64
+		isHidden
+		sourceColumn: PRODUCT_ID
+		lineageTag: col-4a7dab6f
+
+	column STORE_ID
+		dataType: int64
+		isHidden
+		sourceColumn: STORE_ID
+		lineageTag: col-1667133d
+
+	column DATE_KEY
+		dataType: dateTime
+		isHidden
+		sourceColumn: DATE_KEY
+		lineageTag: col-1aed8852
+
+	column ON_HAND
+		dataType: int64
+		isHidden
+		sourceColumn: ON_HAND
+		lineageTag: col-f8b29c4b
+
+	column ON_ORDER
+		dataType: int64
+		isHidden
+		sourceColumn: ON_ORDER
+		lineageTag: col-1e0b26f2
+
+	column REORDER_POINT
+		dataType: int64
+		isHidden
+		sourceColumn: REORDER_POINT
+		lineageTag: col-f92981c8
+
+	measure 'Total Inventory' = SUM([On Hand])
+		formatString: #,##0
+		displayFolder: Inventory
+		lineageTag: MET_0007
+
+
+	partition FACT_INVENTORY = entity
+		mode: directLake
+		entityName: FACT_INVENTORY
+		annotation LakehouseName = RetailLakehouse

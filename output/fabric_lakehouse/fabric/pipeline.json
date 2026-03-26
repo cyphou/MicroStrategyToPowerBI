@@ -1,0 +1,253 @@
+{
+  "name": "pipeline_mstr_migration_RetailLakehouse",
+  "properties": {
+    "description": "Auto-generated ETL pipeline from MicroStrategy migration",
+    "activities": [
+      {
+        "name": "Copy_DIM_STORE",
+        "type": "Copy",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 2,
+          "retryIntervalInSeconds": 30
+        },
+        "typeProperties": {
+          "source": {
+            "type": "SnowflakeSource",
+            "schema": "PUBLIC",
+            "table": "DIM_STORE"
+          },
+          "sink": {
+            "type": "LakehouseTableSink",
+            "tableActionOption": "Overwrite",
+            "partitionOption": "None"
+          },
+          "datasetSettings": {
+            "source": {
+              "type": "SnowflakeTable",
+              "connection": {
+                "server": "acme.snowflakecomputing.com",
+                "database": "RETAIL_DW"
+              }
+            },
+            "sink": {
+              "type": "LakehouseTable",
+              "table": "DIM_STORE",
+              "lakehouse": "RetailLakehouse"
+            }
+          }
+        }
+      },
+      {
+        "name": "Copy_DIM_PRODUCT",
+        "type": "Copy",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 2,
+          "retryIntervalInSeconds": 30
+        },
+        "typeProperties": {
+          "source": {
+            "type": "SnowflakeSource",
+            "schema": "PUBLIC",
+            "table": "DIM_PRODUCT"
+          },
+          "sink": {
+            "type": "LakehouseTableSink",
+            "tableActionOption": "Overwrite",
+            "partitionOption": "None"
+          },
+          "datasetSettings": {
+            "source": {
+              "type": "SnowflakeTable",
+              "connection": {
+                "server": "acme.snowflakecomputing.com",
+                "database": "RETAIL_DW"
+              }
+            },
+            "sink": {
+              "type": "LakehouseTable",
+              "table": "DIM_PRODUCT",
+              "lakehouse": "RetailLakehouse"
+            }
+          }
+        }
+      },
+      {
+        "name": "Copy_DIM_DATE",
+        "type": "Copy",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 2,
+          "retryIntervalInSeconds": 30
+        },
+        "typeProperties": {
+          "source": {
+            "type": "SnowflakeSource",
+            "schema": "PUBLIC",
+            "table": "DIM_DATE"
+          },
+          "sink": {
+            "type": "LakehouseTableSink",
+            "tableActionOption": "Overwrite",
+            "partitionOption": "None"
+          },
+          "datasetSettings": {
+            "source": {
+              "type": "SnowflakeTable",
+              "connection": {
+                "server": "acme.snowflakecomputing.com",
+                "database": "RETAIL_DW"
+              }
+            },
+            "sink": {
+              "type": "LakehouseTable",
+              "table": "DIM_DATE",
+              "lakehouse": "RetailLakehouse"
+            }
+          }
+        }
+      },
+      {
+        "name": "Copy_FACT_SALES",
+        "type": "Copy",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 2,
+          "retryIntervalInSeconds": 30
+        },
+        "typeProperties": {
+          "source": {
+            "type": "SnowflakeSource",
+            "schema": "PUBLIC",
+            "table": "FACT_SALES"
+          },
+          "sink": {
+            "type": "LakehouseTableSink",
+            "tableActionOption": "Overwrite",
+            "partitionOption": "None"
+          },
+          "datasetSettings": {
+            "source": {
+              "type": "SnowflakeTable",
+              "connection": {
+                "server": "acme.snowflakecomputing.com",
+                "database": "RETAIL_DW"
+              }
+            },
+            "sink": {
+              "type": "LakehouseTable",
+              "table": "FACT_SALES",
+              "lakehouse": "RetailLakehouse"
+            }
+          }
+        }
+      },
+      {
+        "name": "Copy_FACT_INVENTORY",
+        "type": "Copy",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 2,
+          "retryIntervalInSeconds": 30
+        },
+        "typeProperties": {
+          "source": {
+            "type": "SnowflakeSource",
+            "schema": "PUBLIC",
+            "table": "FACT_INVENTORY"
+          },
+          "sink": {
+            "type": "LakehouseTableSink",
+            "tableActionOption": "Overwrite",
+            "partitionOption": "None"
+          },
+          "datasetSettings": {
+            "source": {
+              "type": "SnowflakeTable",
+              "connection": {
+                "server": "acme.snowflakecomputing.com",
+                "database": "RETAIL_DW"
+              }
+            },
+            "sink": {
+              "type": "LakehouseTable",
+              "table": "FACT_INVENTORY",
+              "lakehouse": "RetailLakehouse"
+            }
+          }
+        }
+      },
+      {
+        "name": "Refresh_MicroStrategy Report",
+        "type": "SemanticModelRefresh",
+        "dependsOn": [
+          {
+            "activity": "Copy_DIM_STORE",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "Copy_DIM_PRODUCT",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "Copy_DIM_DATE",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "Copy_FACT_SALES",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "Copy_FACT_INVENTORY",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "typeProperties": {
+          "semanticModelName": "MicroStrategy Report",
+          "workspaceId": "<WORKSPACE_ID>",
+          "refreshType": "Full"
+        }
+      },
+      {
+        "name": "Notify_Migration_Complete",
+        "type": "WebActivity",
+        "dependsOn": [
+          {
+            "activity": "Refresh_MicroStrategy Report",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "typeProperties": {
+          "method": "POST",
+          "url": "<WEBHOOK_URL>",
+          "body": {
+            "message": "MicroStrategy → Fabric migration pipeline completed successfully.",
+            "status": "Success"
+          }
+        }
+      }
+    ],
+    "annotations": [
+      "auto-generated",
+      "microstrategy-migration"
+    ]
+  }
+}

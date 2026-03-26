@@ -364,8 +364,13 @@ def convert_metric_to_dax(metric_def, context=None):
     if column_ref and agg in _FUNCTION_MAP:
         dax_func = _FUNCTION_MAP[agg]
         if dax_func:
-            # Use unqualified column reference — TMDL resolves within the table
-            col_ref_str = f"[{column_ref}]" if column_ref else ""
+            # Use fully-qualified column reference to avoid circular
+            # dependency when the measure name equals the column name.
+            table_name = context.get("table_name", "")
+            if table_name:
+                col_ref_str = f"'{table_name}'[{column_ref}]"
+            else:
+                col_ref_str = f"[{column_ref}]"
             dax = f"{dax_func}({col_ref_str})"
             return {"dax": dax, "fidelity": "full", "warnings": []}
 

@@ -1,0 +1,118 @@
+table FACT_SALES
+	lineageTag: DS_0004
+
+	column SALE_ID
+		dataType: int64
+		isHidden
+		sourceColumn: SALE_ID
+		lineageTag: col-33a753bf
+
+	column STORE_ID
+		dataType: int64
+		isHidden
+		sourceColumn: STORE_ID
+		lineageTag: col-3431db0d
+
+	column PRODUCT_ID
+		dataType: int64
+		isHidden
+		sourceColumn: PRODUCT_ID
+		lineageTag: col-20b5bf3f
+
+	column DATE_KEY
+		dataType: dateTime
+		isHidden
+		sourceColumn: DATE_KEY
+		lineageTag: col-38b85022
+
+	column REVENUE
+		dataType: double
+		isHidden
+		sourceColumn: REVENUE
+		lineageTag: col-06219fc8
+
+	column QUANTITY
+		dataType: int64
+		isHidden
+		sourceColumn: QUANTITY
+		lineageTag: col-81407e5f
+
+	column COST
+		dataType: double
+		isHidden
+		sourceColumn: COST
+		lineageTag: col-c024d3a1
+
+	column DISCOUNT_PCT
+		dataType: double
+		isHidden
+		sourceColumn: DISCOUNT_PCT
+		lineageTag: col-ae95dcb7
+
+	measure 'Total Revenue' = SUM([Revenue])
+		formatString: $#,##0.00
+		displayFolder: Sales
+		lineageTag: MET_0001
+
+	measure 'Total Cost' = SUM([Cost])
+		formatString: $#,##0.00
+		displayFolder: Sales
+		lineageTag: MET_0002
+
+	measure 'Gross Profit' = SUM(Revenue) - SUM(Cost)
+		formatString: $#,##0.00
+		displayFolder: Sales
+		lineageTag: MET_0003
+
+	measure 'Gross Margin' = (SUM(Revenue) - SUM(Cost)) / SUM(Revenue)
+		formatString: 0.0%
+		displayFolder: Sales
+		lineageTag: MET_0004
+
+	measure 'Units Sold' = SUM([Quantity])
+		formatString: #,##0
+		displayFolder: Sales
+		lineageTag: MET_0005
+
+	measure 'Avg Discount' = AVERAGE([Discount Pct])
+		formatString: 0.0%
+		displayFolder: Sales
+		lineageTag: MET_0006
+
+	measure 'Revenue per Store' = SUM(Revenue) / Count<Distinct=True>(Store)
+		formatString: $#,##0
+		displayFolder: Sales
+		lineageTag: MET_0008
+
+	measure 'Revenue Rank' = RANKX(ALLSELECTED(), SUM(Revenue,, DESC, SKIP)
+		formatString: #,##0
+		displayFolder: Derived
+		lineageTag: DER_0001
+
+	measure 'YTD Revenue' = ```
+			CALCULATE(
+			    SUM(Revenue,
+			    WINDOW(1, ABS, 0, REL, ALLSELECTED(), ORDERBY([SortColumn], ASC))
+			)
+			```
+		formatString: $#,##0.00
+		displayFolder: Derived
+		lineageTag: DER_0002
+
+	measure 'Revenue MoM' = CALCULATE(SUM(Revenue), OFFSET(-1, ALLSELECTED(), ORDERBY([Date], ASC)))
+		formatString: $#,##0.00
+		displayFolder: Derived
+		lineageTag: DER_0003
+
+
+	partition FACT_SALES = m
+		mode: import
+		expression:= ```
+			let
+			    Source = Snowflake.Databases("acme.snowflakecomputing.com", "RETAIL_DW"),
+			    DB = Source{[Name="RETAIL_DW"]}[Data],
+			    Schema = DB{[Name="PUBLIC"]}[Data],
+			    Table = Schema{[Name="FACT_SALES"]}[Data]
+			in
+			    Table
+			```

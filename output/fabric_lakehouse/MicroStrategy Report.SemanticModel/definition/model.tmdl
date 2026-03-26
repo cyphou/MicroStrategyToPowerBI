@@ -1,0 +1,24 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["DIM_STORE","DIM_PRODUCT","DIM_DATE","FACT_SALES","FACT_INVENTORY"]
+
+ref table DIM_STORE
+ref table DIM_PRODUCT
+ref table DIM_DATE
+ref table FACT_SALES
+ref table FACT_INVENTORY
+
+ref relationship REL_0001
+ref relationship REL_0002
+ref relationship REL_0003
+ref relationship REL_0004
+ref relationship REL_0005
+
+ref role 'Store Region Filter'
+

@@ -1,0 +1,30 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.5.0/schema.json",
+  "name": "9c409370750b4d73",
+  "position": {
+    "x": 0,
+    "y": 0,
+    "width": 1280,
+    "height": 500,
+    "z": 0,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "objects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Channel Mix'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

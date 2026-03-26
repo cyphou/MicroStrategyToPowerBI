@@ -1,0 +1,40 @@
+table DIM_DATE
+	lineageTag: DS_0003
+
+	column DATE_KEY
+		dataType: dateTime
+		isHidden
+		isKey
+		sourceColumn: DATE_KEY
+		lineageTag: col-83e95616
+
+	column YEAR
+		dataType: int64
+		sourceColumn: YEAR
+		lineageTag: col-4e18cc05
+
+	column QUARTER
+		dataType: int64
+		sourceColumn: QUARTER
+		lineageTag: col-abc369e4
+
+	column MONTH
+		dataType: int64
+		sourceColumn: MONTH
+		lineageTag: col-745c57b8
+
+	column MONTH_NAME
+		dataType: string
+		sourceColumn: MONTH_NAME
+		lineageTag: col-9a2beeb2
+
+	column DAY_OF_WEEK
+		dataType: string
+		sourceColumn: DAY_OF_WEEK
+		lineageTag: col-6a2f92f1
+
+
+	partition DIM_DATE = entity
+		mode: directLake
+		entityName: DIM_DATE
+		annotation LakehouseName = RetailLakehouse

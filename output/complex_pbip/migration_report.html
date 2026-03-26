@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Migration Report — MicroStrategy Report</title>
+<style>
+body { font-family: 'Segoe UI', system-ui, sans-serif; margin: 2rem; color: #333; }
+h1 { color: #0078d4; }
+.card { display: inline-block; background: #f3f3f3; border-radius: 8px;
+         padding: 1rem 1.5rem; margin: 0.5rem; text-align: center; }
+.card .num { font-size: 2rem; font-weight: bold; }
+.card .label { font-size: 0.85rem; color: #666; }
+table { border-collapse: collapse; width: 100%; margin-top: 1rem; }
+th, td { border: 1px solid #ddd; padding: 0.5rem 0.75rem; text-align: left; }
+th { background: #0078d4; color: #fff; }
+tr:nth-child(even) { background: #f9f9f9; }
+.badge { padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; color: #fff; }
+.fully_migrated { background: #107c10; }
+.approximated { background: #ff8c00; }
+.manual_review { background: #d83b01; }
+.unsupported { background: #a80000; }
+</style>
+</head>
+<body>
+<h1>Migration Report — MicroStrategy Report</h1>
+
+<h2>Fidelity Score: 89%</h2>
+
+<div>
+  <div class="card"><div class="num">43</div><div class="label">Fully Migrated</div></div>
+  <div class="card"><div class="num">21</div><div class="label">Approximated</div></div>
+  <div class="card"><div class="num">1</div><div class="label">Manual Review</div></div>
+  <div class="card"><div class="num">0</div><div class="label">Unsupported</div></div>
+</div>
+
+<h2>Generation Summary</h2>
+<div>
+  <div class="card"><div class="num">7</div><div class="label">Tables</div></div>
+  <div class="card"><div class="num">25</div><div class="label">Measures</div></div>
+  <div class="card"><div class="num">9</div><div class="label">Pages</div></div>
+  <div class="card"><div class="num">19</div><div class="label">Visuals</div></div>
+  <div class="card"><div class="num">7</div><div class="label">Relationships</div></div>
+</div>
+
+<h2>Object Details (65 objects)</h2>
+<table>
+<thead><tr><th>Type</th><th>Name</th><th>Fidelity</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td>metric</td><td>Total Revenue</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>metric</td><td>Total Cost</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>metric</td><td>Total Quantity</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>metric</td><td>Total Discount</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>metric</td><td>Total Tax</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>metric</td><td>Return Quantity</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>metric</td><td>Return Amount</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>metric</td><td>Avg Unit Cost</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>metric</td><td>Customer Count</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>metric</td><td>Product Count</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>metric</td><td>Profit</td><td><span class="badge approximated">Approximated</span></td><td></td></tr>
+<tr><td>metric</td><td>Profit Margin</td><td><span class="badge approximated">Approximated</span></td><td></td></tr>
+<tr><td>metric</td><td>Gross Revenue</td><td><span class="badge approximated">Approximated</span></td><td></td></tr>
+<tr><td>metric</td><td>Net Revenue</td><td><span class="badge approximated">Approximated</span></td><td></td></tr>
+<tr><td>metric</td><td>Return Rate</td><td><span class="badge approximated">Approximated</span></td><td></td></tr>
+<tr><td>metric</td><td>Revenue per Customer</td><td><span class="badge approximated">Approximated</span></td><td></td></tr>
+<tr><td>metric</td><td>Avg Order Value</td><td><span class="badge approximated">Approximated</span></td><td></td></tr>
+<tr><td>metric</td><td>Discount Rate</td><td><span class="badge approximated">Approximated</span></td><td></td></tr>
+<tr><td>derived_metric</td><td>Revenue Rank</td><td><span class="badge approximated">Approximated</span></td><td></td></tr>
+<tr><td>derived_metric</td><td>Running Revenue</td><td><span class="badge approximated">Approximated</span></td><td></td></tr>
+<tr><td>derived_metric</td><td>Revenue MoM Change</td><td><span class="badge approximated">Approximated</span></td><td></td></tr>
+<tr><td>derived_metric</td><td>3M Moving Avg Revenue</td><td><span class="badge approximated">Approximated</span></td><td></td></tr>
+<tr><td>derived_metric</td><td>Revenue YoY</td><td><span class="badge approximated">Approximated</span></td><td></td></tr>
+<tr><td>derived_metric</td><td>Profit NTile</td><td><span class="badge approximated">Approximated</span></td><td></td></tr>
+<tr><td>derived_metric</td><td>Revenue Quartile</td><td><span class="badge approximated">Approximated</span></td><td></td></tr>
+<tr><td>attribute</td><td>Customer</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>attribute</td><td>City</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>attribute</td><td>State</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>attribute</td><td>Country</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>attribute</td><td>Region</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>attribute</td><td>Segment</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>attribute</td><td>Product</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>attribute</td><td>Category</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>attribute</td><td>Subcategory</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>attribute</td><td>Brand</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>attribute</td><td>Date</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>attribute</td><td>Month</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>attribute</td><td>Quarter</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>attribute</td><td>Year</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>attribute</td><td>Channel</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>fact</td><td>Revenue</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>fact</td><td>Cost</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>fact</td><td>Quantity</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>fact</td><td>Discount</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>fact</td><td>Tax</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>fact</td><td>Return Qty</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>fact</td><td>Return Amount</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>fact</td><td>Unit Cost</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>fact</td><td>Fiscal Year</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>fact</td><td>Month Num</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>report</td><td>Executive Revenue Summary</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>report</td><td>Product Performance Matrix</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>report</td><td>Monthly Trend Analysis</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>report</td><td>Customer Profitability</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>report</td><td>Returns Analysis</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>dossier</td><td>Executive Dashboard</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>dossier</td><td>Product Analytics</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>dossier</td><td>Customer Insights</td><td><span class="badge fully_migrated">Fully Migrated</span></td><td></td></tr>
+<tr><td>security_filter</td><td>Region Filter - East</td><td><span class="badge approximated">Approximated</span></td><td>Mapped to RLS role</td></tr>
+<tr><td>security_filter</td><td>Channel Filter - Online</td><td><span class="badge approximated">Approximated</span></td><td>Mapped to RLS role</td></tr>
+<tr><td>prompt</td><td>Select Year</td><td><span class="badge approximated">Approximated</span></td><td></td></tr>
+<tr><td>prompt</td><td>Revenue Threshold</td><td><span class="badge approximated">Approximated</span></td><td></td></tr>
+<tr><td>prompt</td><td>Select Region</td><td><span class="badge approximated">Approximated</span></td><td></td></tr>
+<tr><td>custom_group</td><td>Customer Tier</td><td><span class="badge manual_review">Manual Review</span></td><td>Custom groups require manual DAX grouping</td></tr>
+<tr><td>cube</td><td>Sales Summary Cube</td><td><span class="badge approximated">Approximated</span></td><td>Cube mapped to Import-mode table</td></tr>
+</tbody>
+</table>
+</body>
+</html>

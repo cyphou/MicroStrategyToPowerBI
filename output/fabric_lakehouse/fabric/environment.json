@@ -1,0 +1,20 @@
+{
+  "name": "MstrSparkEnv",
+  "description": "Fabric environment for MicroStrategy → Power BI migration ETL",
+  "runtimeVersion": "1.2",
+  "sparkProperties": {
+    "spark.sql.parquet.int96RebaseModeInWrite": "CORRECTED",
+    "spark.sql.parquet.datetimeRebaseModeInWrite": "CORRECTED",
+    "spark.sql.ansi.enabled": "false"
+  },
+  "libraries": [],
+  "pools": {
+    "defaultPool": {
+      "type": "Workspace",
+      "starterPool": {
+        "maxNodeCount": 3,
+        "maxExecutors": 2
+      }
+    }
+  }
+}

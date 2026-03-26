@@ -43,17 +43,17 @@ table FACT_WEB_VISITS
 		sourceColumn: DEVICE_TYPE
 		lineageTag: col-3c2f13bc
 
-	measure 'Total Page Views' = SUM([Page Views])
+	measure 'Total Page Views' = SUM('FACT_WEB_VISITS'[Page Views])
 		formatString: #,##0
 		displayFolder: Metrics
 		lineageTag: MU12
 
-	measure 'Total Sessions' = COUNT([Session Duration])
+	measure 'Total Sessions' = COUNT('FACT_WEB_VISITS'[Session Duration])
 		formatString: #,##0
 		displayFolder: Metrics
 		lineageTag: MU13
 
-	measure 'Avg Session Duration' = AVERAGE([Session Duration])
+	measure 'Avg Session Duration' = AVERAGE('FACT_WEB_VISITS'[Session Duration])
 		formatString: #,##0
 		displayFolder: Metrics
 		lineageTag: MU33

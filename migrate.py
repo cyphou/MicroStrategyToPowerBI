@@ -264,6 +264,17 @@ def run_generation(output_dir=None, report_name=None, culture=None, shared_model
             )
 
         if result:
+            # Populate generation stats from the summary dict
+            if isinstance(result, dict):
+                _stats.tmdl_tables = result.get("tables", 0)
+                _stats.tmdl_columns = result.get("columns", 0)
+                _stats.tmdl_measures = result.get("measures", 0)
+                _stats.tmdl_relationships = result.get("relationships", 0)
+                _stats.tmdl_hierarchies = result.get("hierarchies", 0)
+                _stats.tmdl_roles = result.get("roles", 0)
+                _stats.visuals_generated = result.get("visuals", 0)
+                _stats.pages_generated = result.get("pages", 0)
+                _stats.pbip_path = result.get("output_dir", "")
             print("\n✓ Power BI project generated successfully")
             return True
         else:
@@ -737,6 +748,159 @@ def run_fabric_generation(args, fabric_mode, lakehouse_name):
     print()
 
 
+# ── v15.0 DAX Optimization & Quality Gates ──────────────────────
+
+
+def _run_dax_optimization(args):
+    """Apply DAX optimization rewrites (v15.0)."""
+    data = _load_intermediate_data(args)
+    output_dir = getattr(args, 'output_dir', 'artifacts/') or 'artifacts/'
+
+    print()
+    print("-" * 80)
+    print("  DAX OPTIMIZATION (v15.0)")
+    print("-" * 80)
+
+    metrics = data.get("metrics", [])
+    derived = data.get("derived_metrics", [])
+    all_measures = metrics + derived
+
+    from powerbi_import.dax_optimizer import optimize_measures, format_report
+
+    optimized, report = optimize_measures(
+        all_measures,
+        auto_time_intelligence=getattr(args, 'auto_time_intelligence', False),
+    )
+
+    print(f"  ✓ Analysed {report['total_measures']} measures")
+    print(f"    Optimized: {report['measures_optimized']}")
+    print(f"    Patterns:  {len(report['patterns_applied'])}")
+    if report.get('time_intelligence_added'):
+        print(f"    Time Intelligence: +{report['time_intelligence_added']} measures")
+
+    # Save optimization report
+    import json
+    report_path = os.path.join(output_dir, "dax_optimization_report.json")
+    os.makedirs(output_dir, exist_ok=True)
+    with open(report_path, "w", encoding="utf-8") as f:
+        json.dump(report, f, indent=2, ensure_ascii=False)
+    print(f"  ✓ Report: {report_path}")
+
+    # Security validation of output
+    from powerbi_import.security_validator import validate_project_output
+    sec = validate_project_output(output_dir)
+    if sec["errors"]:
+        print(f"  ⚠ Security issues: {len(sec['errors'])}")
+        for err in sec["errors"][:5]:
+            print(f"    • {err}")
+    else:
+        print("  ✓ Security validation passed")
+
+    print()
+
+
+# ── v11.0 Migration Ops ─────────────────────────────────────────
+
+
+def _run_migration_ops(args):
+    """Change detection, drift report, and reconciliation (v11.0)."""
+    output_dir = getattr(args, 'output_dir', 'artifacts/') or 'artifacts/'
+    ops_dir = os.path.join(output_dir, 'migration_ops')
+
+    print()
+    print("-" * 80)
+    print("  MIGRATION OPS (v11.0)")
+    print("-" * 80)
+
+    previous_dir = getattr(args, 'previous_dir', None)
+    baseline_dir = getattr(args, 'baseline_dir', None)
+
+    # Step 1: Change detection (if --watch)
+    if getattr(args, 'watch', False):
+        if not previous_dir:
+            print("  ⚠ --previous-dir required for change detection")
+        else:
+            from microstrategy_export.change_detector import detect_changes, save_manifest
+            current_extract = getattr(args, 'input_dir', 'microstrategy_export') or 'microstrategy_export'
+            manifest = detect_changes(current_extract, previous_dir)
+            save_manifest(manifest, ops_dir)
+            s = manifest["summary"]
+            print(f"  ✓ Change detection: +{s['added']} ~{s['modified']} -{s['deleted']} ={s['unchanged']}")
+
+            # Always generate drift report when doing change detection
+            from powerbi_import.drift_report import detect_drift, save_drift_report
+            prev_output = baseline_dir or os.path.join(output_dir, '..', 'output_prev')
+            drift = detect_drift(output_dir, prev_output)
+            save_drift_report(drift, ops_dir)
+            ds = drift["summary"]
+            print(f"  ✓ Drift detection: {ds['drifted']} drifted, "
+                  f"{ds['added_locally']} added, {ds['deleted_locally']} deleted")
+
+    # Step 2: Reconciliation (if --reconcile)
+    if getattr(args, 'reconcile', False):
+        if not baseline_dir:
+            print("  ⚠ --baseline-dir required for reconciliation")
+        else:
+            from powerbi_import.reconciler import reconcile, save_reconcile_report
+            # Source = current output, target = live output, baseline = previous migration
+            rec = reconcile(output_dir, output_dir, baseline_dir, dry_run=False)
+            save_reconcile_report(rec, ops_dir)
+            rs = rec["summary"]
+            print(f"  ✓ Reconciliation: {rs['auto_applied']} auto, "
+                  f"{rs['conflicts']} conflicts, {rs['new_files']} new, "
+                  f"{rs['removed_files']} removed")
+
+    print()
+
+
+# ── v9.0 Real-Time & Streaming ──────────────────────────────────
+
+
+def _run_realtime_streaming(args):
+    """Detect real-time sources and generate streaming artifacts (v9.0)."""
+    data = _load_intermediate_data(args)
+    output_dir = getattr(args, 'output_dir', 'artifacts/') or 'artifacts/'
+    streaming_dir = os.path.join(output_dir, 'streaming')
+
+    print()
+    print("-" * 80)
+    print("  REAL-TIME & STREAMING ANALYSIS (v9.0)")
+    print("-" * 80)
+
+    # Step 1: Detect real-time sources
+    from microstrategy_export.realtime_extractor import detect_realtime_sources
+    rt_result = detect_realtime_sources(data)
+    summary = rt_result.get("summary", {})
+    print(f"  ✓ Detection: {summary.get('total', 0)} objects analysed")
+    print(f"    Batch: {summary.get('batch', 0)}, "
+          f"Near-realtime: {summary.get('near_realtime', 0)}, "
+          f"Streaming: {summary.get('streaming', 0)}")
+
+    # Step 2: Generate streaming artifacts (push datasets + Eventstreams)
+    if summary.get("streaming", 0) > 0 or summary.get("near_realtime", 0) > 0:
+        from powerbi_import.streaming_generator import generate_streaming_artifacts
+        workspace_id = getattr(args, 'deploy', None) or ''
+        stats = generate_streaming_artifacts(
+            data, rt_result, streaming_dir,
+            workspace_id=workspace_id,
+        )
+        if stats["push_datasets"]:
+            print(f"  ✓ Push datasets: {stats['push_datasets']}")
+        if stats["eventstream_definitions"]:
+            print(f"  ✓ Eventstream definitions: {stats['eventstream_definitions']}")
+        if stats["refresh_schedules"]:
+            print(f"  ✓ Refresh schedules: {stats['refresh_schedules']}")
+
+        # Step 3: Generate refresh configuration
+        from powerbi_import.deploy.refresh_config import generate_refresh_config
+        rc_stats = generate_refresh_config(rt_result, streaming_dir)
+        print(f"  ✓ Refresh config: {rc_stats['total']} entries → {streaming_dir}/refresh_config.json")
+    else:
+        print("  ℹ No real-time or near-realtime objects detected — skipping streaming generation")
+
+    print()
+
+
 def run_fabric_git_push(args):
     """Push .pbip to Fabric workspace Git repo."""
     workspace_id = args.deploy
@@ -902,6 +1066,8 @@ Examples:
     deploy_group.add_argument('--lakehouse-id', help='Fabric lakehouse ID for DirectLake')
     deploy_group.add_argument('--direct-lake', action='store_true',
                              help='Configure DirectLake mode (requires --lakehouse-id)')
+    deploy_group.add_argument('--deploy-env', choices=['dev', 'staging', 'prod'],
+                             help='Select deployment environment config (dev/staging/prod)')
 
     # Logging
     log_group = parser.add_argument_group('Logging')
@@ -919,7 +1085,32 @@ Examples:
     parser.add_argument('--config', help='Path to configuration JSON file')
 
     # Version
-    parser.add_argument('--version', action='version', version='%(prog)s 8.0.0')
+    parser.add_argument('--version', action='version', version='%(prog)s 16.0.0')
+
+    # v15.0 features — DAX Optimization & Quality Gates
+    v15_group = parser.add_argument_group('v15.0 DAX Optimization & Quality Gates')
+    v15_group.add_argument('--optimize-dax', action='store_true',
+                          help='Apply DAX optimization rewrites (IF→SWITCH, ISBLANK→COALESCE, CALCULATE simplification)')
+    v15_group.add_argument('--auto-time-intelligence', action='store_true',
+                          help='Auto-inject Time Intelligence variants (YTD, PY, YoY) for date-based measures')
+    v15_group.add_argument('--snapshot-update', action='store_true',
+                          help='Re-baseline regression snapshots from current output')
+
+    # v11.0 features — Migration Ops
+    v11_group = parser.add_argument_group('v11.0 Migration Ops')
+    v11_group.add_argument('--watch', action='store_true',
+                          help='Detect changes between current and previous extraction (change manifest + drift report)')
+    v11_group.add_argument('--reconcile', action='store_true',
+                          help='Three-way reconcile: preserve manual PBI edits while applying MSTR changes')
+    v11_group.add_argument('--previous-dir',
+                          help='Path to previous extraction output (for change detection)')
+    v11_group.add_argument('--baseline-dir',
+                          help='Path to previous migration output baseline (for reconciliation)')
+
+    # v9.0 features — Real-Time & Streaming
+    v9_group = parser.add_argument_group('v9.0 Real-Time & Streaming')
+    v9_group.add_argument('--realtime', action='store_true',
+                         help='Detect real-time sources and generate push dataset / Eventstream / refresh schedule definitions')
 
     # v6.0 features — Governance & Lineage
     v6_group = parser.add_argument_group('v6.0 Governance & Lineage')
@@ -1160,7 +1351,28 @@ def main():
         except Exception as e:
             logger.warning("Lineage/governance step failed: %s", e)
 
-    # Step 3g: Fabric Git push (optional, v5.0)
+    # Step 3f½: DAX optimization (optional, v15.0)
+    if getattr(args, 'optimize_dax', False) or getattr(args, 'auto_time_intelligence', False):
+        try:
+            _run_dax_optimization(args)
+        except Exception as e:
+            logger.warning("DAX optimization step failed: %s", e)
+
+    # Step 3g: Migration ops — change detection + drift + reconcile (v11.0)
+    if getattr(args, 'watch', False) or getattr(args, 'reconcile', False):
+        try:
+            _run_migration_ops(args)
+        except Exception as e:
+            logger.warning("Migration ops step failed: %s", e)
+
+    # Step 3h: Real-time / streaming (optional, v9.0)
+    if getattr(args, 'realtime', False):
+        try:
+            _run_realtime_streaming(args)
+        except Exception as e:
+            logger.warning("Real-time streaming step failed: %s", e)
+
+    # Step 3i: Fabric Git push (optional, v5.0)
     if getattr(args, 'fabric_git', False):
         run_fabric_git_push(args)
 

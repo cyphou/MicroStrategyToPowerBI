@@ -1,0 +1,13 @@
+[
+  {
+    "id": "SF_0001",
+    "name": "Store Region Filter",
+    "filter_expression": "[Country] = @UserRegion",
+    "assignments": [
+      {
+        "type": "group",
+        "name": "RegionalManagers"
+      }
+    ]
+  }
+]

@@ -2,6 +2,8 @@
 
 This document details all mappings between MicroStrategy and Power BI objects to facilitate migration.
 
+**Version:** v16.0.0 — 2,458 tests | 39 generation modules | 50+ CLI flags
+
 > **See also:**
 > - [MSTR_TO_DAX_REFERENCE.md](MSTR_TO_DAX_REFERENCE.md) — Complete MicroStrategy expression → DAX mapping
 > - [ARCHITECTURE.md](ARCHITECTURE.md) — Pipeline architecture
@@ -346,5 +348,80 @@ This document details all mappings between MicroStrategy and Power BI objects to
 | Custom color themes (CSS-based) | ⚠️ Partial | Basic colors mapped to PBI theme |
 | Nested panel stacks | ⚠️ Approximated | Flattened to single bookmark level |
 | ApplySimple with database-specific SQL | ⚠️ Best-effort | Common patterns converted, complex flagged |
-| Derived metrics with OLAP functions | ⚠️ Partial | Common patterns (Rank, Running) handled |
+| Derived metrics with OLAP functions | ⚠️ Partial | Common patterns (Rank, Running) handled; use `--ai-assist` for complex patterns |
 | Object prompts with dynamic attributes | ⚠️ Approximated | Field parameter with static list |
+
+---
+
+## 🏭 Fabric-Native Mappings (v5.0+/v16.0+)
+
+### Data Type Mapping — MSTR → Delta/Spark (50+ types)
+
+| MicroStrategy Type | Spark/Delta Type | Notes |
+|-------------------|------------------|-------|
+| integer | IntegerType | |
+| long | LongType | |
+| real / double | DoubleType | |
+| decimal | DecimalType(18,2) | |
+| nVarChar / char | StringType | |
+| date | DateType | |
+| timestamp / datetime | TimestampType | |
+| boolean | BooleanType | |
+| binary | BinaryType | |
+| smallint | ShortType | |
+| bigDecimal | DecimalType(38,10) | |
+| float | FloatType | |
+| time | StringType | Stored as string |
+
+### Expression Classification — Lakehouse vs DAX-only
+
+| Expression Pattern | Classification | Destination |
+|-------------------|----------------|-------------|
+| Simple arithmetic (`a + b`, `a * b`) | `lakehouse` | PySpark `withColumn()` |
+| String functions (`Upper`, `Lower`, `Trim`) | `lakehouse` | PySpark built-in functions |
+| Date functions (`Year`, `Month`, `Day`) | `lakehouse` | PySpark `year()`, `month()`, etc. |
+| CALCULATE with context transition | `dax_only` | DAX measure |
+| Level metrics `{~+}`, `{^}`, `{!}` | `dax_only` | DAX CALCULATE + ALL/ALLEXCEPT |
+| Window functions (Rank, Running) | `dax_only` | DAX RANKX / WINDOW |
+| Cross-table references | `dax_only` | DAX with RELATED/RELATEDTABLE |
+
+### Dataflow Gen2 Connector Templates
+
+| Source Type | M Connector Template | Notes |
+|------------|---------------------|-------|
+| SQL Server | `Sql.Database(server, db)` | With native query support |
+| PostgreSQL | `PostgreSQL.Database(server, db)` | |
+| Oracle | `Oracle.Database(server)` | TNS/descriptor |
+| MySQL | `MySQL.Database(server, db)` | |
+| Snowflake | `Snowflake.Databases(account, wh)` | |
+| BigQuery | `GoogleBigQuery.Database(project)` | |
+| Freeform SQL | `Value.NativeQuery(source, sql)` | SQL passthrough |
+
+### Scorecard → PBI Goals Mapping
+
+| MicroStrategy | Power BI Goals | Notes |
+|---------------|---------------|-------|
+| Scorecard | Goals Scorecard | Container for objectives |
+| Objective | Goal | Individual tracked metric |
+| KPI current value | Goal current value | Metric value |
+| KPI target | Goal target | Target value |
+| KPI status (color) | Goal status icon | Red/Yellow/Green mapping |
+| Perspective | Goal category/tag | Grouping mechanism |
+
+### i18n Culture Mapping (v8.0+)
+
+| Component | TMDL Artifact | Notes |
+|----------|--------------|-------|
+| Primary culture | `model.tmdl` → `culture:` + `sourceQueryCulture:` | e.g., `en-US` |
+| Additional cultures | `cultures.tmdl` + `translations.tmdl` | Separate TMDL files per locale |
+| RTL cultures | Visual x-coordinate mirroring + `textDirection: RTL` | Arabic, Hebrew, Farsi, Urdu |
+| Format strings | Culture-specific currency, date, number patterns | 30+ locales supported |
+
+### Streaming/Real-Time Mapping (v9.0+)
+
+| MicroStrategy | Power BI / Fabric | Notes |
+|---------------|------------------|-------|
+| Auto-refresh cache (≤1min) | Push Dataset (REST API) | Real-time streaming |
+| Subscription-based refresh | Eventstream (Fabric RTI) | Event-driven |
+| Scheduled cache refresh | Dataset Refresh Schedule | Time-slot based |
+| Manual refresh | On-demand refresh | User-triggered |

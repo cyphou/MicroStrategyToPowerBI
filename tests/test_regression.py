@@ -72,7 +72,7 @@ class TestMultiLineDax:
         import powerbi_import.tmdl_generator as tg
         orig = tg.convert_metric_to_dax
 
-        def _fake(m):
+        def _fake(m, context=None):
             return {"dax": "IF(\n  [A] > 0,\n  [B],\n  BLANK()\n)"}
         tg.convert_metric_to_dax = _fake
         try:
