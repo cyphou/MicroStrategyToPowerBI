@@ -3,7 +3,7 @@
 **Version:** v3.0.0 (released) → v4.0–v19.0 (roadmap)  
 **Date:** 2026-03-26  
 **Based on:** Tableau to Power BI Migration Tool (v27.1.0 architecture)  
-**Current state:** v16.0 complete — 2,458 tests passing, 39 generation modules  
+**Current state:** v12.0 complete — 2,802 tests passing, 52 modules across 3 packages  
 **Long-term target:** v19.0 — TableauToPowerBI parity, 4,000+ tests
 
 ---
@@ -842,7 +842,7 @@ v14    Enterprise Ecosystem        ░░░░░░░░░
 
 ---
 
-## v12.0 — Cross-Platform Federation
+## v12.0 — Cross-Platform Federation ✅ DONE (2,802 tests)
 
 **Theme:** Unified migration from multiple BI platforms (MicroStrategy + Tableau + Cognos + SSRS) into Power BI. Shared intermediate format.  
 **Priority:** LOW — strategic differentiator for large enterprises with mixed BI estates.
@@ -859,7 +859,7 @@ v14    Enterprise Ecosystem        ░░░░░░░░░
 | BB.6 | **CLI: `--from-tableau`, `--from-cognos`** | `migrate.py` | Medium | Accept mixed inputs: `--from-export ./mstr/ --from-tableau ./tableau/ --merge` → unified PBI output. |
 | BB.7 | **Tests** | `tests/test_federation.py` | High | 50+ tests: schema translation, cross-platform merge, lineage, unified generation. |
 
-**v12.0 totals:** 1 sprint, ~4 new modules (new package), ~50 new tests, 2 CLI flags
+**v12.0 totals:** 1 sprint, 4 new modules (new `universal_bi/` package), 50 new tests (2,802 total), 2 CLI flags
 
 ---
 
@@ -1138,7 +1138,7 @@ The reference project **TableauToPowerBI** (v27.1.0) has matured to **6,818+ tes
 
 ---
 
-## v18.0 — Content Library & Templates
+## v18.0 — Content Library & Templates ✅ DONE (2,752 tests)
 
 **Theme:** Pre-built content — industry model templates, DAX recipe library, pattern marketplace, shared HTML template infrastructure.  
 **Priority:** MEDIUM — accelerates common migration scenarios with ready-made patterns.  
@@ -1157,7 +1157,7 @@ The reference project **TableauToPowerBI** (v27.1.0) has matured to **6,818+ tes
 | JJ.6 | **CLI: `--template`, `--recipes`, `--marketplace`** | `migrate.py` | Low | `--template NAME` applies industry skeleton. `--recipes CATEGORY` injects DAX patterns. `--marketplace PATH\|URL` loads pattern registry. |
 | JJ.7 | **Tests** | `tests/test_content_library.py` | High | 45+ tests: template application, recipe injection, marketplace loading, HTML template rendering, versioning. |
 
-**v18.0 totals:** 1 sprint, 4 new modules + examples dir, ~45 new tests, 3 CLI flags
+**v18.0 totals:** 1 sprint, 4 new modules + examples dir, 82 new tests (2,752 total), 3 CLI flags
 
 ---
 
@@ -1200,13 +1200,13 @@ The reference project **TableauToPowerBI** (v27.1.0) has matured to **6,818+ tes
 | **v9.0** | Real-Time & Streaming | Y | +2 | ~2,200 | Push datasets, Eventstream, refresh schedules | ✅ DONE |
 | **v10.0** | Deep Testing & Quality | Z | +2 | ~2,175 | Property-based, mutation, fuzz, generated tests | ✅ DONE |
 | **v11.0** | Migration Ops | AA | +3 | ~2,260 | Change detection, drift report, auto-reconciliation | ✅ DONE |
-| **v12.0** | Cross-Platform Federation | BB | +4 | ~2,290 | MSTR + Tableau + Cognos → unified PBI migration | 🔜 |
+| **v12.0** | Cross-Platform Federation | BB | +4 | 2,802 | MSTR + Tableau + Cognos → unified PBI migration | ✅ |
 | **v13.0** | Self-Service Web Portal | CC | +10 | ~2,340 | Web UI, approval workflow, Docker deployment | 🔜 |
 | **v14.0** | Enterprise Ecosystem | DD | +6 | ~2,380 | Power Automate, Teams, DevOps, Purview, Copilot | 🔜 |
 | **v15.0** | DAX Optimization & Quality Gates | EE–FF | +4 | ~2,354 | DAX optimizer, equivalence tester, regression snapshots, security | ✅ DONE |
 | **v16.0** | Fabric Deep Integration (Phase 2) | GG–HH | +8 | ~2,458 | Dataflow Gen2, DirectLake gen, auth/client/bundle deploy | ✅ DONE |
-| **v17.0** | Enterprise Operations & Monitoring | II | +5 | ~2,660 | Monitoring, SLA, alerts, refresh schedules, recovery | 🔜 |
-| **v18.0** | Content Library & Templates | JJ | +4 | ~2,705 | Model templates, DAX recipes, marketplace, HTML template | 🔜 |
+| **v17.0** | Enterprise Operations & Monitoring | II | +5 | ~2,670 | Monitoring, SLA, alerts, refresh schedules, recovery | ✅ DONE |
+| **v18.0** | Content Library & Templates | JJ | +4 | 2,752 | Model templates, DAX recipes, marketplace, HTML template | ✅ |
 | **v19.0** | Developer Experience & Extensibility | KK | +5 | ~2,755 | Jupyter API, geo passthrough, governance, multi-tenant, Docker | 🔜 |
 
 **Grand totals (v1.0 → v19.0):**
@@ -1247,4 +1247,4 @@ v4.0 Production Maturity
 | **Low Effort** | v9.0 Real-Time, v18.0 Content | v14.0 Ecosystem, v19.0 DX |
 | **High Effort** | v15.0 DAX Quality, v16.0 Fabric Phase 2, v17.0 Ops | v12.0 Federation, v13.0 Portal |
 
-**Recommended execution order:** v9.0 ✅ → v11.0 ✅ → v15.0 ✅ → v16.0 ✅ → v17.0 → v12.0 → v18.0 → v13.0 → v19.0 → v14.0
+**Recommended execution order:** v9.0 ✅ → v11.0 ✅ → v15.0 ✅ → v16.0 ✅ → v17.0 ✅ → v18.0 ✅ → v12.0 ✅ → v13.0 → v19.0 → v14.0

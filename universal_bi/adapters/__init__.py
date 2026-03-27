@@ -1,0 +1,1 @@
+# Universal BI — Platform adapters.

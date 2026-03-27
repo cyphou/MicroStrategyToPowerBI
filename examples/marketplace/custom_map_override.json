@@ -1,0 +1,17 @@
+{
+  "metadata": {
+    "name": "Custom Map Override",
+    "version": "1.0.0",
+    "author": "built-in",
+    "description": "Override custom geo visuals to Azure Map",
+    "tags": ["geo", "map", "visual"],
+    "category": "visual_mapping"
+  },
+  "payload": {
+    "mappings": {
+      "custom_geocoding": "azureMap",
+      "mapbox": "azureMap",
+      "esri_map": "azureMap"
+    }
+  }
+}

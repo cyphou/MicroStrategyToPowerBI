@@ -2,6 +2,117 @@
 
 All notable changes to this project will be documented in this file.
 
+## [19.0.0] — 2026-03-27
+
+### 🚀 v12.0 — Cross-Platform Federation (Sprint BB)
+
+Universal BI schema for federated migration from MicroStrategy + Tableau (+ future Cognos/SSRS) into unified Power BI output.
+
+### Added
+
+**Sprint BB: Cross-Platform Federation**
+- `universal_bi/schema.py` — Platform-agnostic intermediate schema (12 sections: datasources, dimensions, measures, relationships, hierarchies, security_rules, pages, parameters, filters, custom_groups, custom_sql). `empty_schema()`, `validate()`, `merge_schemas()`, `to_mstr_format()` APIs
+- `universal_bi/adapters/mstr_adapter.py` — MicroStrategy → Universal BI adapter: converts all 18 MSTR intermediate JSON files into universal schema with `source_platform` provenance tags
+- `universal_bi/adapters/tableau_adapter.py` — Tableau → Universal BI adapter: converts Tableau intermediate JSONs (datasources, worksheets, dashboards, calculations, parameters, hierarchies, user_filters, groups, sets, custom_sql) with mark-type → viz-type mapping and shelf → role mapping
+- `universal_bi/cross_lineage.py` — Cross-platform lineage and deduplication: `detect_shared_sources()`, `detect_equivalent_dimensions()`, `detect_equivalent_measures()` with name/table/column similarity scoring, `deduplicate()` with configurable thresholds, `build_lineage()` DAG builder, `lineage_summary()` aggregation
+
+**CLI Enhancements**
+- `--from-tableau DIR` — Path to Tableau intermediate JSON directory for federation
+- `--federate` — Enable cross-platform merge with deduplication and lineage
+- Version bumped to 19.0.0
+
+**Pipeline Wiring**
+- Federation step (Step 1b) runs after extraction, before generation
+- Converts MSTR data → universal schema, optionally merges Tableau data
+- Deduplication removes duplicate dimensions/measures across platforms
+- Writes unified intermediate files back for standard generation pipeline
+
+### Tests
+- 50 new tests in `test_federation.py`:
+  - Schema: 8 tests (empty, validate, merge with dedup, to_mstr_format roundtrip)
+  - MSTR adapter: 11 tests (all section conversions, empty input)
+  - Tableau adapter: 12 tests (datasources, dimensions, measures, relationships, pages, parameters, hierarchies, security, custom groups/sql)
+  - Cross-lineage: 11 tests (shared sources, equivalent dimensions/measures, dedup, lineage graph, summary)
+  - Integration: 2 tests (end-to-end federation pipeline, JSON serialization roundtrip)
+  - Full federation: end-to-end MSTR + Tableau → merge → dedup → validate → generate
+- **2,802 total tests** (from 2,752 pre-v12.0)
+
+## [18.0.0] — 2026-03-27
+
+### 🚀 v18.0 — Content Library & Templates (Sprint III)
+
+Industry-specific semantic model templates, curated DAX recipe library, versioned pattern marketplace, and a unified HTML report framework.
+
+### Added
+
+**Sprint III: Content Library**
+- `powerbi_import/model_templates.py` — 3 industry star-schema skeletons (Healthcare, Finance, Retail) with fact + dimension tables, relationships, measures, hierarchies. `list_templates()`, `get_template()`, `apply_template()` API — enriches existing tables with template columns, adds missing tables
+- `powerbi_import/dax_recipes.py` — 21 curated DAX measure recipes across 3 industries (Healthcare 6, Finance 8, Retail 7). `apply_recipes()` with injection + regex replacement modes, `recipes_to_marketplace_format()` bridge
+- `powerbi_import/marketplace.py` — Versioned pattern registry: `PatternMetadata`, `Pattern`, `PatternRegistry` classes. 5 categories (dax_recipe, visual_mapping, m_template, naming_convention, model_template). Semver versioning, `load()` from directory, `search()` by tags/category/name, `apply_dax_recipes()`, `apply_visual_overrides()`, `export()` API
+- `powerbi_import/html_template.py` — Unified CSS/JS framework: 17 design-token colour constants, `get_report_css()` (dark mode, responsive, print), `get_report_js()` (toggleSection, switchTab, filterTable, sortTable), 16 HTML builder functions (stat_card, stat_grid, section, card, badge, fidelity_bar, donut_chart, bar_chart, data_table, tab_bar, tab_content, flow_diagram, cmd_box)
+- `examples/marketplace/` — 3 sample marketplace patterns: `revenue_ytd.json`, `yoy_growth_percent.json`, `custom_map_override.json`
+
+**CLI Enhancements**
+- `--template healthcare|finance|retail` — Apply industry semantic model template
+- `--recipes INDUSTRY` — Inject DAX recipes for specified industry
+- `--marketplace PATH` — Load pattern marketplace from directory
+- Version bumped to 18.0.0
+
+**Pipeline Wiring**
+- Content library step runs after DAX optimization (Step 3f¾)
+- Template application enriches existing tables, adds missing schema elements
+- DAX recipe injection adds curated measures to semantic model
+- Marketplace overrides applied to visual type map and measure definitions
+
+### Tests
+- 82 new tests in `test_content_library.py`:
+  - Model templates: 12 tests (list, get, deep copy, apply with empty/existing/rels/hierarchies)
+  - DAX recipes: 15 tests (counts, structure, injection, skip, overwrite, replacement, marketplace bridge)
+  - Marketplace: 21 tests (register, versioning, search, load dir, apply DAX/visual, export, to_dict)
+  - HTML template: 34 tests (esc, CSS/JS, open/close, stat_card, grid, section, card, badge, fidelity_bar, donut, bar, table, tabs, flow, cmd_box, constants)
+- **2,752 total tests** (from 2,670 pre-v18.0)
+
+## [17.0.0] — 2026-03-27
+
+### 🚀 v17.0 — Enterprise Operations & Monitoring (Sprint II)
+
+Pluggable monitoring backends, SLA compliance tracking, alert rule generation, refresh schedule migration, and self-healing recovery reports.
+
+### Added
+
+**Sprint II: Enterprise Operations**
+- `powerbi_import/monitoring.py` — Strategy-pattern monitoring with 4 pluggable backends: JSON file, Azure Monitor (OpenTelemetry), Prometheus text exposition, and no-op. `MigrationMonitor` facade with `record_metric()`, `record_event()`, `record_migration()`, `flush()` API
+- `powerbi_import/sla_tracker.py` — Per-report SLA compliance tracking: `SLATracker` with `start()`/`record_result()` timing, 3-dimension compliance (duration, fidelity, validation). `SLAResult` and `SLAReport` dataclasses with `compliance_rate` property. Configurable via JSON config file
+- `powerbi_import/alerts_generator.py` — Extract MSTR thresholds from 3 sources (thresholds.json, metrics with embedded thresholds, numeric prompts) and convert to PBI data-driven alert rule definitions. Operator normalisation, `extract_alerts()`, `generate_alert_rules()`, `save_alert_rules()` API
+- `powerbi_import/refresh_generator.py` — Convert MSTR cache/subscription schedules to PBI dataset refresh configuration. Handles hourly→daily conversion with time slots, PBI Pro 8-refresh cap, weekly/monthly day mapping, cache policy hints. `generate_refresh_config()`, `generate_subscription_config()`, `generate_refresh_json()` API
+- `powerbi_import/recovery_report.py` — Self-healing recovery tracker: `RecoveryReport` class recording automatic repairs during generation (sanitised names, unsupported visuals, broken relationships). Category/severity classification, `save()`, `merge_into()`, `print_summary()` API
+- `docs/ENTERPRISE_GUIDE.md` — 8-phase enterprise migration guide covering Discovery, Infrastructure, Pilot, Bulk Migration, Validation, Deployment, Monitoring, and Ongoing Maintenance
+
+**CLI Enhancements**
+- `--monitor json|azure|prometheus|none` — Enable migration monitoring with specified backend
+- `--sla-config FILE` — Path to SLA configuration JSON file
+- `--alerts` — Generate PBI data-driven alert rules from MSTR thresholds
+- `--migrate-schedules` — Convert MSTR cache/subscription schedules to PBI refresh config
+- Version bumped to 17.0.0
+
+**Pipeline Wiring**
+- Monitoring + SLA tracker initialised before extraction, flushed after deployment
+- Alert generation auto-runs after validation (Step 3i)
+- Refresh schedule migration runs as Step 3j
+- Recovery report saved automatically when repairs exist (Step 3k)
+- SLA report saved as `sla_report.json` with compliance rate display
+
+### Tests
+- 65 new tests in `test_operations.py`:
+  - Monitoring: 13 tests (4 backends + facade + flush + append + fallback)
+  - SLA tracker: 14 tests (SLAResult compliance combos, SLAReport aggregation, SLATracker lifecycle)
+  - Alerts: 12 tests (3-source extraction, operator normalisation, rule generation, persistence)
+  - Refresh: 14 tests (daily/weekly/hourly/cache, day normalisation, time slots, Pro limit cap)
+  - Recovery: 12 tests (record, summary, filter, save, merge_into, print_summary, follow_up)
+- **Total: 2,670 tests passing**
+
+---
+
 ## [16.0.0] — 2026-03-26
 
 ### 🚀 v16.0 — Fabric Deep Integration Phase 2 (Sprints GG–HH)

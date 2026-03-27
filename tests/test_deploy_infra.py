@@ -367,7 +367,7 @@ class TestDeployEnvCLI(unittest.TestCase):
         parser = build_parser()
         for action in parser._actions:
             if hasattr(action, 'version') and action.version:
-                assert "16.0.0" in action.version
+                assert "19.0.0" in action.version
                 return
         self.fail("No version action found")
 

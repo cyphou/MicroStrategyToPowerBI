@@ -1,0 +1,16 @@
+{
+  "metadata": {
+    "name": "YoY Growth %",
+    "version": "1.0.0",
+    "author": "built-in",
+    "description": "Year-over-year growth percentage",
+    "tags": ["revenue", "time-intelligence", "growth", "yoy"],
+    "category": "dax_recipe"
+  },
+  "payload": {
+    "inject": {
+      "name": "YoY Growth %",
+      "dax": "VAR _CY = SUM('Sales'[Revenue]) VAR _PY = CALCULATE(SUM('Sales'[Revenue]), SAMEPERIODLASTYEAR('Calendar'[Date])) RETURN DIVIDE(_CY - _PY, _PY)"
+    }
+  }
+}

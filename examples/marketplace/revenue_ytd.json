@@ -1,0 +1,16 @@
+{
+  "metadata": {
+    "name": "Revenue YTD",
+    "version": "1.0.0",
+    "author": "built-in",
+    "description": "Year-to-date revenue using TOTALYTD",
+    "tags": ["revenue", "time-intelligence", "ytd"],
+    "category": "dax_recipe"
+  },
+  "payload": {
+    "inject": {
+      "name": "Revenue YTD",
+      "dax": "TOTALYTD(SUM('Sales'[Revenue]), 'Calendar'[Date])"
+    }
+  }
+}

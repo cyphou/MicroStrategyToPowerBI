@@ -60,12 +60,28 @@ powerbi_import/         # Step 2: Generation layer (JSON → .pbip)
   lineage_report.py   #   Interactive HTML lineage visualization
   purview_integration.py # Microsoft Purview asset registration
   governance_report.py #  Pre-migration governance checklist HTML
+  monitoring.py       #   Pluggable monitoring (JSON/Azure/Prometheus)
+  sla_tracker.py      #   Per-report SLA compliance tracking
+  alerts_generator.py #   MSTR thresholds → PBI data-driven alerts
+  refresh_generator.py #  Cache/subscription → PBI refresh config
+  recovery_report.py  #   Self-healing recovery tracking
+  model_templates.py  #   Industry star-schema templates (Healthcare/Finance/Retail)
+  dax_recipes.py      #   Curated DAX recipe library (21 measures)
+  marketplace.py      #   Versioned pattern registry
+  html_template.py    #   Shared CSS/JS report framework
   deploy/
     fabric_deployer.py  #   Fabric REST API deployment (SM, report, notebooks, pipelines)
     fabric_git.py       #   Push .pbip to Fabric workspace Git repos
     fabric_env.py       #   Fabric environment config + capacity estimation
     pbi_deployer.py     #   Power BI Service deployment
     gateway_config.py   #   On-premises gateway configuration
+
+universal_bi/           # Cross-platform federation layer
+  schema.py             #   Universal BI schema (platform-agnostic)
+  cross_lineage.py      #   Cross-platform lineage + deduplication
+  adapters/
+    mstr_adapter.py     #   MSTR → Universal BI adapter
+    tableau_adapter.py  #   Tableau → Universal BI adapter
 
 migrate.py              # CLI entry point
 ```
@@ -169,6 +185,35 @@ python migrate.py --help
 - **Bundle deployer**: Atomic deployment of shared semantic model + N thin reports; rollback on partial failure; post-deployment endorsement (Promoted/Certified); environment-based config loading
 - **2,458 total tests**: From 2,354 pre-v16.0 → 2,458 (~104 new Fabric + deploy tests)
 - CLI flags: `--deploy-env dev|staging|prod`
+
+## v17.0 Features
+
+- **Pluggable monitoring**: Strategy-pattern `MigrationMonitor` with 4 backends (JSON file, Azure Monitor/OpenTelemetry, Prometheus text exposition, no-op). `record_metric()`, `record_event()`, `record_migration()`, `flush()` API
+- **SLA compliance tracking**: `SLATracker` with `start()`/`record_result()` timing, `SLAResult`/`SLAReport` dataclasses, 3-dimension compliance (duration ≤ max, fidelity ≥ min, validation pass), configurable via JSON
+- **Alert rule generation**: Extract MSTR thresholds from 3 sources (thresholds, metric-embedded, numeric prompts) → PBI data-driven alert rule definitions with operator normalisation
+- **Refresh schedule migration**: Convert MSTR cache/subscription schedules to PBI dataset refresh config. Hourly→daily time slot generation, PBI Pro 8-refresh cap, weekly/monthly day mapping
+- **Recovery report**: Self-healing tracker for automatic repairs during generation (sanitised names, unsupported visuals, broken relationships). Category/severity classification, merge into migration summary
+- **Enterprise guide**: 8-phase enterprise migration guide (docs/ENTERPRISE_GUIDE.md)
+- **2,670 total tests**: From 2,605 pre-v17.0 → 2,670 (65 new enterprise ops tests)
+- CLI flags: `--monitor json|azure|prometheus|none`, `--sla-config FILE`, `--alerts`, `--migrate-schedules`
+
+## v18.0 Features
+
+- **Industry model templates**: 3 star-schema skeletons (Healthcare, Finance, Retail) with fact + dimension tables, relationships, measures, hierarchies. `apply_template()` enriches existing tables with missing columns and adds new template tables
+- **DAX recipe library**: 21 curated DAX measure recipes across 3 industries (Healthcare 6, Finance 8, Retail 7). Injection + regex replacement modes. `recipes_to_marketplace_format()` bridge to pattern registry
+- **Pattern marketplace**: Versioned `PatternRegistry` with `PatternMetadata`/`Pattern` classes. 5 categories (dax_recipe, visual_mapping, m_template, naming_convention, model_template). Semver versioning, directory loading, search by tags/category/name, `apply_dax_recipes()`, `apply_visual_overrides()`, export
+- **Shared HTML framework**: Unified CSS/JS for all HTML reports — 17 design-token colours, dark mode, responsive, print styles. 16 HTML builder functions (stat_card, donut_chart, bar_chart, data_table with search/sort, tabs, flow_diagram, etc.)
+- **2,752 total tests**: From 2,670 pre-v18.0 → 2,752 (82 new content library tests)
+- CLI flags: `--template healthcare|finance|retail`, `--recipes INDUSTRY`, `--marketplace PATH`
+
+## v12.0 Features
+
+- **Universal BI schema**: Platform-agnostic intermediate format with 12 sections (datasources, dimensions, measures, relationships, hierarchies, security_rules, pages, parameters, filters, custom_groups, custom_sql). `empty_schema()`, `validate()`, `merge_schemas()`, `to_mstr_format()` APIs
+- **MSTR adapter**: Converts all 18 MSTR intermediate JSONs → universal schema with source_platform provenance tags
+- **Tableau adapter**: Converts Tableau intermediate JSONs (datasources with embedded tables/columns/relationships, worksheets, dashboards, calculations, parameters, hierarchies, user_filters, groups, sets, custom_sql) → universal schema. Mark-type → viz-type mapping, shelf → role mapping
+- **Cross-platform lineage**: `detect_shared_sources()`, `detect_equivalent_dimensions()`, `detect_equivalent_measures()` with name/table/column similarity scoring. `deduplicate()` removes cross-platform duplicates. `build_lineage()` DAG builder with node types (source, dimension, measure, page, visual)
+- **2,802 total tests**: From 2,752 pre-v12.0 → 2,802 (50 new federation tests)
+- CLI flags: `--from-tableau DIR`, `--federate`
 
 ## v15.0 Features
 

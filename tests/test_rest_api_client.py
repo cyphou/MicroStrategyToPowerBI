@@ -44,6 +44,15 @@ def client():
         yield c
 
 
+@pytest.fixture
+def real_client():
+    """Client with real requests module but mocked session (for retry tests)."""
+    import requests as real_requests
+    c = MstrRestClient("https://mstr.example.com/MicroStrategyLibrary")
+    c.session = MagicMock()
+    return c
+
+
 # ── Client Initialization ────────────────────────────────────────
 
 class TestClientInit:
@@ -225,3 +234,201 @@ class TestMstrApiError:
     def test_error_inherits_exception(self):
         err = MstrApiError(429, "Rate limited")
         assert isinstance(err, Exception)
+
+
+# ── Search API ───────────────────────────────────────────────────
+
+class TestSearchObjects:
+
+    def test_search_single_page(self, client):
+        data = {"result": [{"id": "1"}, {"id": "2"}], "totalItems": 2}
+        client.session.request.return_value = MockResponse(json_data=data)
+        result = client.search_objects(object_type=3)
+        assert len(result) == 2
+
+    def test_search_with_name_filter(self, client):
+        data = {"result": [{"id": "1", "name": "Sales"}], "totalItems": 1}
+        client.session.request.return_value = MockResponse(json_data=data)
+        result = client.search_objects(object_type=3, name="Sales")
+        assert len(result) == 1
+        # Verify name param was passed
+        call_kwargs = client.session.request.call_args[1]
+        assert "Sales" in str(call_kwargs.get("params", {}))
+
+    def test_search_with_pattern(self, client):
+        data = {"result": [{"id": "1"}], "totalItems": 1}
+        client.session.request.return_value = MockResponse(json_data=data)
+        result = client.search_objects(pattern="Revenue")
+        assert len(result) == 1
+
+    def test_search_empty_results(self, client):
+        data = {"result": [], "totalItems": 0}
+        client.session.request.return_value = MockResponse(json_data=data)
+        result = client.search_objects(object_type=3)
+        assert result == []
+
+    def test_search_pagination(self, client):
+        page1 = {"result": [{"id": "1"}, {"id": "2"}], "totalItems": 3}
+        page2 = {"result": [{"id": "3"}], "totalItems": 3}
+        client.session.request.side_effect = [
+            MockResponse(json_data=page1),
+            MockResponse(json_data=page2),
+        ]
+        result = client.search_objects(object_type=3)
+        assert len(result) == 3
+
+
+# ── Paginated GET ────────────────────────────────────────────────
+
+class TestGetPaginated:
+
+    def test_list_response(self, client):
+        client.session.request.return_value = MockResponse(json_data=[{"id": "T1"}])
+        result = client._get_paginated(f"{client.base_url}/api/model/tables")
+        assert len(result) == 1
+
+    def test_dict_with_data_key(self, client):
+        data = {"data": [{"id": "T1"}, {"id": "T2"}], "totalItems": 2}
+        client.session.request.return_value = MockResponse(json_data=data)
+        result = client._get_paginated(f"{client.base_url}/api/model/tables")
+        assert len(result) == 2
+
+    def test_dict_without_data_key(self, client):
+        data = {"id": "SINGLE", "name": "Something"}
+        client.session.request.return_value = MockResponse(json_data=data)
+        result = client._get_paginated(f"{client.base_url}/api/model/tables")
+        assert len(result) == 1
+        assert result[0]["id"] == "SINGLE"
+
+    def test_paginated_multi_page(self, client):
+        page1 = {"data": [{"id": "1"}, {"id": "2"}], "totalItems": 3}
+        page2 = {"data": [{"id": "3"}], "totalItems": 3}
+        client.session.request.side_effect = [
+            MockResponse(json_data=page1),
+            MockResponse(json_data=page2),
+        ]
+        result = client._get_paginated(f"{client.base_url}/api/model/tables")
+        assert len(result) == 3
+
+
+# ── Retry Logic ──────────────────────────────────────────────────
+
+class TestRetryLogic:
+
+    def test_401_raises_immediately(self, real_client):
+        real_client.session.request.return_value = MockResponse(
+            status_code=401, headers={}
+        )
+        with pytest.raises(MstrApiError, match="401"):
+            real_client._request("GET", f"{real_client.base_url}/api/test")
+
+    def test_429_retries_with_backoff(self, real_client):
+        resp_429 = MockResponse(status_code=429, headers={"Retry-After": "0"})
+        resp_ok = MockResponse(json_data={"ok": True})
+        real_client.session.request.side_effect = [resp_429, resp_ok]
+        result = real_client._request("GET", f"{real_client.base_url}/api/test")
+        assert result.json() == {"ok": True}
+        assert real_client.session.request.call_count == 2
+
+    def test_500_retries(self, real_client):
+        resp_500 = MockResponse(status_code=500)
+        resp_ok = MockResponse(json_data={})
+        real_client.session.request.side_effect = [resp_500, resp_ok]
+        result = real_client._request("GET", f"{real_client.base_url}/api/test")
+        assert result.status_code == 200
+
+    def test_max_retries_exceeded(self, real_client):
+        resp_500 = MockResponse(status_code=500)
+        real_client.session.request.return_value = resp_500
+        with pytest.raises(Exception):
+            real_client._request("GET", f"{real_client.base_url}/api/test")
+
+    def test_connection_error_retries(self, real_client):
+        import requests as real_requests
+        real_client.session.request.side_effect = [
+            real_requests.exceptions.ConnectionError("refused"),
+            MockResponse(json_data={}),
+        ]
+        result = real_client._request("GET", f"{real_client.base_url}/api/test")
+        assert result.status_code == 200
+
+    def test_connection_error_max_retries(self, real_client):
+        import requests as real_requests
+        real_client.session.request.side_effect = real_requests.exceptions.ConnectionError("refused")
+        with pytest.raises(real_requests.exceptions.ConnectionError):
+            real_client._request("GET", f"{real_client.base_url}/api/test")
+
+
+# ── Additional API endpoints ─────────────────────────────────────
+
+class TestAdditionalEndpoints:
+
+    def test_get_tables(self, client):
+        client.session.request.return_value = MockResponse(json_data=[])
+        result = client.get_tables()
+        assert isinstance(result, list)
+
+    def test_get_attributes(self, client):
+        client.session.request.return_value = MockResponse(json_data=[])
+        result = client.get_attributes()
+        assert isinstance(result, list)
+
+    def test_get_facts(self, client):
+        client.session.request.return_value = MockResponse(json_data=[])
+        result = client.get_facts()
+        assert isinstance(result, list)
+
+    def test_get_metrics_delegates_to_search(self, client):
+        data = {"result": [], "totalItems": 0}
+        client.session.request.return_value = MockResponse(json_data=data)
+        result = client.get_metrics()
+        assert isinstance(result, list)
+
+    def test_get_reports(self, client):
+        data = {"result": [], "totalItems": 0}
+        client.session.request.return_value = MockResponse(json_data=data)
+        result = client.get_reports()
+        assert isinstance(result, list)
+
+    def test_get_dossiers(self, client):
+        data = {"result": [], "totalItems": 0}
+        client.session.request.return_value = MockResponse(json_data=data)
+        result = client.get_dossiers()
+        assert isinstance(result, list)
+
+    def test_get_cubes(self, client):
+        data = {"result": [], "totalItems": 0}
+        client.session.request.return_value = MockResponse(json_data=data)
+        result = client.get_cubes()
+        assert isinstance(result, list)
+
+    def test_get_filters(self, client):
+        data = {"result": [], "totalItems": 0}
+        client.session.request.return_value = MockResponse(json_data=data)
+        result = client.get_filters()
+        assert isinstance(result, list)
+
+    def test_get_report_instance(self, client):
+        client.session.request.return_value = MockResponse(json_data={"rows": []})
+        result = client.get_report_instance("RPT1")
+        assert "rows" in result
+
+    def test_get_report_prompts(self, client):
+        client.session.request.return_value = MockResponse(json_data=[{"id": "P1"}])
+        result = client.get_report_prompts("RPT1")
+        assert isinstance(result, list)
+
+    def test_get_dossier_instance(self, client):
+        client.session.request.return_value = MockResponse(json_data={"mid": "123"})
+        result = client.get_dossier_instance("DOS1")
+        assert "mid" in result
+
+    def test_get_user_hierarchies(self, client):
+        client.session.request.return_value = MockResponse(json_data=[])
+        result = client.get_user_hierarchies()
+        assert isinstance(result, list)
+
+    def test_get_cube_definition(self, client):
+        client.session.request.return_value = MockResponse(json_data={"id": "C1"})
+        result = client.get_cube_definition("C1")
+        assert result["id"] == "C1"

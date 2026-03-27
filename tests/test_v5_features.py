@@ -584,7 +584,7 @@ class TestCLIv5Args:
         # Check version action directly
         for action in parser._actions:
             if hasattr(action, 'version') and action.version:
-                assert "16.0.0" in action.version
+                assert "19.0.0" in action.version
                 return
         pytest.fail("No version action found")
 
