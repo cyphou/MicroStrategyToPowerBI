@@ -36,17 +36,21 @@ Level metrics control the grain at which a metric is calculated, independent of 
 
 ## Derived / OLAP Metrics
 
+OLAP outputs that use `Table[Attribute]` or `Table[SortColumn]` are
+approximations: resolve the placeholder table and verify partition, grain,
+sort-order and tie semantics against the target model.
+
 | MicroStrategy | DAX | Notes |
 |---------------|-----|-------|
-| `Rank(Revenue) {Month}` | `RANKX(ALL(Calendar[Month]), [Revenue])` | Dense rank by default |
-| `Rank(Revenue, ASC) {Month}` | `RANKX(ALL(Calendar[Month]), [Revenue], , ASC)` | Ascending rank |
+| `Rank(Sum(Revenue)) <Customer>` | `RANKX(ALL(Table[Customer]), SUM(Revenue),, DESC, SKIP)` | Approximation; default ordering is descending with SKIP ties |
+| `Rank(Sum(Revenue), ASC) <Month>` | `RANKX(ALL(Table[Month]), SUM(Revenue),, ASC, SKIP)` | Approximation; resolve the dimension table and verify tie semantics |
 | `RunningSum(Sum(Revenue)) <Month>` | `CALCULATE(SUM(Revenue), WINDOW(1, ABS, 0, REL, ALLSELECTED(), ORDERBY(Table[Month], ASC)))` | Exported `<...>` and `{...}` level forms are accepted; approximation requires resolving the placeholder table and verifying partition/grain semantics |
-| `RunningAvg(Sum(Revenue)) <Month>` | `AVERAGEX` over a `WINDOW` ordered by `Table[Month]` | Exported `<...>` and `{...}` level forms are accepted; approximation requires resolving the placeholder table and verifying metric aggregation context and partition semantics |
+| `RunningAvg(Sum(Revenue)) <Month>` | `DIVIDE(SUMX(__rows, SUM(Revenue)), COUNTROWS(__rows))` for `__rows` from `WINDOW` ordered by `Table[Month]` | Exported `<...>` and `{...}` level forms are accepted; approximation requires resolving the placeholder table and verifying metric aggregation context and partition semantics |
 | `RunningCount(Revenue) {Month}` | Window pattern | Running count |
-| `MovingAvg(Revenue, 3) {Month}` | `AVERAGEX(TOPN(3, ALL(Calendar[Month]), Calendar[Month], DESC), [Revenue])` | 3-period moving average |
-| `MovingSum(Revenue, 6) {Month}` | `SUMX(TOPN(6, ALL(Calendar[Month]), Calendar[Month], DESC), [Revenue])` | 6-period moving sum |
-| `Lag(Revenue, 1) {Month}` | `OFFSET([Revenue], -1, Calendar, ORDERBY(Calendar[Month]))` | Previous period value |
-| `Lead(Revenue, 1) {Month}` | `OFFSET([Revenue], 1, Calendar, ORDERBY(Calendar[Month]))` | Next period value |
+| `MovingAvg(Sum(Revenue), 3) <Month>` | `AVERAGEX(__rows, SUM(Revenue))` for a 3-row `WINDOW` ordered by `Table[Month]` | Approximation; level and window semantics require validation |
+| `MovingSum(Sum(Revenue), 6) <Month>` | `SUMX(__rows, SUM(Revenue))` for a 6-row `WINDOW` ordered by `Table[Month]` | Approximation; level and window semantics require validation |
+| `Lag(Sum(Revenue), 1, Year)` | `CALCULATE(SUM(Revenue), OFFSET(-1, ALLSELECTED(), ORDERBY(Table[Year], ASC)))` | Previous period pattern; exported third argument is supported, but table and window semantics require validation |
+| `Lead(Sum(Revenue), 1, Year)` | `CALCULATE(SUM(Revenue), OFFSET(1, ALLSELECTED(), ORDERBY(Table[Year], ASC)))` | Next period pattern; exported third argument is supported, but table and window semantics require validation |
 | `NTile(Revenue, 4) {Region}` | RANKX-based quartile pattern | Break into N groups |
 | `OLAPRank(Revenue) {Month}` | `RANKX(ALL(Calendar[Month]), [Revenue])` | Same as Rank |
 | `FirstInRange(Revenue) {Month}` | `FIRSTNONBLANK(Calendar[Month], [Revenue])` | First non-blank value |

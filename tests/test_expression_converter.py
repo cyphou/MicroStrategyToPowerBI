@@ -178,9 +178,11 @@ class TestLevelMetrics:
 class TestDerivedMetrics:
 
     def test_rank(self):
-        result = convert_mstr_expression_to_dax("Rank(Sum(Revenue)) {Customer}")
-        assert "RANKX" in result["dax"]
-        assert "ALL" in result["dax"]
+        result = convert_mstr_expression_to_dax("Rank(Sum(Revenue)) <Customer>")
+        assert result["dax"] == "RANKX(ALL(Table[Customer]), SUM(Revenue),, DESC, SKIP)"
+        assert result["dax"].count("(") == result["dax"].count(")")
+        assert result["fidelity"] == "approximated"
+        assert "placeholder table" in result["warnings"][0]
 
     def test_running_sum(self):
         result = convert_mstr_expression_to_dax("RunningSum(Sum(Revenue)) {Month}")
@@ -222,19 +224,75 @@ class TestDerivedMetrics:
 
     def test_lag(self):
         result = convert_mstr_expression_to_dax("Lag(Sum(Revenue), 1) {Year}")
-        assert "OFFSET" in result["dax"]
-        assert "-1" in result["dax"]
-        assert result["fidelity"] == "full"
+        assert "OFFSET(-1, ALLSELECTED(), ORDERBY(Table[Year], ASC))" in result["dax"]
+        assert "SUM(Revenue)" in result["dax"]
+        assert result["fidelity"] == "approximated"
+        assert "placeholder table" in result["warnings"][0]
+
+    def test_lag_accepts_exported_third_argument(self):
+        result = convert_mstr_expression_to_dax("Lag(Sum(Revenue), 1, Year)")
+        assert "OFFSET(-1, ALLSELECTED(), ORDERBY(Table[Year], ASC))" in result["dax"]
+        assert result["fidelity"] == "approximated"
 
     def test_lead(self):
         result = convert_mstr_expression_to_dax("Lead(Sum(Revenue), 2) {Year}")
-        assert "OFFSET" in result["dax"]
-        assert "2" in result["dax"]
+        assert "OFFSET(2, ALLSELECTED(), ORDERBY(Table[Year], ASC))" in result["dax"]
+        assert result["fidelity"] == "approximated"
+
+    def test_lead_accepts_exported_third_argument(self):
+        result = convert_mstr_expression_to_dax("Lead(Sum(Revenue), 2, Year)")
+        assert "OFFSET(2, ALLSELECTED(), ORDERBY(Table[Year], ASC))" in result["dax"]
+        assert result["fidelity"] == "approximated"
 
     def test_moving_avg(self):
-        result = convert_mstr_expression_to_dax("MovingAvg(Sum(Revenue), 3) {Month}")
+        result = convert_mstr_expression_to_dax("MovingAvg(Sum(Revenue), 3) <Month>")
         assert "AVERAGEX" in result["dax"]
         assert "WINDOW" in result["dax"]
+        assert "ORDERBY(Table[Month], ASC)" in result["dax"]
+        assert result["fidelity"] == "approximated"
+
+    def test_moving_sum_preserves_exported_level(self):
+        result = convert_mstr_expression_to_dax("MovingSum(Sum(Revenue), 3) <Month>")
+        assert "SUMX" in result["dax"]
+        assert "WINDOW" in result["dax"]
+        assert "ORDERBY(Table[Month], ASC)" in result["dax"]
+        assert result["fidelity"] == "approximated"
+
+    def test_compound_expression_converts_each_lag_call(self):
+        expression = (
+            "(Sum(Revenue) - Lag(Sum(Revenue), 1, Year)) "
+            "/ Lag(Sum(Revenue), 1, Year)"
+        )
+        result = convert_mstr_expression_to_dax(expression)
+        assert result["dax"].count("OFFSET(-1, ALLSELECTED(), ORDERBY(Table[Year], ASC))") == 2
+        assert "Lag(" not in result["dax"]
+        assert result["fidelity"] == "approximated"
+        assert any("placeholder table" in warning for warning in result["warnings"])
+
+    def test_compound_lag_metric_qualifies_columns_with_table_context(self):
+        result = convert_metric_to_dax(
+            {
+                "name": "Revenue YoY Change",
+                "metric_type": "derived",
+                "expression": (
+                    "(Sum(Revenue) - Lag(Sum(Revenue), 1, Year)) "
+                    "/ Lag(Sum(Revenue), 1, Year)"
+                ),
+            },
+            context={"table_name": "Fact Sales"},
+        )
+        assert result["dax"].count("SUM('Fact Sales'[Revenue])") == 3
+        assert result["dax"].count("OFFSET(-1, ALLSELECTED(), ORDERBY(Table[Year], ASC))") == 2
+        assert result["fidelity"] == "approximated"
+
+    def test_malformed_embedded_derived_call_requires_manual_review(self):
+        result = convert_mstr_expression_to_dax("Sum(Revenue) + Lag(Sum(Revenue), 1")
+        assert "MANUAL REVIEW" in result["dax"]
+        assert result["fidelity"] == "manual_review"
+
+    def test_derived_call_text_inside_string_is_not_rewritten(self):
+        result = convert_mstr_expression_to_dax('"Lag(Revenue, 1)"')
+        assert result["dax"] == '"Lag(Revenue, 1)"'
         assert result["fidelity"] == "full"
 
     def test_running_avg_parses_nested_metric_and_preserves_level(self):

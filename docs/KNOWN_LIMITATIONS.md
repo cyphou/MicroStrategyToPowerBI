@@ -114,7 +114,7 @@
 | **Panel stacks** | Bookmarks + toggle buttons | Tabs → bookmarks with show/hide; not pixel-identical |
 | **Info windows** | Tooltip pages | Tooltip content may differ in layout |
 | **Dossier layout** | Proportional scaling to PBI canvas | Positions are scaled from MSTR canvas to 1280×720; not pixel-perfect |
-| **Derived metrics (OLAP)** | RANKX / WINDOW / VAR patterns | RunningSum/Avg/MovingAvg use placeholder patterns that may need refinement |
+| **Derived metrics (OLAP)** | RANKX / WINDOW / OFFSET patterns | Rank, running/moving windows, and Lag/Lead use placeholder table references and remain approximations until target grain, ordering, tie, and partition semantics are validated |
 | **Nested metric references** | Inline resolution | Deeply nested metric chains may lose intermediate formatting |
 | **Custom groups** | SWITCH() calculated column | Multi-condition groups converted to DAX SWITCH with conditions |
 | **Consolidations** | Calculated table or measure | Custom aggregation hierarchies approximated |

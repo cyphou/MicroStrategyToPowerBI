@@ -59,7 +59,8 @@ class TestOLAPHardening:
     def test_moving_avg_with_level(self):
         r = self._convert("MovingAvg([Revenue], 3) {~+, Day}")
         assert "Day" in r["dax"]
-        assert r["fidelity"] == "full"
+        assert "ORDERBY(Table[Day], ASC)" in r["dax"]
+        assert r["fidelity"] == "approximated"
 
     # ── MovingSum ────────────────────────────────────────────────
 
@@ -82,8 +83,8 @@ class TestOLAPHardening:
 
     def test_lag_with_level(self):
         r = self._convert("Lag([Revenue], 1) {~+, Month}")
-        assert "Month" in r["dax"]
-        assert r["fidelity"] == "full"
+        assert "ORDERBY(Table[Month], ASC)" in r["dax"]
+        assert r["fidelity"] == "approximated"
 
     # ── Lead ──────────────────────────────────────────────────────
 
@@ -128,8 +129,8 @@ class TestOLAPHardening:
 
     def test_rank_with_level(self):
         r = self._convert("Rank([Revenue]) {~+, Product}")
-        assert "ALL(Product)" in r["dax"]
-        assert r["fidelity"] == "full"
+        assert "ALL(Table[Product])" in r["dax"]
+        assert r["fidelity"] == "approximated"
 
     # ── FirstInRange / LastInRange ───────────────────────────────
 

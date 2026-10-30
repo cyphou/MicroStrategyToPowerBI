@@ -139,14 +139,18 @@ _FUNCTION_MAP = {
 }
 
 # Derived metric patterns (OLAP functions)
-_RE_RANK = re.compile(r'Rank\s*\((.+?)(?:,\s*(ASC|DESC))?(?:,\s*(DENSE))?\)\s*(\{.+?\})?', re.IGNORECASE)
+_RE_RANK = re.compile(r'^\s*Rank\b', re.IGNORECASE)
 _RE_RUNNING_SUM = re.compile(r'^\s*RunningSum\b', re.IGNORECASE)
 _RE_RUNNING_AVG = re.compile(r'^\s*RunningAvg\b', re.IGNORECASE)
-_RE_MOVING_AVG = re.compile(r'MovingAvg\s*\((.+?),\s*(\d+)\)\s*(\{.+?\})?', re.IGNORECASE)
-_RE_MOVING_SUM = re.compile(r'MovingSum\s*\((.+?),\s*(\d+)\)\s*(\{.+?\})?', re.IGNORECASE)
-_RE_LAG = re.compile(r'Lag\s*\((.+?),\s*(\d+)\)\s*(\{.+?\})?', re.IGNORECASE)
-_RE_LEAD = re.compile(r'Lead\s*\((.+?),\s*(\d+)\)\s*(\{.+?\})?', re.IGNORECASE)
+_RE_MOVING_AVG = re.compile(r'^\s*MovingAvg\b', re.IGNORECASE)
+_RE_MOVING_SUM = re.compile(r'^\s*MovingSum\b', re.IGNORECASE)
+_RE_LAG = re.compile(r'^\s*Lag\b', re.IGNORECASE)
+_RE_LEAD = re.compile(r'^\s*Lead\b', re.IGNORECASE)
 _RE_NTILE = re.compile(r'NTile\s*\((.+?),\s*(\d+)\)\s*(\{.+?\})?', re.IGNORECASE)
+_RE_EMBEDDED_DERIVED_CALL = re.compile(
+    r'\b(Rank|RunningSum|RunningAvg|MovingAvg|MovingSum|Lag|Lead)\s*\(',
+    re.IGNORECASE,
+)
 
 # FirstInRange / LastInRange
 _RE_FIRST_IN_RANGE = re.compile(r'FirstInRange\s*\((.+?),\s*(.+?)\)\s*(\{.+?\})?', re.IGNORECASE)
@@ -329,8 +333,23 @@ def convert_mstr_expression_to_dax(expression, context=None):
     if level_match:
         return _convert_level_metric(expr, level_match, context)
 
-    # Standard function conversion
-    dax = _convert_standard_expression(expr, context)
+    # Standard and compound expressions may contain nested OLAP calls.
+    dax, derived_results = _replace_embedded_derived_calls(expr, context)
+    dax = _convert_standard_expression(dax, context)
+    table_name = context.get("table_name")
+    if table_name:
+        dax = qualify_column_references(dax, table_name)
+    if derived_results:
+        fidelity = (
+            "manual_review"
+            if any(result["fidelity"] == "manual_review" for result in derived_results)
+            else "approximated"
+        )
+        warnings = list(dict.fromkeys(
+            warning
+            for result in derived_results
+            for warning in result.get("warnings", [])
+        ))
 
     return {"dax": dax, "fidelity": fidelity, "warnings": warnings}
 
@@ -380,26 +399,80 @@ def convert_metric_to_dax(metric_def, context=None):
 
 # ── Derived metric converters ────────────────────────────────────
 
+def _manual_review_derived(expression, function_name):
+    return {
+        "dax": f"/* MANUAL REVIEW: {expression[:80]} */\nBLANK()",
+        "fidelity": "manual_review",
+        "warnings": [f"{function_name} expression could not be parsed safely."],
+    }
+
+
+def _convert_derived_inner(expression, context):
+    dax, _ = _replace_embedded_derived_calls(expression, context)
+    dax = _convert_standard_expression(dax, context)
+    table_name = context.get("table_name")
+    return qualify_column_references(dax, table_name) if table_name else dax
+
+
+def _convert_offset_metric(expression, function_name, direction, context):
+    parsed = _parse_derived_call(expression, function_name)
+    if not parsed:
+        return _manual_review_derived(expression, function_name)
+
+    arguments, level_spec = _split_top_level_arguments(parsed[0]), parsed[1]
+    if (
+        len(arguments) not in (2, 3)
+        or not arguments[0]
+        or not re.fullmatch(r"\d+", arguments[1])
+    ):
+        return _manual_review_derived(expression, function_name)
+
+    attrs = _parse_level_spec(level_spec)
+    if len(arguments) == 3:
+        attrs = _parse_level_spec(arguments[2]) + attrs
+    attrs = list(dict.fromkeys(attrs))
+    inner_dax = _convert_derived_inner(arguments[0], context)
+    order_by, warnings = _window_orderby(attrs, function_name)
+    offset = int(arguments[1])
+    delta = -offset if direction < 0 else offset
+    return {
+        "dax": (
+            f"CALCULATE({inner_dax}, "
+            f"OFFSET({delta}, ALLSELECTED(), ORDERBY({order_by})))"
+        ),
+        "fidelity": "approximated",
+        "warnings": warnings,
+    }
+
+
 def _try_derived_metric(expr, context):
     """Try to convert derived/OLAP metric expressions."""
 
     # Rank — supports ASC/DESC and DENSE options
-    m = _RE_RANK.match(expr)
-    if m:
-        inner = m.group(1).strip()
-        order_dir = (m.group(2) or "DESC").upper()
-        is_dense = bool(m.group(3))
-        attrs = _parse_level_spec(m.group(4)) if m.group(4) else []
-        inner_dax = _convert_standard_expression(inner, context)
-        rank_type = "DENSE" if is_dense else "SKIP"
+    if _RE_RANK.match(expr):
+        parsed = _parse_derived_call(expr, "Rank")
+        if not parsed:
+            return _manual_review_derived(expr, "Rank")
+        arguments, level_spec = _split_top_level_arguments(parsed[0]), parsed[1]
+        if not arguments or len(arguments) > 3 or not arguments[0]:
+            return _manual_review_derived(expr, "Rank")
+        order_dir = arguments[1].upper() if len(arguments) > 1 else "DESC"
+        ties = arguments[2].upper() if len(arguments) > 2 else "SKIP"
+        if order_dir not in ("ASC", "DESC") or ties not in ("DENSE", "SKIP"):
+            return _manual_review_derived(expr, "Rank")
+        attrs = _parse_level_spec(level_spec)
+        inner_dax = _convert_derived_inner(arguments[0], context)
         if attrs:
+            columns = ", ".join(_placeholder_column(attr) for attr in attrs)
             return {
-                "dax": f"RANKX(ALL({attrs[0]}), {inner_dax},, {order_dir}, {rank_type})",
-                "fidelity": "full",
-                "warnings": [],
+                "dax": f"RANKX(ALL({columns}), {inner_dax},, {order_dir}, {ties})",
+                "fidelity": "approximated",
+                "warnings": [
+                    "Rank level attributes use a placeholder table; resolve the dimension table and verify tie semantics"
+                ],
             }
         return {
-            "dax": f"RANKX(ALLSELECTED(), {inner_dax},, {order_dir}, {rank_type})",
+            "dax": f"RANKX(ALLSELECTED(), {inner_dax},, {order_dir}, {ties})",
             "fidelity": "approximated",
             "warnings": ["Rank dimension not specified — using ALLSELECTED()"],
         }
@@ -408,17 +481,10 @@ def _try_derived_metric(expr, context):
     if _RE_RUNNING_SUM.match(expr):
         parsed = _parse_derived_call(expr, "RunningSum")
         if not parsed or not parsed[0]:
-            return {
-                "dax": f"/* MANUAL REVIEW: {expr[:80]} */\nBLANK()",
-                "fidelity": "manual_review",
-                "warnings": ["RunningSum expression could not be parsed safely."],
-            }
+            return _manual_review_derived(expr, "RunningSum")
         inner, level_spec = parsed
         attrs = _parse_level_spec(level_spec)
-        inner_dax = _convert_standard_expression(inner, context)
-        table_name = context.get("table_name")
-        if table_name:
-            inner_dax = qualify_column_references(inner_dax, table_name)
+        inner_dax = _convert_derived_inner(inner, context)
         order_by, warnings = _window_orderby(attrs, "RunningSum")
         return {
             "dax": (
@@ -435,17 +501,10 @@ def _try_derived_metric(expr, context):
     if _RE_RUNNING_AVG.match(expr):
         parsed = _parse_derived_call(expr, "RunningAvg")
         if not parsed or not parsed[0]:
-            return {
-                "dax": f"/* MANUAL REVIEW: {expr[:80]} */\nBLANK()",
-                "fidelity": "manual_review",
-                "warnings": ["RunningAvg expression could not be parsed safely."],
-            }
+            return _manual_review_derived(expr, "RunningAvg")
         inner, level_spec = parsed
         attrs = _parse_level_spec(level_spec)
-        inner_dax = _convert_standard_expression(inner, context)
-        table_name = context.get("table_name")
-        if table_name:
-            inner_dax = qualify_column_references(inner_dax, table_name)
+        inner_dax = _convert_derived_inner(inner, context)
         order_by, warnings = _window_orderby(attrs, "RunningAvg")
         return {
             "dax": (
@@ -458,57 +517,39 @@ def _try_derived_metric(expr, context):
         }
 
     # MovingAvg — DAX WINDOW sliding range
-    m = _RE_MOVING_AVG.match(expr)
-    if m:
-        inner = m.group(1).strip()
-        window_size = m.group(2)
-        attrs = _parse_level_spec(m.group(3)) if m.group(3) else []
-        inner_dax = _convert_standard_expression(inner, context)
-        sort_col = attrs[0] if attrs else "SortColumn"
-        offset_back = int(window_size) - 1
-        fidelity = "full" if attrs else "approximated"
-        warnings = [] if attrs else [f"MovingAvg({window_size}) — verify sort column reference"]
+    if _RE_MOVING_AVG.match(expr):
+        parsed = _parse_derived_call(expr, "MovingAvg")
+        if not parsed:
+            return _manual_review_derived(expr, "MovingAvg")
+        arguments, level_spec = _split_top_level_arguments(parsed[0]), parsed[1]
+        if (
+            len(arguments) != 2
+            or not arguments[0]
+            or not re.fullmatch(r"\d+", arguments[1])
+            or int(arguments[1]) < 1
+        ):
+            return _manual_review_derived(expr, "MovingAvg")
+        attrs = _parse_level_spec(level_spec)
+        inner_dax = _convert_derived_inner(arguments[0], context)
+        offset_back = int(arguments[1]) - 1
+        order_by, warnings = _window_orderby(attrs, "MovingAvg")
         return {
             "dax": (
-                f"VAR __rows = WINDOW(-{offset_back}, REL, 0, REL, ALLSELECTED(), ORDERBY([{sort_col}], ASC))\n"
+                f"VAR __rows = WINDOW(-{offset_back}, REL, 0, REL, ALLSELECTED(), ORDERBY({order_by}))\n"
                 f"RETURN\n"
                 f"    AVERAGEX(__rows, {inner_dax})"
             ),
-            "fidelity": fidelity,
+            "fidelity": "approximated",
             "warnings": warnings,
         }
 
     # Lag — DAX OFFSET
-    m = _RE_LAG.match(expr)
-    if m:
-        inner = m.group(1).strip()
-        offset = m.group(2)
-        attrs = _parse_level_spec(m.group(3)) if m.group(3) else []
-        inner_dax = _convert_standard_expression(inner, context)
-        sort_col = attrs[0] if attrs else "SortColumn"
-        fidelity = "full" if attrs else "approximated"
-        warnings = [] if attrs else [f"Lag({offset}) — verify sort column reference"]
-        return {
-            "dax": f"CALCULATE({inner_dax}, OFFSET(-{offset}, ALLSELECTED(), ORDERBY([{sort_col}], ASC)))",
-            "fidelity": fidelity,
-            "warnings": warnings,
-        }
+    if _RE_LAG.match(expr):
+        return _convert_offset_metric(expr, "Lag", -1, context)
 
     # Lead — DAX OFFSET
-    m = _RE_LEAD.match(expr)
-    if m:
-        inner = m.group(1).strip()
-        offset = m.group(2)
-        attrs = _parse_level_spec(m.group(3)) if m.group(3) else []
-        inner_dax = _convert_standard_expression(inner, context)
-        sort_col = attrs[0] if attrs else "SortColumn"
-        fidelity = "full" if attrs else "approximated"
-        warnings = [] if attrs else [f"Lead({offset}) — verify sort column reference"]
-        return {
-            "dax": f"CALCULATE({inner_dax}, OFFSET({offset}, ALLSELECTED(), ORDERBY([{sort_col}], ASC)))",
-            "fidelity": fidelity,
-            "warnings": warnings,
-        }
+    if _RE_LEAD.match(expr):
+        return _convert_offset_metric(expr, "Lead", 1, context)
 
     # NTile — proper RANKX/COUNTROWS pattern
     m = _RE_NTILE.match(expr)
@@ -578,23 +619,29 @@ def _try_derived_metric(expr, context):
         }
 
     # MovingSum — DAX WINDOW sliding range
-    m = _RE_MOVING_SUM.match(expr)
-    if m:
-        inner = m.group(1).strip()
-        window_size = m.group(2)
-        attrs = _parse_level_spec(m.group(3)) if m.group(3) else []
-        inner_dax = _convert_standard_expression(inner, context)
-        sort_col = attrs[0] if attrs else "SortColumn"
-        offset_back = int(window_size) - 1
-        fidelity = "full" if attrs else "approximated"
-        warnings = [] if attrs else [f"MovingSum({window_size}) — verify sort column reference"]
+    if _RE_MOVING_SUM.match(expr):
+        parsed = _parse_derived_call(expr, "MovingSum")
+        if not parsed:
+            return _manual_review_derived(expr, "MovingSum")
+        arguments, level_spec = _split_top_level_arguments(parsed[0]), parsed[1]
+        if (
+            len(arguments) != 2
+            or not arguments[0]
+            or not re.fullmatch(r"\d+", arguments[1])
+            or int(arguments[1]) < 1
+        ):
+            return _manual_review_derived(expr, "MovingSum")
+        attrs = _parse_level_spec(level_spec)
+        inner_dax = _convert_derived_inner(arguments[0], context)
+        offset_back = int(arguments[1]) - 1
+        order_by, warnings = _window_orderby(attrs, "MovingSum")
         return {
             "dax": (
-                f"VAR __rows = WINDOW(-{offset_back}, REL, 0, REL, ALLSELECTED(), ORDERBY([{sort_col}], ASC))\n"
+                f"VAR __rows = WINDOW(-{offset_back}, REL, 0, REL, ALLSELECTED(), ORDERBY({order_by}))\n"
                 f"RETURN\n"
                 f"    SUMX(__rows, {inner_dax})"
             ),
-            "fidelity": fidelity,
+            "fidelity": "approximated",
             "warnings": warnings,
         }
 
@@ -886,26 +933,20 @@ def _parse_level_spec(spec_str):
     return attrs
 
 
-def _parse_derived_call(expression, function_name):
-    """Extract one balanced function argument and an optional trailing level spec."""
-    prefix = re.match(rf'\s*{re.escape(function_name)}\s*\(', expression, re.IGNORECASE)
-    if not prefix:
-        return None
-
-    start = prefix.end()
-    depth = 1
+def _find_matching_parenthesis(expression, open_index):
+    depth = 0
     quote = None
-    index = start
+    index = open_index
     while index < len(expression):
         char = expression[index]
         if quote:
-            if char == quote:
+            if char == "\\":
+                index += 1
+            elif char == quote:
                 if index + 1 < len(expression) and expression[index + 1] == quote:
                     index += 1
                 else:
                     quote = None
-            elif char == "\\":
-                index += 1
         elif char in ("'", '"'):
             quote = char
         elif char == "(":
@@ -913,21 +954,125 @@ def _parse_derived_call(expression, function_name):
         elif char == ")":
             depth -= 1
             if depth == 0:
-                inner = expression[start:index].strip()
-                suffix = expression[index + 1:].strip()
-                if suffix and not re.fullmatch(r"(?:\{[^{}]*\}|<[^<>]*>)", suffix):
-                    return None
-                return inner, suffix or None
+                return index
         index += 1
-
     return None
+
+
+def _parse_derived_call(expression, function_name):
+    """Extract one balanced function argument and an optional trailing level spec."""
+    prefix = re.match(rf'\s*{re.escape(function_name)}\s*\(', expression, re.IGNORECASE)
+    if not prefix:
+        return None
+
+    start = prefix.end()
+    close_index = _find_matching_parenthesis(expression, start - 1)
+    if close_index is None:
+        return None
+    inner = expression[start:close_index].strip()
+    suffix = expression[close_index + 1:].strip()
+    if suffix and not re.fullmatch(r"(?:\{[^{}]*\}|<[^<>]*>)", suffix):
+        return None
+    return inner, suffix or None
+
+
+def _split_top_level_arguments(arguments):
+    """Split function arguments without breaking nested calls or quoted text."""
+    parts = []
+    start = 0
+    depth = 0
+    quote = None
+    index = 0
+    while index < len(arguments):
+        char = arguments[index]
+        if quote:
+            if char == "\\":
+                index += 1
+            elif char == quote:
+                if index + 1 < len(arguments) and arguments[index + 1] == quote:
+                    index += 1
+                else:
+                    quote = None
+        elif char in ("'", '"'):
+            quote = char
+        elif char == "(":
+            depth += 1
+        elif char == ")":
+            depth -= 1
+        elif char == "," and depth == 0:
+            parts.append(arguments[start:index].strip())
+            start = index + 1
+        index += 1
+    parts.append(arguments[start:].strip())
+    return parts
+
+
+def _placeholder_column(attribute):
+    return f"Table[{attribute.replace(']', ']]')}]"
+
+
+def _replace_embedded_derived_calls(expression, context):
+    """Convert derived calls embedded in compound expressions and retain their findings."""
+    output = []
+    results = []
+    index = 0
+    quote = None
+    while index < len(expression):
+        char = expression[index]
+        if quote:
+            output.append(char)
+            if char == "\\" and index + 1 < len(expression):
+                index += 1
+                output.append(expression[index])
+            elif char == quote:
+                if index + 1 < len(expression) and expression[index + 1] == quote:
+                    index += 1
+                    output.append(expression[index])
+                else:
+                    quote = None
+            index += 1
+            continue
+        if char in ("'", '"'):
+            quote = char
+            output.append(char)
+            index += 1
+            continue
+
+        match = _RE_EMBEDDED_DERIVED_CALL.match(expression, index)
+        if not match:
+            output.append(char)
+            index += 1
+            continue
+
+        function_name = match.group(1)
+        close_index = _find_matching_parenthesis(expression, match.end() - 1)
+        if close_index is None:
+            result = _manual_review_derived(expression[index:], function_name)
+            output.append(result["dax"])
+            results.append(result)
+            break
+
+        end_index = close_index + 1
+        suffix = re.match(r"\s*(?:\{[^{}]*\}|<[^<>]*>)", expression[end_index:])
+        if suffix:
+            end_index += suffix.end()
+        candidate = expression[index:end_index].strip()
+        result = _try_derived_metric(candidate, context)
+        if result is None:
+            output.append(expression[index:end_index])
+        else:
+            output.append(result["dax"])
+            results.append(result)
+        index = end_index
+
+    return "".join(output), results
 
 
 def _window_orderby(attrs, function_name):
     """Build a qualified DAX template and report unresolved table/level semantics."""
     sort_attrs = attrs or ["SortColumn"]
     order_by = ", ".join(
-        f"Table[{attribute.replace(']', ']]')}], ASC" for attribute in sort_attrs
+        f"{_placeholder_column(attribute)}, ASC" for attribute in sort_attrs
     )
     if attrs:
         warning = (

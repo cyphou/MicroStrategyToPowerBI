@@ -9,6 +9,9 @@ All notable changes to this project will be documented in this file.
 - Parse nested `RunningSum` and `RunningAvg` arguments safely, retain exported
   `<...>` and `{...}` level attributes in DAX `ORDERBY`, and keep unresolved
   table/partition semantics explicitly approximated or under manual review.
+- Parse Rank, moving-window and Lag/Lead arguments safely, convert embedded
+  Lag/Lead calls in compound metrics, and report unresolved table/order semantics
+  as approximations or manual review.
 
 ### Developer tooling
 

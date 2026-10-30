@@ -159,14 +159,14 @@ This document details all mappings between MicroStrategy and Power BI objects to
 
 | MicroStrategy | DAX | Notes |
 |---------------|-----|-------|
-| `Rank(Metric) {Attr}` | `RANKX(ALL(T[Attr]), [Metric])` | |
-| `RunningSum(Metric) {Attr}` | Window function or VAR pattern | |
-| `RunningAvg(Metric) {Attr}` | Window function or VAR pattern | |
+| `Rank(Metric) {Attr}` | `RANKX(ALL(Table[Attr]), [Metric],, DESC, SKIP)` | Approximation; resolve the placeholder table and verify tie semantics |
+| `RunningSum(Metric) {Attr}` | `CALCULATE([Metric], WINDOW(... ORDERBY(Table[Attr], ASC)))` | Approximation; resolve table and partition/grain semantics |
+| `RunningAvg(Metric) {Attr}` | `DIVIDE(SUMX(__rows, [Metric]), COUNTROWS(__rows))` | Approximation over a `WINDOW`; resolve table and partition/grain semantics |
 | `RunningCount(Metric) {Attr}` | Window function or VAR pattern | |
-| `MovingAvg(Metric, N) {Attr}` | `AVERAGEX(TOPN(N, ...))` | |
-| `MovingSum(Metric, N) {Attr}` | `SUMX(TOPN(N, ...))` | |
-| `Lag(Metric, N) {Attr}` | `OFFSET(Table, -N, ...)` | |
-| `Lead(Metric, N) {Attr}` | `OFFSET(Table, N, ...)` | |
+| `MovingAvg(Metric, N) {Attr}` | `AVERAGEX(__rows, [Metric])` over a `WINDOW` ordered by `Table[Attr]` | Approximation; resolve table and window semantics |
+| `MovingSum(Metric, N) {Attr}` | `SUMX(__rows, [Metric])` over a `WINDOW` ordered by `Table[Attr]` | Approximation; resolve table and window semantics |
+| `Lag(Metric, N, Attr)` / `Lag(Metric, N) {Attr}` | `CALCULATE([Metric], OFFSET(-N, ALLSELECTED(), ORDERBY(Table[Attr], ASC)))` | Approximation; supports exported third argument and level suffix |
+| `Lead(Metric, N, Attr)` / `Lead(Metric, N) {Attr}` | `CALCULATE([Metric], OFFSET(N, ALLSELECTED(), ORDERBY(Table[Attr], ASC)))` | Approximation; supports exported third argument and level suffix |
 | `NTile(Metric, N) {Attr}` | RANKX-based NTILE pattern | |
 | `OLAPRank(Metric) {Attr}` | `RANKX(ALL(T[Attr]), [Metric])` | |
 | `FirstInRange(Metric)` | `FIRSTNONBLANK(...)` | |
