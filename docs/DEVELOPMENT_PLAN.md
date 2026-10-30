@@ -1,10 +1,11 @@
 # Development Plan — MicroStrategy to Power BI / Fabric Migration Tool
 
-**Version:** v3.0.0 (released) → v4.0–v19.0 (roadmap)  
-**Date:** 2026-03-26  
+**Package release:** v19.0.0 (per `CHANGELOG.md`)
+**Plan snapshot:** 2026-03-26
 **Based on:** Tableau to Power BI Migration Tool (v27.1.0 architecture)  
-**Current state:** v12.0 complete — 2,802 tests passing, 52 modules across 3 packages  
-**Long-term target:** v19.0 — TableauToPowerBI parity, 4,000+ tests
+**Feature-track state:** v12.0 is the latest feature track recorded in the v19.0.0 release notes; 2,802 tests are reported there, not rerun as part of this review.
+
+> **Roadmap status:** This is a historical backlog, not an approved release schedule. Its feature-track numbers do not match package versions. Treat remaining tracks, especially proposals derived from Tableau tooling, as unprioritized until tied to a MicroStrategy-specific limitation and a synthetic regression test. Check implementation and CLI dispatch before calling any item shipped.
 
 ---
 
@@ -504,13 +505,13 @@ These modules from `TableauToPowerBI/powerbi_import/` can be reused directly or 
 
 ### Sprint L — OLAP Metric Hardening ✨CRITICAL
 
-**Goal:** Raise derived metric (OLAP) fidelity from ~80% (approximated) to ~98% (full DAX). This is the #1 gap identified by v3.0 assessments.
+**Goal:** Stabilize derived-metric conversion against MicroStrategy level semantics before setting a fidelity target. Existing DAX `WINDOW` emission does not by itself establish valid DAX or equivalent results.
 
 | # | Item | File(s) | Est. | Details |
 |---|------|---------|------|---------|
-| L.1 | **RunningSum → DAX WINDOW** | `expression_converter.py` | High | Replace placeholder VAR pattern with proper `WINDOW(1, ABS, 0, REL, ...)` for accurate running totals. Handle multi-attribute sort keys. |
-| L.2 | **RunningAvg → DAX WINDOW** | `expression_converter.py` | High | `WINDOW` with averaging over expanding range. Handle partition-by attributes. |
-| L.3 | **MovingAvg → OFFSET range** | `expression_converter.py` | High | `MovingAvg(Metric, N)` → `AVERAGEX(OFFSET(..., -N+1, ..., N), [Metric])`. Handle edge cases: window at start, null handling. |
+| L.1 | **Nested RunningSum parsing and sort level** | `microstrategy_export/expression_converter.py`, `tests/test_expression_converter.py` | High | Parse nested expressions such as `RunningSum(Sum(Revenue)) {Month}` without truncating the inner aggregation; preserve `Month` in `ORDERBY` and emit balanced DAX. The current synthetic call returns a truncated `SUM(Revenue,` expression and falls back to `[SortColumn]`. |
+| L.2 | **RunningAvg partition semantics** | `microstrategy_export/expression_converter.py`, `tests/test_expression_converter.py` | High | Verify nested aggregation parsing and the specified MSTR sort/partition levels. Mark output approximated/manual-review when the level cannot be represented; do not infer full fidelity from emitting `WINDOW`. |
+| L.3 | **MovingAvg edge-case verification** | `microstrategy_export/expression_converter.py`, `tests/test_expression_converter.py` | High | Confirm MSTR window boundaries, null handling, sort/partition levels, and fidelity labels with synthetic cases before claiming equivalence. |
 | L.4 | **Rank with ties** | `expression_converter.py` | Medium | `Rank` with `{attr}` → `RANKX(ALL(T), [M], , ASC, DENSE)`. Support ASC/DESC, DENSE/SKIP tie handling. |
 | L.5 | **NTile partitioning** | `expression_converter.py` | Medium | `NTile(Metric, N) {Attr}` → RANKX-based quartile/decile pattern with `CEILING(DIVIDE(RANKX(...), COUNTROWS(...)) * N)`. |
 | L.6 | **FirstInRange / LastInRange** | `expression_converter.py` | Medium | `FirstInRange(Metric) {Attr}` → `CALCULATE([M], TOPN(1, ALL(T), T[SortCol], ASC))`. |
@@ -518,7 +519,7 @@ These modules from `TableauToPowerBI/powerbi_import/` can be reused directly or 
 | L.8 | **ApplyOLAP passthrough** | `expression_converter.py` | High | Parse `ApplyOLAP("function", args)` → attempt DAX conversion. Common: `LAG`, `LEAD`, `ROW_NUMBER`, `DENSE_RANK`, `SUM OVER (PARTITION BY ... ORDER BY ...)`. |
 | L.9 | **OLAP fidelity tests** | `tests/test_olap_metrics.py` | High | 60+ parametrized tests: every OLAP function × simple/nested/partitioned × edge cases. Target: 98% fidelity on test corpus. |
 
-**Success criteria:** Running `--assess` on a complex MSTR project shows <2% metrics flagged as `manual_review` (was ~5-10%).
+**Success criteria:** Synthetic regression cases cover nested expressions, level/sort attributes, partitioning, and window boundaries; generated DAX is syntactically balanced, and unsupported semantics remain explicitly flagged. Do not claim native DAX execution or source-value equivalence without matching execution evidence.
 
 ---
 

@@ -7,10 +7,24 @@ user-invocable: true
 
 You are the **Orchestrator** agent for the MicroStrategy to Power BI migration project.
 
-## Your Files (You Own These)
+Read [shared rules](shared.instructions.md) first. Invocation: **@orchestrator**.
 
-- `migrate.py` — CLI entry point
-- Pipeline orchestration modules
+## Owned Files
+
+- `migrate.py`
+- `wizard.py`
+- `powerbi_import/plugins.py`
+- `powerbi_import/progress.py`
+
+## Workflow
+
+Read `build_parser()` and follow each option into actual dispatch before documenting
+or changing behavior. Coordinate offline/live extraction, assessment, batch/shared
+generation, optional Fabric output, validation and authorized deployment. Preserve
+exit codes and backward-compatible defaults. Do not transplant positional Tableau
+commands or flags that do not exist here. Handoff with reproducer, input contract,
+owner, acceptance criteria and evidence state; agent handoffs are development work,
+not an automatic migration runtime. Use other agents only when needed.
 
 ## Constraints
 
@@ -18,4 +32,3 @@ You are the **Orchestrator** agent for the MicroStrategy to Power BI migration p
 - Do NOT modify generation logic — delegate to **@generator**
 - Do NOT modify MicroStrategy parsing — delegate to **@extractor**
 - Do NOT write tests directly — delegate to **@tester**
-

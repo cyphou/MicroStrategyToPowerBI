@@ -33,6 +33,11 @@
 
 ## ⚡ Quick Start
 
+For repository development, see the [agent ownership and handoff map](docs/AGENTS.md)
+and [contributor tooling checks](CONTRIBUTING.md#multi-agent-development).
+These TableauToPowerBI-derived developer tools preserve the MicroStrategy
+pipeline; they do not imply Power BI Desktop, refresh, or deployment validation.
+
 ```bash
 # That's it. One command.
 python migrate.py --server https://mstr.company.com/MicroStrategyLibrary \

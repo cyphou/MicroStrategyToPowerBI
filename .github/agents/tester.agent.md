@@ -7,9 +7,12 @@ user-invocable: true
 
 You are the **Tester** agent for the MicroStrategy to Power BI migration project.
 
-## Your Files (You Own These)
+Read [shared rules](shared.instructions.md) first. Invocation: **@tester**.
+
+## Owned Files
 
 - `tests/*.py` — All test files
+- `tests/**/*.py` — Nested test suites and fixture helpers
 
 ## Constraints
 
@@ -23,4 +26,9 @@ You are the **Tester** agent for the MicroStrategy to Power BI migration project
 - Runner: `pytest tests/ --tb=short -q`
 - Coverage: `pytest tests/ --cov --cov-report=term-missing --tb=no -q`
 - Test files named `test_<module>.py` matching source module names
-
+- Follow existing pytest fixtures and `unittest.TestCase` patterns; do not rewrite
+  tests merely to standardize style. Mock live REST/auth/deployment/model calls.
+- Add negative tests for ownership gaps/overlaps, customization frontmatter,
+  broken skill links and unimplemented CLI options when those contracts change.
+- Record commands and measured results. Skipped/native/runtime stages remain
+  `not_run`; do not claim a mocked deployment proves live execution.

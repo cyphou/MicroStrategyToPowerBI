@@ -35,6 +35,11 @@ jobs:
       - name: Run tests
         run: python -m pytest tests/ -v --tb=short --junitxml=test-results.xml
 
+      - name: Validate agent ownership and migration skills
+        run: |
+          python scripts/check_agent_ownership.py
+          python scripts/validate_skills.py
+
       - name: Run tests with coverage
         if: matrix.python-version == '3.12' && matrix.os == 'ubuntu-latest'
         run: python -m pytest tests/ --cov=microstrategy_export --cov=powerbi_import --cov-report=xml --cov-report=term-missing

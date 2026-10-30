@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Developer tooling
+
+- Adapt the committed TableauToPowerBI agent governance, specialist handoffs,
+  explicit file ownership, and repository migration skill to MicroStrategy.
+- Add ownership and skill validation commands with JSON output, failing exit
+  statuses, negative regression tests, and CI integration. Checks use qualified
+  module paths and inspect argparse declarations without importing the CLI.
+- Reference baseline: TableauToPowerBI commit
+  `3de10594f4e2b7d5fc97a58e8adb9571a9844d94`. Uncommitted upstream changes,
+  Azure agent bundles, and Tableau-only runtime features are not imported.
+
 ## [19.0.0] — 2026-03-27
 
 ### 🚀 v12.0 — Cross-Platform Federation (Sprint BB)

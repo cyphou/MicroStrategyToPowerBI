@@ -1,99 +1,62 @@
-<!-- Copilot instructions for the MicroStrategy to Power BI migration project -->
+# MicroStrategy to Power BI / Fabric
 
-# Project: MicroStrategy to Power BI Migration
+This repository extracts MicroStrategy metadata through REST or offline JSON
+exports and generates Power BI projects (TMDL semantic models, PBIR reports and
+Power Query M), with optional Fabric artifact generation and deployment.
 
-Automated migration of MicroStrategy artifacts to Power BI format.
+## Start Here
 
-## Architecture — Pipeline
+Read [shared project rules](agents/shared.instructions.md) before work and the
+relevant owner in [agent topology](../docs/AGENTS.md). Use the
+[migration skill](skills/microstrategy-to-powerbi/SKILL.md) for migration workflows.
+Those links are explicit: do not assume nested instruction files auto-load.
 
-```
-MicroStrategy source → [microstrategy_export] → Extraction → [output, powerbi_import, test_output, test_output_nocal] → Power BI
-```
+- Extraction/expression conversion: `microstrategy_export/`.
+- Generation/assessment/evidence/deployment: `powerbi_import/`.
+- Normalized federation/adapters: `universal_bi/`.
+- CLI/wizard: `migrate.py`, `wizard.py`.
+- Tests: `tests/`; architecture, limitations and plans: `docs/`.
+- Output folders are generated artifacts, not implementation source.
 
-## Project Structure
+## Development Contract
 
-- **Source / Extraction**: `microstrategy_export/`
-- **Target / Generation**: `output/`, `powerbi_import/`, `test_output/`, `test_output_nocal/`
-- **Tests**: `tests/` (46 test files)
-- **Docs**: `docs/`
+1. Read before editing; search for existing helpers before adding functions.
+2. Plan multi-step changes without creating unsolicited plan documents.
+3. Use exactly one primary owner per recursive non-`__init__.py` runtime module
+   under the three packages above, plus the CLI/wizard. Only backticked paths in
+   an agent's `## Owned Files` section are ownership claims. Keep handoffs elsewhere.
+4. Fix source generators, regenerate, and preserve MicroStrategy-specific levels,
+   attribute forms/keys, prompts, reports/dossiers, cubes and security filters.
+5. Run `pytest tests/ --tb=short -q` after implementation changes; coordinate a
+   single integrated run during parallel work. New behavior requires tests.
+   Never weaken assertions or invent pass/coverage counts.
+6. Run `python scripts/check_agent_ownership.py` and
+   `python scripts/validate_skills.py` after customization changes.
+7. Use existing dependency/runtime conventions. Read the actual parser and dispatch
+   before documenting commands; Tableau CLI syntax is not this CLI's syntax.
+8. Apply **@readme**'s documentation checklist before and after updates. Keep
+   release claims, links, examples and counts tied to current implementation and
+   measured evidence; **@roadmap-planner** owns planning priorities.
 
-## Key Modules
+## Safety and Evidence
 
-- **Extraction**:
-  - `microstrategy_export\__init__.py`
-  - `microstrategy_export\change_detector.py`
-  - `microstrategy_export\connection_mapper.py`
-  - `microstrategy_export\cube_extractor.py`
-  - `microstrategy_export\dossier_extractor.py`
-  - `microstrategy_export\expression_converter.py`
-  - `microstrategy_export\extract_mstr_data.py`
-  - `microstrategy_export\incremental.py`
-  - `microstrategy_export\metric_extractor.py`
-  - `microstrategy_export\parallel.py`
-  - `microstrategy_export\prompt_extractor.py`
-  - `microstrategy_export\realtime_extractor.py`
-  - `microstrategy_export\report_extractor.py`
-  - `microstrategy_export\rest_api_client.py`
-  - `microstrategy_export\schema_extractor.py`
-  - ... and 2 more
-- **Generation**:
-  - `examples\generate_examples.py`
-  - `powerbi_import\__init__.py`
-  - `powerbi_import\ai_converter.py`
-  - `powerbi_import\alerts_generator.py`
-  - `powerbi_import\assessment.py`
-  - `powerbi_import\calc_column_utils.py`
-  - `powerbi_import\certification.py`
-  - `powerbi_import\comparison_report.py`
-  - `powerbi_import\dashboard.py`
-  - `powerbi_import\dataflow_generator.py`
-  - `powerbi_import\dax_optimizer.py`
-  - `powerbi_import\dax_recipes.py`
-  - `powerbi_import\deploy\__init__.py`
-  - `powerbi_import\deploy\auth.py`
-  - `powerbi_import\deploy\bundle_deployer.py`
-  - ... and 53 more
-- **Orchestration**:
-  - `migrate.py`
-  - `wizard.py`
-- **Utilities**:
-  - `scripts\scheduled_migration.py`
-  - `universal_bi\__init__.py`
-  - `universal_bi\adapters\__init__.py`
-  - `universal_bi\adapters\mstr_adapter.py`
-  - `universal_bi\adapters\tableau_adapter.py`
-  - `universal_bi\cross_lineage.py`
-  - `universal_bi\schema.py`
+Static inspection, generated definitions, mocked tests and advisory review are
+not runtime proof. Desktop opening/rendering, refresh, query execution, effective
+RLS, deployment and Fabric pipeline completion remain **`not_run`** unless an
+authorized matching run supplies evidence. Healing/evidence/Fabric agent roles
+add development guidance, not an automatic runtime healing or evidence pipeline.
 
-## Hard Constraints
+Keep changes metadata-driven, not report-specific. Do not assume nonexistent
+error hierarchies, modules or CLI switches. AI fallback is opt-in/budgeted and
+must not transmit customer metadata without permission. Audit exact publication
+scope for secrets, personal/customer data, private endpoints and asset provenance.
+Do not publish unresolved sensitive or unlicensed content, generated outputs or
+unrelated changes. Commit/push only when requested, after checks pass, using
+conventional messages and the required co-author trailer.
 
-1. **Read before write** — never assume file contents from memory
-2. **Test after every change** — run `pytest tests/ --tb=short -q`
-3. **No duplicate functions** — always search for an existing name before creating one
-4. **Git hygiene** — commit only when tests pass, conventional messages (`feat:`, `fix:`, `test:`, `docs:`)
+## Committed Reference
 
-## Multi-Agent Architecture
-
-This project uses a specialized agent architecture. See `docs/AGENTS.md` for the full
-architecture diagram and `.github/agents/` for per-agent definitions.
-
-## Workflow Rules
-
-### 1. Plan Before Build
-- For multi-step work, create a plan before starting
-- If something goes sideways, STOP and re-plan
-
-### 2. Read Before Write
-- **Always read target code before editing**
-- Read `copilot-instructions.md` at session start for project rules
-
-### 3. Testing Contract
-- Run `pytest tests/ --tb=short -q` after EVERY implementation change
-- If tests fail → fix them before reporting completion
-- New features **require** new tests
-- Never weaken test assertions to make tests pass
-
-### 4. Scope Discipline
-- Only modify files directly related to the task
-- No drive-by refactors
-- Prefer the smallest change that solves the problem
+Customization governance patterns were adapted from TableauToPowerBI commit
+`3de10594f4e2b7d5fc97a58e8adb9571a9844d94`, not dirty working-tree files or
+untracked Azure bundles. Preserve target-domain behavior rather than claiming
+the reference project's runtime features or test totals exist here.

@@ -40,16 +40,24 @@ See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the full design.
 
 ## Multi-Agent Development
 
-6 specialized Copilot agents handle domain-specific work. When opening a PR, tag the relevant agent:
+Use the specialist ownership and handoff map in [docs/AGENTS.md](docs/AGENTS.md).
+The repository migration skill guides assessment, extraction, generation, and
+validation without replacing MicroStrategy-specific specialists. Governance,
+repair, evidence, and Fabric roles are development roles, not additional
+automatic runtime stages.
 
-| Agent | Domain |
-|-------|--------|
-| `@extraction` | REST API, schema/report/dossier extraction |
-| `@expression` | MSTR→DAX conversion, function mappings |
-| `@generation` | TMDL, visuals, .pbip, M queries, deployment |
-| `@testing` | Unit tests, fixtures, coverage |
-| `@validation` | Assessment, fidelity scoring, reports |
-| `@orchestrator` | CLI, config, cross-module coordination |
+From the repository root, run the developer tooling checks:
+
+```bash
+python scripts/check_agent_ownership.py
+python scripts/validate_skills.py
+```
+
+Ownership checks require one primary owner per runtime Python module, using
+repo-relative paths or exclusive globs in each agent's `## Owned Files` section.
+Handoff references do not claim ownership. Skill checks validate required
+frontmatter fields, names, relative links, and migration CLI options. Both
+commands support `--json`, return nonzero on errors, and run in CI.
 
 ## Testing
 

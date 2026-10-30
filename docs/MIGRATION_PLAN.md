@@ -2,7 +2,7 @@
 
 **Version:** v3.0.0-plan  
 **Date:** 2026-03-19  
-**Status:** v2.0.0 shipped (570 tests, 15K+ LOC) — v3.0 plan defined below
+**Status:** Historical v3.0 planning snapshot. The v2.0/test/LOC counts and phase statuses below describe the plan as recorded on this date; they are not current implementation evidence. Use `docs/DEVELOPMENT_PLAN.md` for roadmap context and verify shipped behavior against the changelog, source, tests, and CLI dispatch.
 
 ---
 
