@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Conversion
+
+- Parse nested `RunningSum` and `RunningAvg` arguments safely, retain exported
+  `<...>` and `{...}` level attributes in DAX `ORDERBY`, and keep unresolved
+  table/partition semantics explicitly approximated or under manual review.
+
 ### Developer tooling
 
 - Adapt the committed TableauToPowerBI agent governance, specialist handoffs,

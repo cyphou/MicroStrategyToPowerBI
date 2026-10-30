@@ -140,8 +140,8 @@ _FUNCTION_MAP = {
 
 # Derived metric patterns (OLAP functions)
 _RE_RANK = re.compile(r'Rank\s*\((.+?)(?:,\s*(ASC|DESC))?(?:,\s*(DENSE))?\)\s*(\{.+?\})?', re.IGNORECASE)
-_RE_RUNNING_SUM = re.compile(r'RunningSum\s*\((.+?)\)\s*(\{.+?\})?', re.IGNORECASE)
-_RE_RUNNING_AVG = re.compile(r'RunningAvg\s*\((.+?)\)\s*(\{.+?\})?', re.IGNORECASE)
+_RE_RUNNING_SUM = re.compile(r'^\s*RunningSum\b', re.IGNORECASE)
+_RE_RUNNING_AVG = re.compile(r'^\s*RunningAvg\b', re.IGNORECASE)
 _RE_MOVING_AVG = re.compile(r'MovingAvg\s*\((.+?),\s*(\d+)\)\s*(\{.+?\})?', re.IGNORECASE)
 _RE_MOVING_SUM = re.compile(r'MovingSum\s*\((.+?),\s*(\d+)\)\s*(\{.+?\})?', re.IGNORECASE)
 _RE_LAG = re.compile(r'Lag\s*\((.+?),\s*(\d+)\)\s*(\{.+?\})?', re.IGNORECASE)
@@ -405,41 +405,55 @@ def _try_derived_metric(expr, context):
         }
 
     # RunningSum — DAX WINDOW pattern
-    m = _RE_RUNNING_SUM.match(expr)
-    if m:
-        inner = m.group(1).strip()
-        attrs = _parse_level_spec(m.group(2)) if m.group(2) else []
+    if _RE_RUNNING_SUM.match(expr):
+        parsed = _parse_derived_call(expr, "RunningSum")
+        if not parsed or not parsed[0]:
+            return {
+                "dax": f"/* MANUAL REVIEW: {expr[:80]} */\nBLANK()",
+                "fidelity": "manual_review",
+                "warnings": ["RunningSum expression could not be parsed safely."],
+            }
+        inner, level_spec = parsed
+        attrs = _parse_level_spec(level_spec)
         inner_dax = _convert_standard_expression(inner, context)
-        sort_col = attrs[0] if attrs else "SortColumn"
-        fidelity = "full" if attrs else "approximated"
-        warnings = [] if attrs else ["RunningSum — verify sort column reference"]
+        table_name = context.get("table_name")
+        if table_name:
+            inner_dax = qualify_column_references(inner_dax, table_name)
+        order_by, warnings = _window_orderby(attrs, "RunningSum")
         return {
             "dax": (
                 f"CALCULATE(\n"
                 f"    {inner_dax},\n"
-                f"    WINDOW(1, ABS, 0, REL, ALLSELECTED(), ORDERBY([{sort_col}], ASC))\n"
+                f"    WINDOW(1, ABS, 0, REL, ALLSELECTED(), ORDERBY({order_by}))\n"
                 f")"
             ),
-            "fidelity": fidelity,
+            "fidelity": "approximated",
             "warnings": warnings,
         }
 
     # RunningAvg — DAX WINDOW pattern
-    m = _RE_RUNNING_AVG.match(expr)
-    if m:
-        inner = m.group(1).strip()
-        attrs = _parse_level_spec(m.group(2)) if m.group(2) else []
+    if _RE_RUNNING_AVG.match(expr):
+        parsed = _parse_derived_call(expr, "RunningAvg")
+        if not parsed or not parsed[0]:
+            return {
+                "dax": f"/* MANUAL REVIEW: {expr[:80]} */\nBLANK()",
+                "fidelity": "manual_review",
+                "warnings": ["RunningAvg expression could not be parsed safely."],
+            }
+        inner, level_spec = parsed
+        attrs = _parse_level_spec(level_spec)
         inner_dax = _convert_standard_expression(inner, context)
-        sort_col = attrs[0] if attrs else "SortColumn"
-        fidelity = "full" if attrs else "approximated"
-        warnings = [] if attrs else ["RunningAvg — verify sort column reference"]
+        table_name = context.get("table_name")
+        if table_name:
+            inner_dax = qualify_column_references(inner_dax, table_name)
+        order_by, warnings = _window_orderby(attrs, "RunningAvg")
         return {
             "dax": (
-                f"VAR __rows = WINDOW(1, ABS, 0, REL, ALLSELECTED(), ORDERBY([{sort_col}], ASC))\n"
+                f"VAR __rows = WINDOW(1, ABS, 0, REL, ALLSELECTED(), ORDERBY({order_by}))\n"
                 f"RETURN\n"
                 f"    DIVIDE(SUMX(__rows, {inner_dax}), COUNTROWS(__rows))"
             ),
-            "fidelity": fidelity,
+            "fidelity": "approximated",
             "warnings": warnings,
         }
 
@@ -857,18 +871,75 @@ def _handle_additional_functions(expr, context):
 
 
 def _parse_level_spec(spec_str):
-    """Parse a level metric specification string like '{~+, Year, Region}'.
+    """Parse a level specification such as '{~+, Year, Region}' or '<Year>'.
 
     Returns list of attribute names.
     """
     if not spec_str:
         return []
-    # Remove braces
-    inner = spec_str.strip('{}').strip()
+    inner = spec_str.strip()
+    if len(inner) >= 2 and (inner[0], inner[-1]) in (("{", "}"), ("<", ">")):
+        inner = inner[1:-1].strip()
     # Split by comma, filter out operators
     parts = [p.strip() for p in inner.split(',')]
     attrs = [p for p in parts if p and p not in ('~', '~+', '!', '^', '+')]
     return attrs
+
+
+def _parse_derived_call(expression, function_name):
+    """Extract one balanced function argument and an optional trailing level spec."""
+    prefix = re.match(rf'\s*{re.escape(function_name)}\s*\(', expression, re.IGNORECASE)
+    if not prefix:
+        return None
+
+    start = prefix.end()
+    depth = 1
+    quote = None
+    index = start
+    while index < len(expression):
+        char = expression[index]
+        if quote:
+            if char == quote:
+                if index + 1 < len(expression) and expression[index + 1] == quote:
+                    index += 1
+                else:
+                    quote = None
+            elif char == "\\":
+                index += 1
+        elif char in ("'", '"'):
+            quote = char
+        elif char == "(":
+            depth += 1
+        elif char == ")":
+            depth -= 1
+            if depth == 0:
+                inner = expression[start:index].strip()
+                suffix = expression[index + 1:].strip()
+                if suffix and not re.fullmatch(r"(?:\{[^{}]*\}|<[^<>]*>)", suffix):
+                    return None
+                return inner, suffix or None
+        index += 1
+
+    return None
+
+
+def _window_orderby(attrs, function_name):
+    """Build a qualified DAX template and report unresolved table/level semantics."""
+    sort_attrs = attrs or ["SortColumn"]
+    order_by = ", ".join(
+        f"Table[{attribute.replace(']', ']]')}], ASC" for attribute in sort_attrs
+    )
+    if attrs:
+        warning = (
+            f"{function_name} uses a placeholder table for level attributes; resolve the "
+            "dimension table and verify metric/partition semantics"
+        )
+    else:
+        warning = (
+            f"{function_name} has no level attribute; replace Table[SortColumn] "
+            "and review window semantics"
+        )
+    return order_by, [warning]
 
 
 # ── Apply function helpers ───────────────────────────────────────

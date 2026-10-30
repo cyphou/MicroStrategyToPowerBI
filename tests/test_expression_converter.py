@@ -185,7 +185,40 @@ class TestDerivedMetrics:
     def test_running_sum(self):
         result = convert_mstr_expression_to_dax("RunningSum(Sum(Revenue)) {Month}")
         assert result["fidelity"] == "approximated"
-        assert "RunningSum" in result["warnings"][0]
+        assert "SUM(Revenue)" in result["dax"]
+        assert "ORDERBY(Table[Month], ASC)" in result["dax"]
+        assert "SUM(Revenue," not in result["dax"]
+        assert result["dax"].count("(") == result["dax"].count(")")
+        assert "placeholder table" in result["warnings"][0]
+
+    def test_running_sum_qualifies_inner_column_with_metric_table_context(self):
+        result = convert_metric_to_dax(
+            {
+                "name": "Running Revenue",
+                "metric_type": "derived",
+                "expression": "RunningSum(Sum(Revenue)) <Month>",
+            },
+            context={"table_name": "Fact Sales"},
+        )
+        assert "SUM('Fact Sales'[Revenue])" in result["dax"]
+        assert "ORDERBY(Table[Month], ASC)" in result["dax"]
+        assert result["fidelity"] == "approximated"
+
+    def test_running_sum_preserves_multiple_level_attributes(self):
+        result = convert_mstr_expression_to_dax("RunningSum(Sum(Revenue)) {Month, Year}")
+        assert "ORDERBY(Table[Month], ASC, Table[Year], ASC)" in result["dax"]
+        assert result["fidelity"] == "approximated"
+
+    def test_running_sum_without_level_attribute_is_not_exact(self):
+        result = convert_mstr_expression_to_dax("RunningSum(Sum(Revenue))")
+        assert "ORDERBY(Table[SortColumn], ASC)" in result["dax"]
+        assert result["fidelity"] == "approximated"
+        assert "no level attribute" in result["warnings"][0]
+
+    def test_running_sum_rejects_unbalanced_nested_expression(self):
+        result = convert_mstr_expression_to_dax("RunningSum(Sum(Revenue) {Month}")
+        assert result["fidelity"] == "manual_review"
+        assert "could not be parsed safely" in result["warnings"][0]
 
     def test_lag(self):
         result = convert_mstr_expression_to_dax("Lag(Sum(Revenue), 1) {Year}")
@@ -203,6 +236,19 @@ class TestDerivedMetrics:
         assert "AVERAGEX" in result["dax"]
         assert "WINDOW" in result["dax"]
         assert result["fidelity"] == "full"
+
+    def test_running_avg_parses_nested_metric_and_preserves_level(self):
+        result = convert_mstr_expression_to_dax("RunningAvg(Sum(Revenue)) {Month}")
+        assert "SUM(Revenue)" in result["dax"]
+        assert "ORDERBY(Table[Month], ASC)" in result["dax"]
+        assert result["dax"].count("(") == result["dax"].count(")")
+        assert result["fidelity"] == "approximated"
+        assert "placeholder table" in result["warnings"][0]
+
+    def test_running_avg_parses_exported_angle_bracket_level(self):
+        result = convert_mstr_expression_to_dax("RunningAvg(Sum(Revenue)) <Month>")
+        assert "ORDERBY(Table[Month], ASC)" in result["dax"]
+        assert result["fidelity"] == "approximated"
 
 
 # ── ApplySimple patterns ────────────────────────────────────────

@@ -40,8 +40,8 @@ Level metrics control the grain at which a metric is calculated, independent of 
 |---------------|-----|-------|
 | `Rank(Revenue) {Month}` | `RANKX(ALL(Calendar[Month]), [Revenue])` | Dense rank by default |
 | `Rank(Revenue, ASC) {Month}` | `RANKX(ALL(Calendar[Month]), [Revenue], , ASC)` | Ascending rank |
-| `RunningSum(Revenue) {Month}` | `VAR __tbl = ALLSELECTED(Calendar[Month])` ... WINDOW pattern | Running cumulative sum |
-| `RunningAvg(Revenue) {Month}` | Window pattern similar to RunningSum | Running average |
+| `RunningSum(Sum(Revenue)) <Month>` | `CALCULATE(SUM(Revenue), WINDOW(1, ABS, 0, REL, ALLSELECTED(), ORDERBY(Table[Month], ASC)))` | Exported `<...>` and `{...}` level forms are accepted; approximation requires resolving the placeholder table and verifying partition/grain semantics |
+| `RunningAvg(Sum(Revenue)) <Month>` | `AVERAGEX` over a `WINDOW` ordered by `Table[Month]` | Exported `<...>` and `{...}` level forms are accepted; approximation requires resolving the placeholder table and verifying metric aggregation context and partition semantics |
 | `RunningCount(Revenue) {Month}` | Window pattern | Running count |
 | `MovingAvg(Revenue, 3) {Month}` | `AVERAGEX(TOPN(3, ALL(Calendar[Month]), Calendar[Month], DESC), [Revenue])` | 3-period moving average |
 | `MovingSum(Revenue, 6) {Month}` | `SUMX(TOPN(6, ALL(Calendar[Month]), Calendar[Month], DESC), [Revenue])` | 6-period moving sum |
